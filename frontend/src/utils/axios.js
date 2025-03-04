@@ -40,6 +40,7 @@ export const endpoints = {
     me: '/auth/verify-session',
     signIn: 'auth/signin',
     signUp: '/auth/signup',
+    logout: '/auth/logout'
   },
   mail: {
     list: '/api/mail/list',

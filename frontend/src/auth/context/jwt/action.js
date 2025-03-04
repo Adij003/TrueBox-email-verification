@@ -1,6 +1,6 @@
 import axios, { endpoints } from 'src/utils/axios';
 
-import { setSession } from './utils';
+
 
 /** **************************************
  * Sign in
@@ -54,7 +54,13 @@ export const signUp = async ({ email, password, first_name, last_name }) => {
  *************************************** */
 export const signOut = async () => {
   try {
-    await setSession(null);
+    const res = await axios.get(endpoints.auth.logout);
+
+    const logoutResponse = res.data;
+
+    if (logoutResponse.status !== 'success') {
+      throw new Error('Error during sign out');
+    }
   } catch (error) {
     console.error('Error during sign out:', error);
     throw error;
