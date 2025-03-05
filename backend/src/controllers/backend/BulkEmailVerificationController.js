@@ -5,18 +5,16 @@ const Response = require('../../utils/Response');
 const { Readable } = require("stream"); // Import Readable for buffer stream
 const BulkVerification = require("../../models/BulkVerificationSchema");
 require("dotenv").config();
-// we have to add validation, logs, and response
-module.exports = {
-    uploadBulkEmails: async (req, res) => {
+
+
+    exports.uploadBulkEmails = async (req, res) => {
       try {
         console.log("Received file:", req.file); // Debugging
     
         if (!req.file) {
           return res.status(400).json(Response.error("CSV file is required"));
       }
-
-       
-    
+          
         // Create a readable stream from buffer
         const fileStream = new Readable();
         fileStream.push(req.file.buffer);
@@ -40,29 +38,25 @@ module.exports = {
         const newBulkJob = new BulkVerification({ job_id });
         await newBulkJob.save();
     
-        return res.status(200).json({
-          success: true,
-          message: "Bulk email verification list has been created",
-          job_id,
-        });
+       
+        return res.status(200).json(Response.success("Bulk email verification list crated successfully", job_id));
     
       } catch (error) {
-        console.error("Error uploading bulk emails:", error.response?.data || error.message);
-        return res.status(500).json({
-          success: false,
-          message: "Error uploading bulk emails",
-          error: error.response?.data || error.message,
-        });
+       Logs.error('Erro in uploading bulk email', error)
+        return res.status(500).json(Response.error('Error in uploading bulk email', error));
+
       }
     },
 
-    startBulkVerification: async (req, res) => {
+    exports.startBulkVerification = async (req, res) => {
       try {
         const { job_id } = req.params;
   
         if (!job_id) {
-            return res.status(400).json({ success: false, message: "job_id is required" });
+            return res.status(400).json(Response.error('job_id is required'));
         }
+
+        Logs.info('job_id is: ', job_id)
   
         // Prepare API request
         const API_KEY = process.env.BOUNCIFY_API_KEY;
@@ -79,29 +73,20 @@ module.exports = {
             { status: "in-progress" }
         );
   
-        return res.status(200).json({
-            success: true,
-            message: "Job verification started",
-            job_id,
-            apiResponse: response.data, // Optional: include API response for debugging
-        });
+        return res.status(200).json(Response.success('Email id verification started', job_id));
   
     } catch (error) {
-        console.error("Error starting verification:", error.response?.data || error.message);
-        return res.status(500).json({
-            success: false,
-            message: "Error starting verification",
-            error: error.response?.data || error.message,
-        });
+        Logs.error('Error in starting email verification', error)
+        return res.status(500).json(Response.error('Error in starting email verification', error));
     }
     },
 
-    checkBulkStatus: async (req, res) => {
+    exports.checkBulkStatus = async (req, res) => {
       try {
         const { job_id } = req.params;
     
         if (!job_id) {
-          return res.status(400).json({ success: false, message: "job_id is required" });
+          return res.status(400).json(Response.error('Job_id is required...'));
         }
     
         // Call Bouncify API
@@ -126,28 +111,21 @@ module.exports = {
           }
         );
     
-        return res.status(200).json({
-          success: true,
-          message: "Bulk job status retrieved",
-          data,
-        });
+        return res.status(200).json(Response.success('"Bulk job status retrieved: ', data));
     
       } catch (error) {
-        console.error("Error checking status:", error.response?.data || error.message);
-        return res.status(500).json({
-          success: false,
-          message: "Error checking job status",
-          error: error.response?.data || error.message,
-        });
+        
+        Logs.error('Error checking status of bulk emails', error)
+        return res.status(500).json(Response.error('Error in checking job', error));
       }
     },
-    downloadBulkResults: async (req, res) => {
+    exports.downloadBulkResults = async (req, res) => {
       try {
         const { job_id } = req.params;
   
     
         if (!job_id) {
-          return res.status(400).json({ success: false, message: "job_id is required" });
+          return res.status(400).json(Response.error('Job_id is required...'));
         }
     
         // Call Bouncify API
@@ -167,15 +145,11 @@ module.exports = {
     
       } catch (error) {
         console.error("Error downloading results:", error.response?.data || error.message);
-        return res.status(500).json({
-          success: false,
-          message: "Error downloading results",
-          error: error.response?.data || error.message,
-        });
+        Logs.error('Error in downloading data', error)
+        return res.status(500).json(Response.error('Error in downloading data', error));
       }
     }
 
-}
 
 
 
