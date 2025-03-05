@@ -49,7 +49,7 @@ module.exports = {
                     res.status(400).json(Response.error(err));
                 }
 
-                return res.send(Response.success("Logged in successfully"));
+                return res.send(Response.success("Logged in successfully", token));
             });
         } catch (err) {
             Logs.error(err);
