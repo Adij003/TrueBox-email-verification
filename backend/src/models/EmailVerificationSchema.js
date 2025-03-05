@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const EmailVerificationSchema = new mongoose.Schema({
+  user_id: {
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'User', 
+    required: true
+},
   email: { type: String, required: true, unique: true },
   result: { type: String, enum: ["deliverable", "undeliverable", "accept-all", "unknown"], required: true },
   message: { type: String },

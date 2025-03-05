@@ -9,35 +9,35 @@ require("dotenv").config();
 
     exports.uploadBulkEmails = async (req, res) => {
       try {
-        console.log("Received file:", req.file); // Debugging
     
         if (!req.file) {
           return res.status(400).json(Response.error("CSV file is required"));
       }
-          
-        // Create a readable stream from buffer
+              
         const fileStream = new Readable();
         fileStream.push(req.file.buffer);
-        fileStream.push(null); // End stream
-    
-        // Prepare form data
+        fileStream.push(null);
+        
         const formData = new FormData();
         formData.append("local_file", fileStream, req.file.originalname);
     
-        // Call Bouncify API
         const API_KEY = process.env.BOUNCIFY_API_KEY;
         const response = await axios.post(
-          `https://api.bouncify.io/v1/bulk?apikey=${API_KEY}`, // Fix the query param syntax
+          `https://api.bouncify.io/v1/bulk?apikey=${API_KEY}`, 
           formData,
           { headers: formData.getHeaders() }
         );
-    
+        
+        console.log('the response from uploading bulk emails: ', response.data)
         const { job_id } = response.data;
     
-        // Store job in DB
-        const newBulkJob = new BulkVerification({ job_id });
+        
+        const newBulkJob = new BulkVerification({ job_id, user_id: req.user.id });
         await newBulkJob.save();
-    
+
+        console.log('New Bulk Job that i have saved: ', newBulkJob);
+        
+
        
         return res.status(200).json(Response.success("Bulk email verification list crated successfully", job_id));
     
@@ -58,22 +58,19 @@ require("dotenv").config();
 
         Logs.info('job_id is: ', job_id)
   
-        // Prepare API request
         const API_KEY = process.env.BOUNCIFY_API_KEY;
         const url = `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`;
         const headers = { 'Content-Type': 'application/json' };
-        const data = { "action": "start" }; // ✅ Include required body
-  
-        // Make API request
+        const data = { "action": "start" };
+         
         const response = await axios.patch(url, data, { headers });
   
-        // Update status in DB
         await BulkVerification.findOneAndUpdate(
             { job_id },
             { status: "in-progress" }
         );
   
-        return res.status(200).json(Response.success('Email id verification started', job_id));
+        return res.status(200).json(Response.success('Email id verification started', response));
   
     } catch (error) {
         Logs.error('Error in starting email verification', error)
@@ -89,7 +86,7 @@ require("dotenv").config();
           return res.status(400).json(Response.error('Job_id is required...'));
         }
     
-        // Call Bouncify API
+        
         const API_KEY = process.env.BOUNCIFY_API_KEY;
         const response = await axios.get(
           `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`
@@ -97,7 +94,7 @@ require("dotenv").config();
     
         const data = response.data;
     
-        // Update status and results in DB
+        
         await BulkVerification.findOneAndUpdate(
           { job_id },
           {
@@ -128,7 +125,6 @@ require("dotenv").config();
           return res.status(400).json(Response.error('Job_id is required...'));
         }
     
-        // Call Bouncify API
         const API_KEY = process.env.BOUNCIFY_API_KEY;
         const response = await axios.post(
           `https://api.bouncify.io/v1/download?jobId=${job_id}&apikey=${API_KEY}`,
@@ -136,11 +132,9 @@ require("dotenv").config();
           { responseType: "stream" }
        );
     
-        // Set response headers for file download
         res.setHeader("Content-Disposition", `attachment; filename=${job_id}.csv`);
         res.setHeader("Content-Type", "text/csv");
     
-        // Pipe the response directly to the client
         response.data.pipe(res);
     
       } catch (error) {

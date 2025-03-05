@@ -1,19 +1,42 @@
+const { check, validationResult } = require("express-validator");
 const axios = require("axios");
-const EmailVerification = require("../../models/EmailVerificationSchema"); // Import the schema
-require("dotenv").config(); // To use environment variables
+const EmailVerification = require("../../models/EmailVerificationSchema"); 
+const Response = require('../../utils/Response');
+const Logs = require('../../utils/Logs');
+require("dotenv").config();
+const CreditInfo = require('../../models/CreditSchema')
+
+const validateEmail = [
+  check("email").isEmail().withMessage("Please provide email in correct format, this will help us to save credit and fire unwanted api requests"),
+];
 
 const verifySingleEmail = async (req, res) => {
   try {
-    const { email } = req.body;
-
-    // 1️⃣ Validate input
-    if (!email) {
-      return res.status(400).json({ success: false, message: "Email is required" });
+    console.log('the req parameter: ', req.user.id) //debugging
+    // Validate input 
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json(Response.error('Invalid Email id', errors));
     }
 
-    // 2️⃣ Check if email was already verified before (to avoid duplicate API calls)
+    const { email } = req.body;
+    const API_KEY = process.env.BOUNCIFY_API_KEY;
+
+
+    // Checking if email was already verified before to avoid unnecessaru api calls
+
     const existingVerification = await EmailVerification.findOne({ email });
+
     if (existingVerification) {
+
+      const responseCredits = await axios.get(
+        `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
+      );
+  
+      const availableCredits = responseCredits.data.credits_info.credits_remaining
+      // console.log('Current usable credits ', responseCredits.data.credits_info.credits_remaining) // for debugging
+
+
       return res.status(200).json({
         success: true,
         message: "Email verification result (cached)",
@@ -21,16 +44,16 @@ const verifySingleEmail = async (req, res) => {
       });
     }
 
-    // 3️⃣ Call Bouncify API
-    const API_KEY = process.env.BOUNCIFY_API_KEY; // Store this in .env
+    
     const response = await axios.get(
       `https://api.bouncify.io/v1/verify?apikey=${API_KEY}&email=${email}`
     );
 
     const data = response.data;
 
-    // 4️⃣ Store in DB
+    
     const emailVerification = new EmailVerification({
+      user_id: req.user.id,
       email: data.email,
       result: data.result,
       message: data.message,
@@ -46,7 +69,19 @@ const verifySingleEmail = async (req, res) => {
 
     await emailVerification.save();
 
-    // 5️⃣ Return response
+    const responseCredits = await axios.get(
+      `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
+    );
+
+    
+    console.log('the credit response with data is: ',responseCredits.data)
+
+
+    // const creditInfoUpdate = new CreditInfo({
+
+    // })
+
+    // Return response
     return res.status(200).json({
       success: true,
       message: "Email verification successful",
@@ -63,4 +98,4 @@ const verifySingleEmail = async (req, res) => {
   }
 };
 
-module.exports = { verifySingleEmail };
+module.exports = { verifySingleEmail, validateEmail };
