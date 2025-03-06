@@ -6,7 +6,6 @@ import { Helmet } from 'react-helmet-async';
 import {
   Box,
   Link,
-  Grid,
   Button,
   Dialog,
   Popover,
@@ -31,7 +30,7 @@ import PageHeader from 'src/components/page-header/page-header';
 
 import Upload from 'src/sections/dashboard/component/upload/upload-file';
 import { DashboardTable } from 'src/sections/dashboard/component/table/dashboard-table';
-import { FolderSection } from 'src/sections/dashboard/component/folder/dashboardfolder';
+// import { FolderSection } from 'src/sections/dashboard/component/folder/dashboardfolder';
 import CreditStatsCards from 'src/sections/dashboard/component/stats-cards/credit-stats-cards';
 import VerifySingleEmail from 'src/sections/dashboard/component/verify-single-email/verify-single-email';
 import { DashboardTrashTable } from 'src/sections/dashboard/component/dashboard-trash-table/dashboard-trash-table';
@@ -171,53 +170,7 @@ export default function Page() {
         <Box marginTop={5}>
           <CreditStatsCards />
         </Box>
-        {/* <Box
-          width="100%"
-          sx={{
-            mt: '40px',
-            mb: '24px',
-            gap: 3,
-            display: 'grid',
-            flexWrap: 'wrap',
-            gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-              md: 'repeat(2, 1fr)',
-              lg: 'repeat(3, 1fr)',
-            },
-          }}
-        >
-          <StatsCards
-            cardtitle="Email Credits Consumed"
-            cardstats={stats.consumed}
-            icon_name="Processed.svg"
-            icon_color="#10CBF3"
-            bg_gradient="#10CBF3"
-            tooltipTittle="Number of emails credits consumed by your account."
-          />
-          <StatsCards
-            cardtitle="Email Credits Remaining"
-            cardstats={stats.remaining}
-            icon_name="Complete.svg"
-            icon_color="#1D88FA"
-            bg_gradient="#1D88FA"
-            tooltipTittle="Number of emails credits remaining in your account."
-          />
-          <StatsCards
-            cardtitle="Total Number of Email Lists"
-            cardstats="100"
-            icon_name="list.svg"
-            icon_color="#28a645"
-            bg_gradient="#28a645"
-            tooltipTittle="Number of email lists uploaded in your account."
-          />
-        </Box> */}
-
-        <Grid container spacing={3}>
-          <Grid item xs={12} md={4} lg={3}>
-            <FolderSection onHomeClick={handleHomeClick} onTrashClick={handleTrashClick} />
-          </Grid>
-          <Grid item xs={12} md={8} lg={9}>
+       
             <BigCard
               tooltip="View file upload guidelines for email verification."
               getHelp={false}
@@ -253,13 +206,12 @@ export default function Page() {
             />
             <Box sx={{ mt: 3 }}>
               {activeTable === 'trash' ? (
-                <DashboardTrashTable />
+                <DashboardTrashTable  />
               ) : (
-                <DashboardTable selectedFolder={selectedFolder} />
+                <DashboardTable  selectedFolder={selectedFolder} />
               )}
             </Box>
-          </Grid>
-        </Grid>
+     
       </DashboardContent>
 
       <Dialog

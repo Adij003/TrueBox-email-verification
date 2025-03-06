@@ -225,15 +225,13 @@ module.exports = {
     verifySession: async function (req, res) {
         try {
             if (req.session && req.user) {
-                res.status(200).json(Response.success({
-                    message: "Session is active",
-                    user: {
+                res.status(200).json(Response.success("Session is active", {
                         first_name: req.user.first_name,
                         last_name: req.user.last_name,
                         email: req.user.email
 
                     }
-                }));
+                ));
 
                 // res.status(200).json(Response.success("Session is active", {
                 //     first_name: req.user.first_name,
@@ -244,7 +242,7 @@ module.exports = {
 
             }
             else {
-                res.status(401).json(Response.error({ message: "Session is not active" }));
+                res.status(401).json(Response.error("Session is not active"));
             }
 
         } catch (err) {

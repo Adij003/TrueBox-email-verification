@@ -10,6 +10,16 @@ const validateEmail = [
   check("email").isEmail().withMessage("Please provide email in correct format, this will help us to save credit and fire unwanted api requests"),
 ];
 
+/**
+ * Verifies an email using the Bouncify API. If the email was previously verified, 
+ * returns the cached result; otherwise, it makes an API request, saves the result, 
+ * and updates the user's credit info.
+ * 
+ * @param {Object} req - Express request object containing the email and user details.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response with verification result or an error message.
+ */
+
 const verifySingleEmail = async (req, res) => {
   try {
     console.log('the req parameter: ', req.user.id) //debugging

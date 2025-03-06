@@ -16,7 +16,7 @@ import { NavMobile } from './nav-mobile';
 import { layoutClasses } from '../classes';
 import { NavVertical } from './nav-vertical';
 import { NavHorizontal } from './nav-horizontal';
-import { _account } from '../config-nav-account';
+// import { _account } from '../config-nav-account';
 import { HeaderBase } from '../core/header-base';
 import { FooterBase } from '../core/footer-base';
 import { _workspaces } from '../config-nav-workspace';
@@ -71,7 +71,7 @@ export function DashboardLayout({ sx, children, data }) {
                 { value: 'cn', label: 'Chinese', countryCode: 'CN' },
                 { value: 'ar', label: 'Arabic', countryCode: 'SA' },
               ],
-              account: _account,
+              // account: _account,
 
               workspaces: _workspaces,
             }}

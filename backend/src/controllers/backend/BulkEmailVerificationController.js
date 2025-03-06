@@ -6,6 +6,12 @@ const { Readable } = require("stream"); // Import Readable for buffer stream
 const BulkVerification = require("../../models/BulkVerificationSchema");
 require("dotenv").config();
 
+/**
+ * Uploads a bulk email list for verification.
+ * @param {Object} req - Express request object containing the uploaded file.
+ * @param {Object} res - Express response object.
+ * @returns {Object} JSON response with job ID if successful, or error message.
+ */
 
     exports.uploadBulkEmails = async (req, res) => {
       try {
@@ -47,6 +53,12 @@ require("dotenv").config();
 
       }
     },
+    /**
+     * Starts bulk email verification for a given job ID.
+     * @param {Object} req - Express request object containing job_id in params.
+     * @param {Object} res - Express response object.
+     * @returns {Object} JSON response indicating whether the verification started.
+     */
 
     exports.startBulkVerification = async (req, res) => {
       try {
@@ -77,6 +89,13 @@ require("dotenv").config();
         return res.status(500).json(Response.error('Error in starting email verification', error));
     }
     },
+
+          /**
+       * Checks the status of a bulk email verification job.
+       * @param {Object} req - Express request object containing job_id in params.
+       * @param {Object} res - Express response object.
+       * @returns {Object} JSON response with the job status and details.
+       */
 
     exports.checkBulkStatus = async (req, res) => {
       try {
@@ -116,6 +135,13 @@ require("dotenv").config();
         return res.status(500).json(Response.error('Error in checking job', error));
       }
     },
+
+        /**
+     * Downloads the results of a completed bulk email verification job.
+     * @param {Object} req - Express request object containing job_id in params.
+     * @param {Object} res - Express response object.
+     * @returns {Object} CSV file as response stream if successful.
+     */
     exports.downloadBulkResults = async (req, res) => {
       try {
         const { job_id } = req.params;
