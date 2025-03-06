@@ -17,6 +17,7 @@ const EmailVerificationSchema = new mongoose.Schema({
   disposable: { type: Number },
   spamtrap: { type: Number },
   success: { type: Boolean, required: true },
+  credits_consumed: { type: Number, default: 1},
   verifiedAt: { type: Date, default: Date.now },
 });
 

@@ -6,6 +6,7 @@
       ref: 'User', 
   },
     job_id: { type: String, required: true, unique: true },
+    credits_consumed: {type: Number, default: 0},
     status: { type: String, enum: ["pending", "in-progress", "completed"], default: "pending" },
     createdAt: { type: Date, default: Date.now },
     completedAt: { type: Date },

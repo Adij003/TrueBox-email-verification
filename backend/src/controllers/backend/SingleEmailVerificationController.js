@@ -74,12 +74,19 @@ const verifySingleEmail = async (req, res) => {
     );
 
     
-    console.log('the credit response with data is: ',responseCredits.data)
+    console.log('the credit response with data is: ',responseCredits.data) // for debugging
 
 
-    // const creditInfoUpdate = new CreditInfo({
-
-    // })
+    const updatedCreditInfo = await CreditInfo.findOneAndUpdate(
+      { user_id: req.user.id },
+      { 
+        $inc: { credits_consumed: 1 },  // Increment credits_consumed by 1
+        $set: { credits_remaining: responseCredits.data.credits_info.credits_remaining } // Update credits_remaining
+      },
+      { new: true, upsert: true } // Returning the updated document otherwise creating a new one if not found
+    );
+    
+    console.log('Updated Credit Info: ', updatedCreditInfo);
 
     // Return response
     return res.status(200).json({

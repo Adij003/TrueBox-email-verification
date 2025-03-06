@@ -6,18 +6,22 @@ const CreditSchema = new mongoose.Schema({
         ref: 'User', 
         required: true
     },
-
+    total_credits: {
+        type: Number,
+        default: 100
+    },
     credits_remaining: {
         type: Number,
         default: 100
     },
     credits_consumed: {
-        type: Number
+        type: Number,
+        default: 0
     },
-    timestamp:{
+    timestamp:{ 
         type: Date,
         default: Date.now
     }
 })
 
-exports.module = mongoose.model("CreditInfo", CreditSchema)
+module.exports = mongoose.model("CreditInfo", CreditSchema);
