@@ -1,244 +1,283 @@
-const { User } = require('../../models');
-const Logs = require('../../utils/Logs');
-const Response = require('../../utils/Response');
-const Helper = require('../../utils/Helper');
-const { validationResult, param, body } = require('express-validator');
-
+const { User } = require("../../models");
+const Logs = require("../../utils/Logs");
+const Response = require("../../utils/Response");
+const Helper = require("../../utils/Helper");
+const { validationResult, param, body } = require("express-validator");
 
 module.exports = {
+  /**
+   * Create user
+   * @param {*} req
+   * @param {*} res
+   */
+  create: async (req, res) => {
+    try {
+      if (!req.body.user_id) {
+        throw "User id is required";
+      }
 
-    /**
-     * Create user
-     * @param {*} req 
-     * @param {*} res 
-     */
-    create: async (req, res) => {
-        try {
-            if (!req.body.user_id) {
-                throw "User id is required";
-            }
+      const user = await User.signUp(req.body.user_id);
+      res.send(Response.success("User created successfully", user));
+    } catch (err) {
+      Logs.error(err);
+      res
+        .status(500)
+        .json(
+          Response.error(
+            "Some error occurred while creating the User.",
+            err.message
+          )
+        );
+    }
+  },
 
-            const user = await User.signUp(req.body.user_id);
-            res.send(Response.success('User created successfully', user));
-        } catch (err) {
-            Logs.error(err);
-            res.status(500).json(Response.error('Some error occurred while creating the User.', err.message));
+  /**
+   * This method is use for retrieve a single record.
+   * @param {*} req
+   * @param {*} res
+   * @returns User
+   */
+  getOne: async (req, res) => {
+    try {
+      // Define your validation rules here
+      const validationRules = [
+        param("user_id", "Invalid user ID").custom(Helper.isValidObjectId),
+      ];
+
+      // Run the validation rules
+      await Promise.all(
+        validationRules.map(async (rule) => await rule.run(req))
+      );
+
+      // Get validation errors
+      const errors = validationResult(req);
+
+      // Check for validation errors
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json(Response.error("Fields are required.", errors.array()[0]));
+      }
+
+      const userId = req.params.user_id;
+
+      const user = await User.findById(userId);
+
+      if (!user) {
+        throw "User not found!";
+      }
+
+      return res.json(Response.success("Get User", user));
+    } catch (err) {
+      Logs.error(err);
+      res.status(400).json(Response.error(err));
+    }
+  },
+
+  /**
+   * This method is use to update the single record.
+   * @param {*} req
+   * @param {*} res
+   * @returns User
+   */
+  updateOne: async (req, res) => {
+    try {
+      // Define your validation rules here
+      const validationRules = [
+        param("user_id", "Invalid user ID")
+          .notEmpty()
+          .custom(Helper.isValidObjectId),
+        body("username").optional().escape(),
+        body("email")
+          .optional()
+          .isEmail()
+          .withMessage("Invalid email address")
+          .escape(),
+        body("password")
+          .optional()
+          .isLength({ min: 6 })
+          .withMessage("Password must be at least 6 characters"),
+      ];
+
+      // Run the validation rules
+      await Promise.all(
+        validationRules.map(async (rule) => await rule.run(req))
+      );
+
+      // Get validation errors
+      const errors = validationResult(req);
+
+      // Check for validation errors
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json(Response.error("Fields are required.", errors.array()[0]));
+      }
+
+      const userId = req.params.user_id;
+
+      const { username, email, password } = req.body;
+
+      if (!username && !email && !password) {
+        throw "Atleast one of the field is required username, email or password.";
+      }
+
+      let updateFields = {};
+
+      if (email) {
+        // Check if the provided email already exists
+        let existingUser = await User.findOne({ _id: { $ne: userId }, email });
+        if (existingUser) {
+          throw "User with this email already exists";
         }
-    },
 
-    /**
-     * This method is use for retrieve a single record.
-     * @param {*} req 
-     * @param {*} res 
-     * @returns User
-     */
-    getOne: async (req, res) => {
-        try {
+        updateFields.email = email;
+      }
 
-            // Define your validation rules here
-            const validationRules = [
-                param('user_id', 'Invalid user ID').custom(Helper.isValidObjectId)
-            ];
+      if (username) {
+        updateFields.username = username;
+      }
 
-            // Run the validation rules
-            await Promise.all(validationRules.map(async rule => await rule.run(req)));
+      if (password) {
+        updateFields.password = password;
+      }
 
-            // Get validation errors
-            const errors = validationResult(req);
+      const updatedUser = await User.findByIdAndUpdate(userId, updateFields, {
+        new: true,
+      });
 
-            // Check for validation errors
-            if (!errors.isEmpty()) {
-                return res.status(400).json(Response.error("Fields are required.", errors.array()[0]));
-            }
+      if (!updatedUser) {
+        throw "User not found!";
+      }
 
-            const userId = req.params.user_id;
+      return res.json(
+        Response.success("User updated successfully", updatedUser)
+      );
+    } catch (err) {
+      Logs.error(err);
+      res.status(500).json(Response.error(err));
+    }
+  },
 
-            const user = await User.findById(userId);
+  /**
+   * This method is use to fetch all the user record.
+   * @param {*} req
+   * @param {*} res
+   * @returns User
+   */
+  getAll: async (req, res) => {
+    try {
+      const Users = await User.find();
+      return res.json(Response.success("All User", Users));
+    } catch (err) {
+      Logs.error(err);
+      res.status(500).json(Response.error(err));
+    }
+  },
 
-            if (!user) {
-                throw "User not found!";
-            }
+  addTeamMember: async (req, res) => {
+    try {
+      const { email, shared_on, permission_type, folders = [] } = req.body;
+      const user_id = req.user.id; // Directly from req.user_id
 
-            return res.json(Response.success("Get User", user));
-        } catch (err) {
-            Logs.error(err);
-            res.status(400).json(Response.error(err));
+      console.log("All the user data", req.user);
+
+      // Validate input
+      if (!email || !permission_type) {
+        return res
+          .status(400)
+          .json({
+            success: false,
+            message: "Email and permission type are required",
+          });
+      }
+
+      // Find the user by ID
+      const user = await User.findOne({ user_id });
+
+      if (!user) {
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
+      }
+
+      // Create the new team member object
+      const newTeamMember = {
+        email,
+        shared_on: shared_on || new Date(),
+        permission_type,
+        folders: folders || [],
+      };
+
+      // Add to the team_members array
+      user.team_members.push(newTeamMember);
+
+      // Save the updated user document
+      await user.save();
+
+      res
+        .status(200)
+        .json({
+          success: true,
+          message: "Team member added successfully",
+          data: user.team_members,
+        });
+    } catch (error) {
+      console.error("Error adding team member:", error);
+      res
+        .status(500)
+        .json({ success: false, message: "Internal server error" });
+    }
+  },
+
+  /**
+   * This method is use to delete a single record.
+   * @param {*} req
+   * @param {*} res
+   * @returns User
+   */
+
+  deleteOne: async (req, res) => {
+    try {
+      // Define your validation rules here
+      const validationRules = [
+        param("user_id", "Invalid user ID").custom(Helper.isValidObjectId),
+      ];
+
+      // Run the validation rules
+      await Promise.all(
+        validationRules.map(async (rule) => await rule.run(req))
+      );
+
+      // Get validation errors
+      const errors = validationResult(req);
+
+      // Check for validation errors
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .json(Response.error("Fields are required.", errors.array()[0]));
+      }
+
+      const userId = req.params.user_id;
+
+      const deletedUser = await User.findByIdAndDelete(userId);
+
+      if (!deletedUser) {
+        throw "User not found!";
+      }
+
+      // Destroy the current session
+      req.session.destroy((err) => {
+        if (err) {
+          Logs.error(err);
         }
-    },
+      });
 
-    /**
-     * This method is use to update the single record.
-     * @param {*} req 
-     * @param {*} res 
-     * @returns User
-     */
-    updateOne: async (req, res) => {
-        try {
-
-            // Define your validation rules here
-            const validationRules = [
-                param('user_id', 'Invalid user ID').notEmpty().custom(Helper.isValidObjectId),
-                body('username').optional().escape(),
-                body('email').optional().isEmail().withMessage('Invalid email address').escape(),
-                body('password').optional().isLength({ min: 6 }).withMessage('Password must be at least 6 characters')
-            ];
-
-            // Run the validation rules
-            await Promise.all(validationRules.map(async rule => await rule.run(req)));
-
-            // Get validation errors
-            const errors = validationResult(req);
-
-            // Check for validation errors
-            if (!errors.isEmpty()) {
-                return res.status(400).json(Response.error("Fields are required.", errors.array()[0]));
-            }
-
-            const userId = req.params.user_id;
-
-            const { username, email, password } = req.body;
-
-            if (!username && !email && !password) {
-                throw "Atleast one of the field is required username, email or password."
-            }
-
-            let updateFields = {}
-
-            if (email) {
-                // Check if the provided email already exists
-                let existingUser = await User.findOne({ _id: { $ne: userId }, email });
-                if (existingUser) {
-                    throw "User with this email already exists";
-                }
-
-                updateFields.email = email;
-            }
-
-            if (username) {
-                updateFields.username = username;
-            }
-
-            if (password) {
-                updateFields.password = password;
-            }
-
-            const updatedUser = await User.findByIdAndUpdate(userId, updateFields, { new: true });
-
-
-            if (!updatedUser) {
-                throw "User not found!";
-            }
-
-            return res.json(Response.success("User updated successfully", updatedUser));
-        } catch (err) {
-            Logs.error(err);
-            res.status(500).json(Response.error(err));
-        }
-    },
-
-    /**
-     * This method is use to fetch all the user record.
-     * @param {*} req 
-     * @param {*} res 
-     * @returns User
-     */
-    getAll: async (req, res) => {
-        try {
-            const Users = await User.find();
-            return res.json(Response.success("All User", Users));
-        } catch (err) {
-            Logs.error(err);
-            res.status(500).json(Response.error(err));
-        }
-    },
-
-    addTeamMember: async (req, res) => {
-        try {
-            const { email, shared_on, permission_type, folders = [] } = req.body;
-            const user_id = req.user.id; // Directly from req.user_id
-
-            console.log('All the user data', req.user)
-            
-    
-            // Validate input
-            if (!email || !permission_type) {
-                return res.status(400).json({ success: false, message: "Email and permission type are required" });
-            }
-    
-            // Find the user by ID
-            const user = await User.findOne({ user_id });
-    
-            if (!user) {
-                return res.status(404).json({ success: false, message: "User not found" });
-            }
-    
-            // Create the new team member object
-            const newTeamMember = {
-                email,
-                shared_on: shared_on || new Date(),
-                permission_type,
-                folders: folders || []
-            };
-    
-            // Add to the team_members array
-            user.team_members.push(newTeamMember);
-    
-            // Save the updated user document
-            await user.save();
-    
-            res.status(200).json({ success: true, message: "Team member added successfully", data: user.team_members });
-        } catch (error) {
-            console.error("Error adding team member:", error);
-            res.status(500).json({ success: false, message: "Internal server error" });
-        }
-    },
-
-    /**
-     * This method is use to delete a single record.
-     * @param {*} req 
-     * @param {*} res 
-     * @returns User
-     */
-
-    deleteOne: async (req, res) => {
-        try {
-
-            // Define your validation rules here
-            const validationRules = [
-                param('user_id', 'Invalid user ID').custom(Helper.isValidObjectId)
-            ];
-
-            // Run the validation rules
-            await Promise.all(validationRules.map(async rule => await rule.run(req)));
-
-            // Get validation errors
-            const errors = validationResult(req);
-
-            // Check for validation errors
-            if (!errors.isEmpty()) {
-                return res.status(400).json(Response.error("Fields are required.", errors.array()[0]));
-            }
-
-            const userId = req.params.user_id;
-
-            const deletedUser = await User.findByIdAndDelete(userId);
-
-            if (!deletedUser) {
-                throw "User not found!";
-            }
-
-            // Destroy the current session
-            req.session.destroy((err) => {
-                if (err) {
-                    Logs.error(err);
-                }
-            });
-
-            return res.json(Response.success("Get User", deletedUser));
-        } catch (err) {
-            Logs.error(err);
-            res.status(500).json(Response.error(err));
-        }
-    },
-
-}
+      return res.json(Response.success("Get User", deletedUser));
+    } catch (err) {
+      Logs.error(err);
+      res.status(500).json(Response.error(err));
+    }
+  },
+};
