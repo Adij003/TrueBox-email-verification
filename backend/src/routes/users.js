@@ -7,5 +7,8 @@ router.get('/', UsersController.getAll);
 router.get('/:user_id', UsersController.getOne);
 router.put('/:user_id', UsersController.updateOne);
 router.delete('/:user_id', UsersController.deleteOne);
+router.post('/add-member', UsersController.addTeamMember);
+
+
 
 module.exports = router;

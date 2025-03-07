@@ -5,16 +5,21 @@ const {
   startBulkVerification,
   checkBulkStatus, 
   downloadBulkResults,
+  verifySingleEmail
 } = require("../controllers/backend/BulkEmailVerificationController");
+
+
 
 const router = express.Router();
 const upload  = require("../middlewares/multer");
 
-router.post('/bulk', upload.single('csv_file'), uploadBulkEmails);
+router.post('/upload-bulk-email', upload.single('csv_file'), uploadBulkEmails);
 
 
-router.patch("/start/:job_id", startBulkVerification); 
+router.patch("/verify/bulk/:job_id", startBulkVerification); 
 router.get("/status/:job_id", checkBulkStatus);
 router.post("/download/:job_id", downloadBulkResults);
+router.post("/verify/single", verifySingleEmail);
+
 
 module.exports = router;

@@ -2,11 +2,10 @@ const axios = require("axios");
 const Logs = require('../../utils/Logs');
 const Response = require('../../utils/Response');
 const CreditInfo = require("../../models/CreditSchema");
-require("dotenv").config();
 
 exports.getCreditInfo = async (req, res) => {
+    
     try{
-
         const API_KEY = process.env.BOUNCIFY_API_KEY;
 
         const responseCredits = await axios.get(
@@ -38,6 +37,10 @@ exports.getCreditInfo = async (req, res) => {
       
     } catch (error) {
         Logs.error('Error fetching user credit info', error)
-        return res.status(500).json(Response.error('Error fetching user credit info', error))
+        return res.status(500).json({
+            status: "error",
+            message: error.message || "An unknown error occurred",
+            stack: error.stack
+        })
     }
 }

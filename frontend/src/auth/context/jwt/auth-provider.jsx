@@ -8,7 +8,7 @@ import { AuthContext } from '../auth-context';
 
 // ----------------------------------------------------------------------
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }) {  
   const dispatch = useDispatch();
 
   // Access user data and loading status from Redux

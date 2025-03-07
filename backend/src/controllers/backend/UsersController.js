@@ -152,6 +152,47 @@ module.exports = {
         }
     },
 
+    addTeamMember: async (req, res) => {
+        try {
+            const { email, shared_on, permission_type, folders = [] } = req.body;
+            const user_id = req.user.id; // Directly from req.user_id
+
+            console.log('All the user data', req.user)
+            
+    
+            // Validate input
+            if (!email || !permission_type) {
+                return res.status(400).json({ success: false, message: "Email and permission type are required" });
+            }
+    
+            // Find the user by ID
+            const user = await User.findOne({ user_id });
+    
+            if (!user) {
+                return res.status(404).json({ success: false, message: "User not found" });
+            }
+    
+            // Create the new team member object
+            const newTeamMember = {
+                email,
+                shared_on: shared_on || new Date(),
+                permission_type,
+                folders: folders || []
+            };
+    
+            // Add to the team_members array
+            user.team_members.push(newTeamMember);
+    
+            // Save the updated user document
+            await user.save();
+    
+            res.status(200).json({ success: true, message: "Team member added successfully", data: user.team_members });
+        } catch (error) {
+            console.error("Error adding team member:", error);
+            res.status(500).json({ success: false, message: "Internal server error" });
+        }
+    },
+
     /**
      * This method is use to delete a single record.
      * @param {*} req 

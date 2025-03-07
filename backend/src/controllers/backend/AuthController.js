@@ -232,14 +232,6 @@ module.exports = {
 
                     }
                 ));
-
-                // res.status(200).json(Response.success("Session is active", {
-                //     first_name: req.user.first_name,
-                //     last_name: req.user.last_name,
-                //     email: req.user.email
-
-                // }))
-
             }
             else {
                 res.status(401).json(Response.error("Session is not active"));

@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const CreditSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId, 
-        ref: 'User', 
+        ref: 'User',  
         required: true
     },
     total_credits: {
@@ -18,10 +18,21 @@ const CreditSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    timestamp:{ 
-        type: Date,
-        default: Date.now
+    credits_adding_history: {
+        type: [
+            {
+                amount_added: {
+                    type: Number,
+                    default: 100
+                },
+                timestamp: {
+                    type: Date,
+                    default: Date.now
+                }
+            }
+        ],
+        default: [{ amount_added: 100, timestamp: Date.now() }] 
     }
-})
+});
 
-module.exports = mongoose.model("CreditInfo", CreditSchema);
+module.exports = mongoose.model("CreditInfo", CreditSchema)

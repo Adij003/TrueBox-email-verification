@@ -5,6 +5,22 @@ const Helper = require('../utils/Helper');
 const userSchema = new mongoose.Schema({
     user_id: { type: String, required: true, unique: true },
     api: { type: mongoose.Schema.Types.Mixed, required: true },
+    team_members: [
+        {
+            email: { type: String, required: true },
+            shared_on: { type: Date, default: Date.now },
+            permission_type: { type: String, enum: ["read", "write"], required: true },
+            folders: { type: [String], default: [] } 
+        }
+    ],
+
+    shared_with_me: [
+        {
+            shared_by: { type: String, required: true },
+            shared_on: { type: Date, default: Date.now },
+            permission_type: { type: String, enum: ["read", "write"], required: true }
+        }
+    ],
     createdAt: {
         type: Date,
         default: Date.now
