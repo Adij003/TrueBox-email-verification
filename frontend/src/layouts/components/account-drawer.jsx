@@ -1,3 +1,4 @@
+import {  useSelector } from 'react-redux';
 import { useState, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
@@ -39,6 +40,7 @@ export function AccountDrawer({ data = [], sx, ...other }) {
   const router = useRouter();
 
   const pathname = usePathname();
+  const { user } = useSelector((state) => state.user);
 
   const [open, setOpen] = useState(false);
 
@@ -104,11 +106,11 @@ export function AccountDrawer({ data = [], sx, ...other }) {
             {renderAvatar}
 
             <Typography variant="subtitle1" noWrap sx={{ mt: 2 }}>
-              Ankit Mandli
+              {user.displayName}
             </Typography>
 
             <Typography variant="body2" sx={{ color: 'text.secondary', mt: 0.5 }} noWrap>
-              ankit.mandli@pabbly.com
+              {user.email}
             </Typography>
           </Stack>
 

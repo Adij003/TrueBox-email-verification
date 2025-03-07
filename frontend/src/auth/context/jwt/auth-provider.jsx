@@ -12,7 +12,7 @@ export function AuthProvider({ children }) {
   const dispatch = useDispatch();
 
   // Access user data and loading status from Redux
-  const { user, status } = useSelector((state) => state.user);
+  const { user, status } = useSelector((state) => state.user); 
  
   useEffect(() => {
     dispatch(fetchUserSession()); // Trigger the thunk to    the user session

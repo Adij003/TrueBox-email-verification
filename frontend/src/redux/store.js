@@ -8,7 +8,7 @@ export const store = configureStore({
   reducer: {
     fileUpload: fileUploadReducer,
     listName: listNameReducer,
-    user: userReducer,
+    user: userReducer, 
 
   },
 });
