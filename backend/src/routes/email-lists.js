@@ -6,7 +6,7 @@ const {
   checkBulkStatus, 
   downloadBulkResults,
   verifySingleEmail
-} = require("../controllers/backend/BulkEmailVerificationController");
+} = require("../controllers/backend/EmailVerificationController");
 
 
 

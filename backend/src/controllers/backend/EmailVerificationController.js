@@ -3,9 +3,8 @@ const FormData = require("form-data");
 const Logs = require("../../utils/Logs");
 const Response = require("../../utils/Response");
 const { Readable } = require("stream"); // Import Readable for buffer stream
-const BulkVerification = require("../../models/EmailVerification");
-const EmailVerification = require("../../models/EmailVerification");
-const CreditInfo = require("../../models/CreditSchema");
+const EmailVerification = require("../../models/email_verification");
+const CreditInfo = require("../../models/Credits");
 
 /**
  * Uploads a bulk email list for verification.
@@ -36,10 +35,10 @@ const CreditInfo = require("../../models/CreditSchema");
     console.log("the response from uploading bulk emails: ", response.data);
     const { job_id } = response.data;
 
-    const newBulkJob = new BulkVerification({
+    const newBulkJob = new EmailVerification({
+      type: "bulk",
       job_id,
       user_id: req.user.id,
-      type: "bulk",
     });
     await newBulkJob.save();
 
@@ -84,7 +83,7 @@ const CreditInfo = require("../../models/CreditSchema");
 
       const response = await axios.patch(url, data, { headers });
 
-      await BulkVerification.findOneAndUpdate(
+      await EmailVerification.findOneAndUpdate(
         { job_id },
         { status: "in-progress" }
       );
@@ -121,7 +120,7 @@ const CreditInfo = require("../../models/CreditSchema");
 
       const data = response.data;
 
-      await BulkVerification.findOneAndUpdate(
+      await EmailVerification.findOneAndUpdate(
         { job_id },
         {
           status: data.status,

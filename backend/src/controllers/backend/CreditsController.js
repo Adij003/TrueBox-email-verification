@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Logs = require("../../utils/Logs");
 const Response = require("../../utils/Response");
-const CreditInfo = require("../../models/CreditSchema");
+const CreditInfo = require("../../models/Credits");
 
 exports.getCreditInfo = async (req, res) => {
   try {

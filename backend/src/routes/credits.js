@@ -1,8 +1,8 @@
 const express = require("express");
-const {getCreditInfo} = require('../controllers/backend/CreditInfoController')
+const { getCreditInfo } = require("../controllers/backend/CreditsController");
 
 const router = express.Router();
 
-router.get("/", getCreditInfo)
+router.get("/", getCreditInfo);
 
 module.exports = router;

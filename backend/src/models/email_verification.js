@@ -12,11 +12,19 @@ const EmailVerificationSchema = new mongoose.Schema({
     required: true,
   },
   // Single Email Verification Fields
-  email: { type: String, required: function() { return this.type === "single"; } },
+  email: {
+    type: String,
+    required: function () {
+      return this.type === "single";
+    },
+    sparse: true,
+  },
   result: {
     type: String,
     enum: ["deliverable", "undeliverable", "accept-all", "unknown"],
-    required: function() { return this.type === "single"; },
+    required: function () {
+      return this.type === "single";
+    },
   },
   message: { type: String },
   user: { type: String },
@@ -29,8 +37,18 @@ const EmailVerificationSchema = new mongoose.Schema({
   success: { type: Boolean },
 
   // Bulk Email Verification Fields
-  job_id: { type: String, unique: true, required: function() { return this.type === "bulk"; } },
-  status: { type: String, enum: ["pending", "in-progress", "completed"], default: "pending" },
+  job_id: {
+    type: String,
+    unique: true,
+    required: function () {
+      return this.type === "bulk";
+    },
+  },
+  status: {
+    type: String,
+    enum: ["pending", "in-progress", "completed"],
+    default: "pending",
+  },
   credits_consumed: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   completedAt: { type: Date },
