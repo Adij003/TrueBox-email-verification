@@ -1,10 +1,32 @@
-import React from 'react';
+import {useEffect} from 'react';
+import {  useSelector, useDispatch } from 'react-redux';
 
-import { Box } from '@mui/material';
+import { Box } from '@mui/material'; 
+
+import { fetchCredits } from 'src/redux/slice/creditSlice'
 
 import StatsCards from 'src/components/stats-card/stats-card';
 
+
 export default function CreditStatsCards() {
+  const { credits, isCreditsLoading, isCreditsSuccess, isCreditsError, creditsMessage } = useSelector((state) => state.credits);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchCredits());
+  }, [dispatch]);
+
+  // const { credits_consumed, total_credits, credits_remaining } = credits?.data 
+  const { credits_consumed, total_credits, credits_remaining } = credits?.data || {};
+
+
+
+  console.log('credits consumed', credits_consumed)
+  console.log('credits total: ', total_credits)
+  console.log('credits remaining: ', credits_remaining)
+
+
   function calculateStats(allottedCredits, consumedCredits) {
     const remainingCredits = allottedCredits - consumedCredits;
     return {
@@ -43,7 +65,7 @@ export default function CreditStatsCards() {
       /> */}
       <StatsCards
         cardtitle="Email Credits Consumed"
-        cardstats={stats.consumed}
+        cardstats={credits_consumed}
         icon_name="Processed.svg"
         icon_color="#10CBF3"
         bg_gradient="#10CBF3"
@@ -51,7 +73,7 @@ export default function CreditStatsCards() {
       />
       <StatsCards
         cardtitle="Email Credits Remaining"
-        cardstats={stats.remaining}
+        cardstats={credits_remaining}
         icon_name="Complete.svg"
         icon_color="#1D88FA"
         bg_gradient="#1D88FA"
@@ -59,7 +81,7 @@ export default function CreditStatsCards() {
       />
       <StatsCards
         cardtitle="Total Number of Email Lists"
-        cardstats="100"
+        cardstats="1000"
         icon_name="list.svg"
         icon_color="#28a645"
         bg_gradient="#28a645"

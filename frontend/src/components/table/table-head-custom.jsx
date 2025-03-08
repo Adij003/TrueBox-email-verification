@@ -39,7 +39,7 @@ export function TableHeadCustom({
       <TableRow>
         {showCheckbox && onSelectAllRows && (
           <TableCell
-            hover
+            // hover
             padding="checkbox"
             sx={{
               borderWidth: 1,

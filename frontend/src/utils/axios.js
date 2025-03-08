@@ -40,5 +40,8 @@ export const endpoints = {
     signUp: '/auth/signup',
     logout: '/auth/logout'
   },
+  credits: {
+    getCredits: '/credits'
+  }
   
 };
