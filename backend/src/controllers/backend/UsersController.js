@@ -1,4 +1,4 @@
-const { User } = require("../../models");
+const  User  = require("../../models/User");
 const Logs = require("../../utils/Logs");
 const Response = require("../../utils/Response");
 const Helper = require("../../utils/Helper");

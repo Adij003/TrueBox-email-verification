@@ -43,6 +43,7 @@ const EmailVerificationSchema = new mongoose.Schema({
     required: function () {
       return this.type === "bulk";
     },
+    sparse: true,
   },
   status: {
     type: String,
@@ -70,4 +71,4 @@ const EmailVerificationSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("EmailVerification", EmailVerificationSchema);
+module.exports = mongoose.model("EmailList", EmailVerificationSchema);

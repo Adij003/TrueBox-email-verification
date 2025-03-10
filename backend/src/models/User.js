@@ -66,3 +66,5 @@ userSchema.statics.signUp = function(userId) {
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;
+
+

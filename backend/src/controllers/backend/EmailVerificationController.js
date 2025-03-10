@@ -3,7 +3,7 @@ const FormData = require("form-data");
 const Logs = require("../../utils/Logs");
 const Response = require("../../utils/Response");
 const { Readable } = require("stream"); // Import Readable for buffer stream
-const EmailVerification = require("../../models/email_verification");
+const EmailList = require("../../models/EmailList");
 const CreditInfo = require("../../models/Credits");
 
 /**
@@ -35,7 +35,7 @@ const CreditInfo = require("../../models/Credits");
     console.log("the response from uploading bulk emails: ", response.data);
     const { job_id } = response.data;
 
-    const newBulkJob = new EmailVerification({
+    const newBulkJob = new EmailList({
       type: "bulk",
       job_id,
       user_id: req.user.id,
@@ -83,10 +83,7 @@ const CreditInfo = require("../../models/Credits");
 
       const response = await axios.patch(url, data, { headers });
 
-      await EmailVerification.findOneAndUpdate(
-        { job_id },
-        { status: "in-progress" }
-      );
+      await EmailList.findOneAndUpdate({ job_id }, { status: "in-progress" });
 
       return res
         .status(200)
@@ -120,7 +117,7 @@ const CreditInfo = require("../../models/Credits");
 
       const data = response.data;
 
-      await EmailVerification.findOneAndUpdate(
+      await EmailList.findOneAndUpdate(
         { job_id },
         {
           status: data.status,
@@ -205,17 +202,28 @@ const CreditInfo = require("../../models/Credits");
       const API_KEY = process.env.BOUNCIFY_API_KEY;
 
       // Check if email was already verified to avoid unnecessary API calls
-      const existingVerification = await EmailVerification.findOne({
-        email,
-        type: "single",
+      const existingVerification = await EmailList.findOne({
+        email: { $regex: new RegExp(`^${email}$`, "i") }, // Case-insensitive match
       });
 
+      console.log(
+        "We are reaching here, single email verification: ",
+        existingVerification
+      );
+
       if (existingVerification) {
+        console.log("Email found in cache: ", existingVerification);
+
         const responseCredits = await axios.get(
           `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
         );
         const availableCredits =
           responseCredits.data.credits_info.credits_remaining;
+
+        console.log(
+          "response credits, total available credits: ",
+          availableCredits
+        );
 
         return res.status(200).json({
           success: true,
@@ -232,7 +240,7 @@ const CreditInfo = require("../../models/Credits");
       const data = response.data;
 
       // Create a new verification record
-      const emailVerification = new EmailVerification({
+      const newEmailVerificationRecord = new EmailList({
         user_id: req.user.id,
         type: "single", // Hardcoded type
         email: data.email,
@@ -248,17 +256,12 @@ const CreditInfo = require("../../models/Credits");
         success: data.success,
       });
 
-      await emailVerification.save();
+      await newEmailVerificationRecord.save();
 
       // Fetch updated credit info
       const responseCredits = await axios.get(
         `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
       );
-
-      console.log(
-        "Updated credit response:",
-        responseCredits.data.credits_info.credits_remaining
-      ); // Debugging
 
       // Update user's credit info
       const updatedCreditInfo = await CreditInfo.findOneAndUpdate(
@@ -273,13 +276,11 @@ const CreditInfo = require("../../models/Credits");
         { new: true, upsert: true } // Return the updated document, create one if not found
       );
 
-      console.log("Updated Credit Info:", updatedCreditInfo);
-
       // Return response
       return res.status(200).json({
         success: true,
         message: "Email verification successful",
-        data: emailVerification,
+        data: newEmailVerificationRecord,
         updatedCreditInfo,
       });
     } catch (error) {
