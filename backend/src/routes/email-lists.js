@@ -13,7 +13,7 @@ const {
 const router = express.Router();
 const upload  = require("../middlewares/multer");
 
-router.post('/upload-bulk-email', upload.single('csv_file'), uploadBulkEmails);
+router.post('/upload-bulk', upload.single('csv_file'), uploadBulkEmails);
 
 
 router.patch("/verify/bulk/:job_id", startBulkVerification); 
