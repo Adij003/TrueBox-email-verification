@@ -5,7 +5,7 @@ const Helper = require('../utils/Helper');
 const userSchema = new mongoose.Schema({
     user_id: { type: String, required: true, unique: true },
     api: { type: mongoose.Schema.Types.Mixed, required: true },
-    team_members: [
+    teamMembers: [
         {
             email: { type: String, required: true },
             shared_on: { type: Date, default: Date.now },
@@ -13,8 +13,7 @@ const userSchema = new mongoose.Schema({
             folders: { type: [String], default: [] } 
         }
     ],
-
-    shared_with_me: [
+    sharedWithMe: [
         {
             shared_by: { type: String, required: true },
             shared_on: { type: Date, default: Date.now },

@@ -209,8 +209,8 @@ module.exports = {
         folders: folders || [],
       };
 
-      // Add to the team_members array
-      user.team_members.push(newTeamMember);
+      // Add to the teamMembers array
+      user.teamMembers.push(newTeamMember);
 
       // Save the updated user document
       await user.save();
@@ -220,7 +220,7 @@ module.exports = {
         .json({
           success: true,
           message: "Team member added successfully",
-          data: user.team_members,
+          data: user.teamMembers,
         });
     } catch (error) {
       console.error("Error adding team member:", error);

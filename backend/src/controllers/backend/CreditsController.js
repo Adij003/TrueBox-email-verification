@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Logs = require("../../utils/Logs");
 const Response = require("../../utils/Response");
-const CreditInfo = require("../../models/Credits");
+const Credit = require("../../models/Credit");
 
 exports.getCreditInfo = async (req, res) => {
   try {
@@ -11,13 +11,14 @@ exports.getCreditInfo = async (req, res) => {
       `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
     );
 
-    console.log("the credit response with data is: ", responseCredits.data); // for debugging
+    // console.log("the credit response with data is: ", responseCredits.data); // for debugging
 
-    let userCreditInfo = await CreditInfo.findOne({ user_id: req.user.id });
+    let userCreditInfo = await Credit.findOne({ user_id: req.user.id });
+    // console.log('Credits data: ', responseCredits.data.credits_info.credits_remaining)
 
     if (!userCreditInfo) {
       // If no record exists, create a new one with default total_credits (100)
-      userCreditInfo = new CreditInfo({
+      userCreditInfo = new Credit({
         user_id: req.user.id,
         total_credits: 100, // Default total credits
         credits_remaining: responseCredits.data.credits_info.credits_remaining,

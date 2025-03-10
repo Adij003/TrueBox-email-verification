@@ -4,7 +4,7 @@ const Logs = require("../../utils/Logs");
 const Response = require("../../utils/Response");
 const { Readable } = require("stream"); // Import Readable for buffer stream
 const EmailList = require("../../models/EmailList");
-const CreditInfo = require("../../models/Credits");
+const Credit = require("../../models/Credit");
 
 /**
  * Uploads a bulk email list for verification.
@@ -35,14 +35,21 @@ const CreditInfo = require("../../models/Credits");
     console.log("the response from uploading bulk emails: ", response.data);
     const { job_id } = response.data;
 
+    let userCreditInfo = await Credit.findOne({ user_id: req.user.id });
+    const previousUserCredit = userCreditInfo.credits_remaining;
+
+    console.log('The previous user credits: ', previousUserCredit)
+
     const newBulkJob = new EmailList({
       type: "bulk",
       job_id,
       user_id: req.user.id,
+      previousCredits: previousUserCredit
     });
     await newBulkJob.save();
 
     console.log("New Bulk Job that i have saved: ", newBulkJob);
+    
 
     return res
       .status(200)
@@ -73,9 +80,7 @@ const CreditInfo = require("../../models/Credits");
       if (!job_id) {
         return res.status(400).json(Response.error("job_id is required"));
       }
-
-      Logs.info("job_id is: ", job_id);
-
+      
       const API_KEY = process.env.BOUNCIFY_API_KEY;
       const url = `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`;
       const headers = { "Content-Type": "application/json" };
@@ -102,44 +107,145 @@ const CreditInfo = require("../../models/Credits");
    * @returns {Object} JSON response with the job status and details.
    */
 
-  (exports.checkBulkStatus = async (req, res) => {
+  // (exports.checkBulkStatus = async (req, res) => {
+  //   try {
+  //     const { job_id } = req.params;
+
+  //     if (!job_id) {
+  //       return res.status(400).json(Response.error("Job_id is required..."));
+  //     }
+
+  //     const API_KEY = process.env.BOUNCIFY_API_KEY;
+  //     const response = await axios.get(
+  //       `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`
+  //     );
+
+  //     const data = response.data;
+
+  //     let updatedRecord;
+   
+      
+
+  //     if(data.status === 'completed'){
+
+  //       const responseCredits = await axios.get(
+  //         `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
+  //       );
+  //       const newUserCredits = responseCredits.data.credits_info.credits_remaining
+  //       console.log('updated credits after process is completed: ', newUserCredits)
+
+  //       const bulkEmailData = await EmailList.findOne({job_id})
+  //       console.log('showing users bulk email previous credits', bulkEmailData.previousCredits)
+  //       const creditDiff = bulkEmailData.previousCredits - newUserCredits;
+  //       updatedRecord = await EmailList.findOneAndUpdate(
+  //         { job_id },
+  //         {
+  //           status: data.status,
+  //           total: data.total,
+  //           verified: data.verified,
+  //           pending: data.pending,
+  //           creditsConsumed: creditDiff,
+  //           analysis: data.analysis,
+  //           results: data.results,  
+  //           completedAt: data.status === "completed" ? new Date() : null,
+  //         },
+  //         { new: true }
+  //       );
+
+  //     } else {
+        
+  //       updatedRecord = await EmailList.findOneAndUpdate(
+  //         { job_id },
+  //         {
+  //           status: data.status,
+  //           total: data.total,
+  //           verified: data.verified,
+  //           pending: data.pending,
+  //           analysis: data.analysis,
+  //           results: data.results,
+  //           completedAt: data.status === "completed" ? new Date() : null,
+  //         },
+  //         { new: true }
+  //       );
+  //     }
+
+  //     return res
+  //       .status(200)
+  //       .json(Response.success('"Bulk job status retrieved: ', updatedRecord ));
+  //   } catch (error) {
+  //     Logs.error("Error checking status of bulk emails", error);
+  //     return res
+  //       .status(500)
+  //       .json(Response.error("Error in checking job", error));
+  //   }
+  // }),
+
+  exports.checkBulkStatus = async (req, res) => {
     try {
       const { job_id } = req.params;
-
+  
       if (!job_id) {
         return res.status(400).json(Response.error("Job_id is required..."));
       }
-
+  
       const API_KEY = process.env.BOUNCIFY_API_KEY;
       const response = await axios.get(
         `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`
       );
-
+  
       const data = response.data;
-
-      await EmailList.findOneAndUpdate(
+      let updateFields = {
+        status: data.status,
+        total: data.total,
+        verified: data.verified,
+        pending: data.pending,
+        analysis: data.analysis,
+        results: data.results,
+        completedAt: data.status === "completed" ? new Date() : null,
+      };
+  
+      if (data.status === "completed") {
+        const responseCredits = await axios.get(
+          `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
+        );
+        const newUserCredits = responseCredits.data.credits_info.credits_remaining;
+        console.log("updated credits after process is completed:", newUserCredits);
+  
+        // Use findOneAndUpdate with aggregation to avoid extra query
+        const updatedRecord = await EmailList.findOneAndUpdate(
+          { job_id },
+          [
+            {
+              $set: updateFields,
+            },
+            {
+              $set: {
+                creditsConsumed: {
+                  $subtract: ["$previousCredits", newUserCredits], // Calculate in MongoDB query itself
+                },
+              },
+            },
+          ],
+          { new: true }
+        );
+  
+        return res.status(200).json(Response.success("Bulk job status retrieved", updatedRecord));
+      }
+  
+      // Update without creditsConsumed calculation if status is not 'completed'
+      const updatedRecord = await EmailList.findOneAndUpdate(
         { job_id },
-        {
-          status: data.status,
-          total: data.total,
-          verified: data.verified,
-          pending: data.pending,
-          analysis: data.analysis,
-          results: data.results,
-          completedAt: data.status === "completed" ? new Date() : null,
-        }
+        updateFields,
+        { new: true }
       );
-
-      return res
-        .status(200)
-        .json(Response.success('"Bulk job status retrieved: ', data));
+  
+      return res.status(200).json(Response.success("Bulk job status retrieved", updatedRecord));
     } catch (error) {
       Logs.error("Error checking status of bulk emails", error);
-      return res
-        .status(500)
-        .json(Response.error("Error in checking job", error));
+      return res.status(500).json(Response.error("Error in checking job", error));
     }
-  }),
+  };
+  
   /**
    * Downloads the results of a completed bulk email verification job.
    * @param {Object} req - Express request object containing job_id in params.
@@ -248,9 +354,9 @@ const CreditInfo = require("../../models/Credits");
         message: data.message,
         user: data.user,
         domain: data.domain,
-        accept_all: data.accept_all,
+        acceptAll: data.accept_all,
         role: data.role,
-        free_email: data.free_email,
+        freeEmail: data.free_email,
         disposable: data.disposable,
         spamtrap: data.spamtrap,
         success: data.success,
@@ -264,7 +370,7 @@ const CreditInfo = require("../../models/Credits");
       );
 
       // Update user's credit info
-      const updatedCreditInfo = await CreditInfo.findOneAndUpdate(
+      const updatedCreditInfo = await Credit.findOneAndUpdate(
         { user_id: req.user.id },
         {
           $inc: { credits_consumed: 1 }, // Increment credits consumed by 1

@@ -29,9 +29,9 @@ const EmailVerificationSchema = new mongoose.Schema({
   message: { type: String },
   user: { type: String },
   domain: { type: String },
-  accept_all: { type: Number },
+  acceptAll: { type: Number },
   role: { type: Number },
-  free_email: { type: Number },
+  freeEmail: { type: Number },
   disposable: { type: Number },
   spamtrap: { type: Number },
   success: { type: Boolean },
@@ -50,7 +50,9 @@ const EmailVerificationSchema = new mongoose.Schema({
     enum: ["pending", "in-progress", "completed"],
     default: "pending",
   },
-  credits_consumed: { type: Number, default: 0 },
+  previousCredits: { type: Number, default: 0 },
+
+  creditsConsumed: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   completedAt: { type: Date },
   total: { type: Number },
@@ -66,7 +68,7 @@ const EmailVerificationSchema = new mongoose.Schema({
   results: {
     deliverable: { type: Number, default: 0 },
     undeliverable: { type: Number, default: 0 },
-    accept_all: { type: Number, default: 0 },
+    acceptAll: { type: Number, default: 0 },
     unknown: { type: Number, default: 0 },
   },
 });
