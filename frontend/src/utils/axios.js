@@ -42,6 +42,13 @@ export const endpoints = {
   },
   credits: {
     getCredits: '/credits'
+  },
+  emailList: {
+    uploadBulkEmail: '/upload-bulk',
+    startBulkVerification: (jobId) => `/verify/bulk/${jobId}`,
+    checkBulkStatus: (jobId) => `/status/${jobId}`,
+    downloadBulkResults: (jobId) => `/download/${jobId}`,
+    verifySingleEmail: '/verify/single',
   }
   
 };

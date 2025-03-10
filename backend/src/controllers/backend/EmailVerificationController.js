@@ -18,6 +18,12 @@ const Credit = require("../../models/Credit");
       return res.status(400).json(Response.error("CSV file is required"));
     }
 
+    const { emailListName } = req.body;
+
+    if (!emailListName) {
+      return res.status(400).json(Response.error("Email list name is required"));
+    }
+
     const fileStream = new Readable();
     fileStream.push(req.file.buffer);
     fileStream.push(null);
@@ -32,24 +38,20 @@ const Credit = require("../../models/Credit");
       { headers: formData.getHeaders() }
     );
 
-    console.log("the response from uploading bulk emails: ", response.data);
     const { job_id } = response.data;
 
     let userCreditInfo = await Credit.findOne({ user_id: req.user.id });
     const previousUserCredit = userCreditInfo.credits_remaining;
-
-    console.log('The previous user credits: ', previousUserCredit)
+    console.log('Previous credits: ', previousUserCredit)
 
     const newBulkJob = new EmailList({
       type: "bulk",
       job_id,
       user_id: req.user.id,
-      previousCredits: previousUserCredit
+      emailListName,
+      previousCredits: previousUserCredit,
     });
     await newBulkJob.save();
-
-    console.log("New Bulk Job that i have saved: ", newBulkJob);
-    
 
     return res
       .status(200)
@@ -66,6 +68,7 @@ const Credit = require("../../models/Credit");
       .json(Response.error("Error in uploading bulk email", error));
   }
 }),
+
   /**
    * Starts bulk email verification for a given job ID.
    * @param {Object} req - Express request object containing job_id in params.
@@ -76,11 +79,10 @@ const Credit = require("../../models/Credit");
   (exports.startBulkVerification = async (req, res) => {
     try {
       const { job_id } = req.params;
-
       if (!job_id) {
         return res.status(400).json(Response.error("job_id is required"));
       }
-      
+
       const API_KEY = process.env.BOUNCIFY_API_KEY;
       const url = `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`;
       const headers = { "Content-Type": "application/json" };
@@ -100,6 +102,7 @@ const Credit = require("../../models/Credit");
         .json(Response.error("Error in starting email verification", error));
     }
   }),
+
   /**
    * Checks the status of a bulk email verification job.
    * @param {Object} req - Express request object containing job_id in params.
@@ -107,92 +110,19 @@ const Credit = require("../../models/Credit");
    * @returns {Object} JSON response with the job status and details.
    */
 
-  // (exports.checkBulkStatus = async (req, res) => {
-  //   try {
-  //     const { job_id } = req.params;
-
-  //     if (!job_id) {
-  //       return res.status(400).json(Response.error("Job_id is required..."));
-  //     }
-
-  //     const API_KEY = process.env.BOUNCIFY_API_KEY;
-  //     const response = await axios.get(
-  //       `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`
-  //     );
-
-  //     const data = response.data;
-
-  //     let updatedRecord;
-   
-      
-
-  //     if(data.status === 'completed'){
-
-  //       const responseCredits = await axios.get(
-  //         `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
-  //       );
-  //       const newUserCredits = responseCredits.data.credits_info.credits_remaining
-  //       console.log('updated credits after process is completed: ', newUserCredits)
-
-  //       const bulkEmailData = await EmailList.findOne({job_id})
-  //       console.log('showing users bulk email previous credits', bulkEmailData.previousCredits)
-  //       const creditDiff = bulkEmailData.previousCredits - newUserCredits;
-  //       updatedRecord = await EmailList.findOneAndUpdate(
-  //         { job_id },
-  //         {
-  //           status: data.status,
-  //           total: data.total,
-  //           verified: data.verified,
-  //           pending: data.pending,
-  //           creditsConsumed: creditDiff,
-  //           analysis: data.analysis,
-  //           results: data.results,  
-  //           completedAt: data.status === "completed" ? new Date() : null,
-  //         },
-  //         { new: true }
-  //       );
-
-  //     } else {
-        
-  //       updatedRecord = await EmailList.findOneAndUpdate(
-  //         { job_id },
-  //         {
-  //           status: data.status,
-  //           total: data.total,
-  //           verified: data.verified,
-  //           pending: data.pending,
-  //           analysis: data.analysis,
-  //           results: data.results,
-  //           completedAt: data.status === "completed" ? new Date() : null,
-  //         },
-  //         { new: true }
-  //       );
-  //     }
-
-  //     return res
-  //       .status(200)
-  //       .json(Response.success('"Bulk job status retrieved: ', updatedRecord ));
-  //   } catch (error) {
-  //     Logs.error("Error checking status of bulk emails", error);
-  //     return res
-  //       .status(500)
-  //       .json(Response.error("Error in checking job", error));
-  //   }
-  // }),
-
-  exports.checkBulkStatus = async (req, res) => {
+  (exports.checkBulkStatus = async (req, res) => {
     try {
       const { job_id } = req.params;
-  
+
       if (!job_id) {
         return res.status(400).json(Response.error("Job_id is required..."));
       }
-  
+
       const API_KEY = process.env.BOUNCIFY_API_KEY;
       const response = await axios.get(
         `https://api.bouncify.io/v1/bulk/${job_id}?apikey=${API_KEY}`
       );
-  
+
       const data = response.data;
       let updateFields = {
         status: data.status,
@@ -203,15 +133,13 @@ const Credit = require("../../models/Credit");
         results: data.results,
         completedAt: data.status === "completed" ? new Date() : null,
       };
-  
+
       if (data.status === "completed") {
         const responseCredits = await axios.get(
           `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
         );
         const newUserCredits = responseCredits.data.credits_info.credits_remaining;
-        console.log("updated credits after process is completed:", newUserCredits);
-  
-        // Use findOneAndUpdate with aggregation to avoid extra query
+        console.log('new user current credits are: ', newUserCredits)
         const updatedRecord = await EmailList.findOneAndUpdate(
           { job_id },
           [
@@ -221,77 +149,75 @@ const Credit = require("../../models/Credit");
             {
               $set: {
                 creditsConsumed: {
-                  $subtract: ["$previousCredits", newUserCredits], // Calculate in MongoDB query itself
+                  $subtract: ["$previousCredits", newUserCredits],
                 },
               },
             },
           ],
           { new: true }
         );
-  
-        return res.status(200).json(Response.success("Bulk job status retrieved", updatedRecord));
+        
+        return res
+          .status(200)
+          .json(Response.success("Bulk job status retrieved", updatedRecord));
       }
-  
-      // Update without creditsConsumed calculation if status is not 'completed'
+
       const updatedRecord = await EmailList.findOneAndUpdate(
         { job_id },
         updateFields,
         { new: true }
       );
-  
-      return res.status(200).json(Response.success("Bulk job status retrieved", updatedRecord));
+
+      return res
+        .status(200)
+        .json(Response.success("Bulk job status retrieved", updatedRecord));
     } catch (error) {
       Logs.error("Error checking status of bulk emails", error);
-      return res.status(500).json(Response.error("Error in checking job", error));
-    }
-  };
-  
-  /**
-   * Downloads the results of a completed bulk email verification job.
-   * @param {Object} req - Express request object containing job_id in params.
-   * @param {Object} res - Express response object.
-   * @returns {Object} CSV file as response stream if successful.
-   */
-  (exports.downloadBulkResults = async (req, res) => {
-    try {
-      const { job_id } = req.params;
-
-      if (!job_id) {
-        return res.status(400).json(Response.error("Job_id is required..."));
-      }
-
-      const API_KEY = process.env.BOUNCIFY_API_KEY;
-      const response = await axios.post(
-        `https://api.bouncify.io/v1/download?jobId=${job_id}&apikey=${API_KEY}`,
-        {
-          filterResult: [
-            "deliverable",
-            "undeliverable",
-            "accept_all",
-            "unknown",
-          ],
-        },
-        { responseType: "stream" }
-      );
-
-      res.setHeader(
-        "Content-Disposition",
-        `attachment; filename=${job_id}.csv`
-      );
-      res.setHeader("Content-Type", "text/csv");
-
-      response.data.pipe(res);
-    } catch (error) {
-      console.error(
-        "Error downloading results:",
-        error.response?.data || error.message
-      );
-      Logs.error("Error in downloading data", error);
       return res
         .status(500)
-        .json(Response.error("Error in downloading data", error));
+        .json(Response.error("Error in checking job", error.message));
     }
-  }),
+  });
+
+/**
+ * Downloads the results of a completed bulk email verification job.
+ * @param {Object} req - Express request object containing job_id in params.
+ * @param {Object} res - Express response object.
+ * @returns {Object} CSV file as response stream if successful.
+ */
+(exports.downloadBulkResults = async (req, res) => {
+  try {
+    const { job_id } = req.params;
+
+    if (!job_id) {
+      return res.status(400).json(Response.error("Job_id is required..."));
+    }
+
+    const API_KEY = process.env.BOUNCIFY_API_KEY;
+    const response = await axios.post(
+      `https://api.bouncify.io/v1/download?jobId=${job_id}&apikey=${API_KEY}`,
+      {
+        filterResult: ["deliverable", "undeliverable", "accept_all", "unknown"],
+      },
+      { responseType: "stream" }
+    );
+
+    res.setHeader("Content-Disposition", `attachment; filename=${job_id}.csv`);
+    res.setHeader("Content-Type", "text/csv");
+
+    response.data.pipe(res);
+  } catch (error) {
+    console.error(
+      "Error downloading results:",
+      error.response?.data || error.message
+    );
+    Logs.error("Error in downloading data", error);
+    return res
+      .status(500)
+      .json(Response.error("Error in downloading data", error));
+  }
+}),
+
   /**
    * Verifies an email using the Bouncify API. If the email was previously verified,
    * returns the cached result; otherwise, it makes an API request, saves the result,
@@ -312,24 +238,13 @@ const Credit = require("../../models/Credit");
         email: { $regex: new RegExp(`^${email}$`, "i") }, // Case-insensitive match
       });
 
-      console.log(
-        "We are reaching here, single email verification: ",
-        existingVerification
-      );
-
       if (existingVerification) {
-        console.log("Email found in cache: ", existingVerification);
 
         const responseCredits = await axios.get(
           `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
         );
         const availableCredits =
           responseCredits.data.credits_info.credits_remaining;
-
-        console.log(
-          "response credits, total available credits: ",
-          availableCredits
-        );
 
         return res.status(200).json({
           success: true,
@@ -400,4 +315,27 @@ const Credit = require("../../models/Credit");
         error: error.response?.data || error.message,
       });
     }
-  });
+  }),
+  (
+    exports.getAllEmailLists = async (req, res) => {
+      try {
+        const { type } = req.query; // (optional)
+    
+        let filter = { user_id: req.user.id }; 
+    
+        if (type) {
+          if (!["single", "bulk"].includes(type)) {
+            return res.status(400).json(Response.error("Invalid type. Use 'single' or 'bulk'"));
+          }
+          filter.type = type;
+        }
+    
+        const emailLists = await EmailList.find(filter).sort({ createdAt: -1 }); 
+    
+        return res.status(200).json(Response.success("Email lists fetched successfully", emailLists));
+      } catch (error) {
+        Logs.error("Error fetching email lists", error);
+        return res.status(500).json(Response.error("Error fetching email lists", error));
+      }
+    }
+  );

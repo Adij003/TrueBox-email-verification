@@ -35,7 +35,7 @@ const EmailVerificationSchema = new mongoose.Schema({
   disposable: { type: Number },
   spamtrap: { type: Number },
   success: { type: Boolean },
-
+  
   // Bulk Email Verification Fields
   job_id: {
     type: String,
@@ -50,8 +50,9 @@ const EmailVerificationSchema = new mongoose.Schema({
     enum: ["pending", "in-progress", "completed"],
     default: "pending",
   },
+  emailListName: { type: String },
+  
   previousCredits: { type: Number, default: 0 },
-
   creditsConsumed: { type: Number, default: 0 },
   createdAt: { type: Date, default: Date.now },
   completedAt: { type: Date },

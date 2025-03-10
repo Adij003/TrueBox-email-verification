@@ -18,10 +18,10 @@ const CreditSchema = new mongoose.Schema({
     type: Number,
     default: 0,
   },
-  credits_adding_history: {
+  creditsAddingHistory: {
     type: [
       {
-        amount_added: {
+        amountAdded: {
           type: Number,
           default: 100,
         },
@@ -31,7 +31,7 @@ const CreditSchema = new mongoose.Schema({
         },
       },
     ],
-    default: [{ amount_added: 100, timestamp: Date.now() }],
+    default: [{ amountAdded: 100, timestamp: Date.now() }],
   },
 });
 

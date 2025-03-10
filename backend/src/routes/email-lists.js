@@ -6,6 +6,7 @@ const {
   checkBulkStatus,
   downloadBulkResults,
   verifySingleEmail,
+  getAllEmailLists
 } = require("../controllers/backend/EmailVerificationController");
 
 const router = express.Router();
@@ -17,5 +18,6 @@ router.patch("/verify/bulk/:job_id", startBulkVerification);
 router.get("/status/:job_id", checkBulkStatus);
 router.post("/download/:job_id", downloadBulkResults);
 router.post("/verify/single", verifySingleEmail);
+router.get("/", getAllEmailLists )
 
 module.exports = router;

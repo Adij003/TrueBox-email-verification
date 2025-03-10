@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import axios, { endpoints } from 'src/utils/axios';
 
-const initialState = {
+const initialState = { 
   credits: null,
   isCreditsLoading: false,
   isCreditsSuccess: false,

@@ -80,9 +80,9 @@ export default function CreditStatsCards() {
         tooltipTittle="Number of emails credits remaining in your account."
       />
       <StatsCards
-        cardtitle="Total Number of Email Lists"
-        cardstats="1000"
-        icon_name="list.svg"
+        cardtitle="Total Number of Credits Alloted"
+        cardstats={total_credits}
+        icon_name="2card.png"
         icon_color="#28a645"
         bg_gradient="#28a645"
         tooltipTittle="Number of email lists uploaded in your account."
