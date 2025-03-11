@@ -42,10 +42,6 @@ exports.getCreditInfo = async (req, res) => {
       );
   } catch (error) {
     Logs.error("Error fetching user credit info", error);
-    return res.status(500).json({
-      status: "error",
-      message: error.message || "An unknown error occurred",
-      stack: error.stack,
-    });
+    return res.status(500).json(Response.error('Error in fetching user credit details', error));
   }
 };

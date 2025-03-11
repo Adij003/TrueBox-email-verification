@@ -21,7 +21,9 @@ const Credit = require("../../models/Credit");
     const { emailListName } = req.body;
 
     if (!emailListName) {
-      return res.status(400).json(Response.error("Email list name is required"));
+      return res
+        .status(400)
+        .json(Response.error("Email list name is required"));
     }
 
     const fileStream = new Readable();
@@ -42,7 +44,6 @@ const Credit = require("../../models/Credit");
 
     let userCreditInfo = await Credit.findOne({ user_id: req.user.id });
     const previousUserCredit = userCreditInfo.credits_remaining;
-    console.log('Previous credits: ', previousUserCredit)
 
     const newBulkJob = new EmailList({
       type: "bulk",
@@ -68,7 +69,6 @@ const Credit = require("../../models/Credit");
       .json(Response.error("Error in uploading bulk email", error));
   }
 }),
-
   /**
    * Starts bulk email verification for a given job ID.
    * @param {Object} req - Express request object containing job_id in params.
@@ -102,7 +102,6 @@ const Credit = require("../../models/Credit");
         .json(Response.error("Error in starting email verification", error));
     }
   }),
-
   /**
    * Checks the status of a bulk email verification job.
    * @param {Object} req - Express request object containing job_id in params.
@@ -138,8 +137,8 @@ const Credit = require("../../models/Credit");
         const responseCredits = await axios.get(
           `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
         );
-        const newUserCredits = responseCredits.data.credits_info.credits_remaining;
-        console.log('new user current credits are: ', newUserCredits)
+        const newUserCredits =
+          responseCredits.data.credits_info.credits_remaining;
         const updatedRecord = await EmailList.findOneAndUpdate(
           { job_id },
           [
@@ -156,7 +155,7 @@ const Credit = require("../../models/Credit");
           ],
           { new: true }
         );
-        
+
         return res
           .status(200)
           .json(Response.success("Bulk job status retrieved", updatedRecord));
@@ -217,7 +216,6 @@ const Credit = require("../../models/Credit");
       .json(Response.error("Error in downloading data", error));
   }
 }),
-
   /**
    * Verifies an email using the Bouncify API. If the email was previously verified,
    * returns the cached result; otherwise, it makes an API request, saves the result,
@@ -239,7 +237,6 @@ const Credit = require("../../models/Credit");
       });
 
       if (existingVerification) {
-
         const responseCredits = await axios.get(
           `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
         );
@@ -263,7 +260,7 @@ const Credit = require("../../models/Credit");
       // Create a new verification record
       const newEmailVerificationRecord = new EmailList({
         user_id: req.user.id,
-        type: "single", // Hardcoded type
+        type: "single",
         email: data.email,
         result: data.result,
         message: data.message,
@@ -271,6 +268,7 @@ const Credit = require("../../models/Credit");
         domain: data.domain,
         acceptAll: data.accept_all,
         role: data.role,
+        creditsConsumed: 1,
         freeEmail: data.free_email,
         disposable: data.disposable,
         spamtrap: data.spamtrap,
@@ -316,26 +314,38 @@ const Credit = require("../../models/Credit");
       });
     }
   }),
-  (
-    exports.getAllEmailLists = async (req, res) => {
-      try {
-        const { type } = req.query; // (optional)
-    
-        let filter = { user_id: req.user.id }; 
-    
-        if (type) {
-          if (!["single", "bulk"].includes(type)) {
-            return res.status(400).json(Response.error("Invalid type. Use 'single' or 'bulk'"));
-          }
-          filter.type = type;
+
+  /**
+   * Gets all Email-lists including single, bulk or both
+   *
+   *@param {Object} req - object containing user details and optional type, single or bulk
+   * @param {Object} res - response object.
+   * @returns {Object} JSON response with the list of emails or an error message.
+   */
+  (exports.getAllEmailLists = async (req, res) => {
+    try {
+      const { type } = req.query; // (optional)
+
+      let filter = { user_id: req.user.id };
+
+      if (type) {
+        if (!["single", "bulk"].includes(type)) {
+          return res
+            .status(400)
+            .json(Response.error("Invalid type. Use 'single' or 'bulk'"));
         }
-    
-        const emailLists = await EmailList.find(filter).sort({ createdAt: -1 }); 
-    
-        return res.status(200).json(Response.success("Email lists fetched successfully", emailLists));
-      } catch (error) {
-        Logs.error("Error fetching email lists", error);
-        return res.status(500).json(Response.error("Error fetching email lists", error));
+        filter.type = type;
       }
+
+      const emailLists = await EmailList.find(filter).sort({ createdAt: -1 });
+
+      return res
+        .status(200)
+        .json(Response.success("Email lists fetched successfully", emailLists));
+    } catch (error) {
+      Logs.error("Error fetching email lists", error);
+      return res
+        .status(500)
+        .json(Response.error("Error fetching email lists", error));
     }
-  );
+  });
