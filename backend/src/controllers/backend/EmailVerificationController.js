@@ -314,7 +314,6 @@ const Credit = require("../../models/Credit");
       });
     }
   }),
-
   /**
    * Gets all Email-lists including single, bulk or both
    *
@@ -324,7 +323,7 @@ const Credit = require("../../models/Credit");
    */
   (exports.getAllEmailLists = async (req, res) => {
     try {
-      const { type } = req.query; // (optional)
+      const { type, page = 1, limit = 5 } = req.query;
 
       let filter = { user_id: req.user.id };
 
@@ -337,11 +336,30 @@ const Credit = require("../../models/Credit");
         filter.type = type;
       }
 
-      const emailLists = await EmailList.find(filter).sort({ createdAt: -1 });
+      const itemsPerPage = Math.min(Math.max(parseInt(limit), 1), 100);
+      const skip = (Math.max(parseInt(page), 1) - 1) * itemsPerPage;
 
-      return res
-        .status(200)
-        .json(Response.success("Email lists fetched successfully", emailLists));
+      const [emailLists, totalCount] = await Promise.all([
+        EmailList.find(filter)
+          .sort({ createdAt: -1 })
+          .skip(skip)
+          .limit(itemsPerPage),
+        EmailList.countDocuments(filter),
+      ]);
+
+      const totalPages = Math.ceil(totalCount / itemsPerPage);
+
+      return res.status(200).json(
+        Response.success("Email lists fetched successfully", {
+          emailLists,
+          pagination: {
+            currentPage: Number(page),
+            totalPages,
+            totalItems: totalCount,
+            itemsPerPage,
+          },
+        })
+      );
     } catch (error) {
       Logs.error("Error fetching email lists", error);
       return res

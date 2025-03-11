@@ -35,4 +35,4 @@ const CreditSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("CreditInfo", CreditSchema);
+module.exports = mongoose.model("Credits", CreditSchema);
