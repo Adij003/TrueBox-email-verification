@@ -53,7 +53,7 @@ export const signUp = async ({ email, password, first_name, last_name }) => {
 export const signOut = async () => {
   try {
     const res = await axios.get(endpoints.auth.logout);
-
+    
     const logoutResponse = res.data;
 
     if (logoutResponse.status !== 'success') {

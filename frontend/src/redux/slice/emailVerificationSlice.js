@@ -117,7 +117,6 @@ export const downloadBulkResults = createAsyncThunk(
   }
 );
 
-
 export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', async (emailData, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.post(endpoints.emailList.verifySingleEmail, emailData);
@@ -130,22 +129,33 @@ export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', as
 export const fetchEmailLists = createAsyncThunk(
   "emails/fetchEmailLists",
   async ({ type, page = 1, limit = 5 }, { rejectWithValue }) => {
-    console.log('we are reacing fetch email list async thunk')
+    console.log("We are reaching fetch email list async thunk");
+
     try {
+      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const response = await axiosInstance.get(endpoints.emailList.getEmailList, {
         params: { type, page, limit },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`, // Include the token
+        },
       });
-      console.log('we are in fetchEmailLit async thunk', response.data.data)
+
+      console.log("We are in fetchEmailList async thunk", response.data.data);
       return response.data.data; // Extracting the `data` field from the response
     } catch (error) {
+      console.error("Fetch email lists error:", error);
       return rejectWithValue(
         error.response?.data?.message || "Failed to fetch email lists"
       );
     }
   }
 );
-
-
 
 
 const emailVerificationSlice = createSlice({
@@ -232,8 +242,8 @@ const emailVerificationSlice = createSlice({
     .addCase(fetchEmailLists.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      state.emailLists = action.payload.emailLists;
-      state.pagination = action.payload.pagination; // Store pagination data
+      state.emailLists = action.payload.emailLists || []; // Ensure it's an array
+      state.pagination = action.payload.pagination || { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 5 };
     })
     .addCase(fetchEmailLists.rejected, (state, action) => {
       state.isLoading = false;

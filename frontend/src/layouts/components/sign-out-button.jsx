@@ -8,6 +8,7 @@ import { useRouter } from 'src/routes/hooks';
 import { logout } from 'src/redux/slice/userSlice';
 
 import { useAuthContext } from 'src/auth/hooks';
+import { signOut } from 'src/auth/context/jwt/action';
 
 
 // ----------------------------------------------------------------------
@@ -20,15 +21,15 @@ export function SignOutButton({ onClose, ...other }) {
 
   const handleLogout = useCallback(async () => {
     try {
-      // await signOut();
-      // await checkUserSession?.();
+      await signOut();
+      await checkUserSession?.();
       dispatch(logout());
-      // onClose?.();
+      onClose?.();
       router.refresh();
     } catch (error) {
       console.error(error);
     }
-  }, [dispatch, router]);
+  }, [dispatch, router, onClose, checkUserSession]);
 
   return (
     <Button fullWidth variant="soft" size="large" color="primary" onClick={handleLogout} {...other}>

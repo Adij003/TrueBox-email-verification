@@ -44,7 +44,7 @@ export const endpoints = {
     getCredits: '/credits'
   },
   emailList: {
-    uploadBulkEmail: '/bulk',
+    uploadBulkEmail: '/email-lists/bulk',
     startBulkVerification: (jobId) => `/email-lists/verify/bulk/${jobId}`,
     checkBulkStatus: (jobId) => `/email-lists/status/${jobId}`,
     downloadBulkResults: (jobId) => `/email-lists/download/${jobId}`,

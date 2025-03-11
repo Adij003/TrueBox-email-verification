@@ -217,8 +217,15 @@ const BouncifyService = require("../../services/bouncify-service");
           .limit(itemsPerPage),
         EmailList.countDocuments(filter),
       ]);
-
+      console.log('we are reaching here')
       const totalPages = Math.ceil(totalCount / itemsPerPage);
+      console.log('Fetched email lists:', emailLists);
+      console.log('Pagination:', {
+        currentPage: Number(page),
+        totalPages,
+        totalItems: totalCount,
+        itemsPerPage,
+      });
 
       return res.status(200).json(
         Response.success("Email lists fetched successfully", {
@@ -235,6 +242,6 @@ const BouncifyService = require("../../services/bouncify-service");
       Logs.error("Error fetching email lists", error);
       return res
         .status(500)
-        .json(Response.error("Error fetching email lists", error));
+        .json(Response.error("Error fetching email lists", error.message));
     }
   });
