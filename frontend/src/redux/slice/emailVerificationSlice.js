@@ -132,17 +132,17 @@ export const fetchEmailLists = createAsyncThunk(
     console.log("We are reaching fetch email list async thunk");
 
     try {
-      const token = localStorage.getItem("token"); // Retrieve token from localStorage
+      // const token = localStorage.getItem("token"); // Retrieve token from localStorage
 
-      if (!token) {
-        throw new Error("No authentication token found");
-      }
+      // if (!token) {
+      //   throw new Error("No authentication token found");
+      // }
 
       const response = await axiosInstance.get(endpoints.emailList.getEmailList, {
         params: { type, page, limit },
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`, // Include the token
+          // "Authorization": `Bearer ${token}`, // Include the token
         },
       });
 
