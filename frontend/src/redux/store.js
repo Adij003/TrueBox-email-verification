@@ -4,6 +4,7 @@ import userReducer from './slice/userSlice';
 import creditReducer from './slice/creditSlice';
 import listNameReducer from './slice/listNameSlice';
 import fileUploadReducer from './slice/upload-slice';
+import emailVerificationReducer from './slice/emailVerificationSlice'
 
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
     listName: listNameReducer,
     user: userReducer, 
     credits: creditReducer,
+    emailVerification: emailVerificationReducer
 
   },
 });

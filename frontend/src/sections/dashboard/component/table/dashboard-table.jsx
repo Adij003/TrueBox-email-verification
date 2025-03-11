@@ -1,7 +1,7 @@
 // components/DashboardTable/index.jsx
 import { toast } from 'sonner';
-import { useSelector } from 'react-redux';
 import { useTheme } from '@emotion/react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, useCallback } from 'react';
 
 import {
@@ -28,6 +28,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { varAlpha } from 'src/theme/styles';
+import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice'
 import { DASHBOARD_STATUS_OPTIONS } from 'src/_mock/_table/_apptable/_dashboard';
 
 import { Label } from 'src/components/label';
@@ -51,6 +52,7 @@ import { MoveToFolderPopover } from 'src/sections/dialog-boxes/move-to-folder-da
 import { DashboardTableRow } from './dashboard-table-row';
 import { DashboardTableToolbar } from './dashboard-table-toolbar';
 import { DashboardTableFiltersResult } from './dashboard-table-filters-result';
+
 
 // constants/table.js
 const STATUS_OPTIONS = [
@@ -150,7 +152,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return stabilizedThis.map((el) => el[0]);
 }
-
+ 
 export function DashboardTable() {
   const theme = useTheme();
   const table = useTable({ defaultOrderBy: 'orderNumber' });
@@ -174,16 +176,28 @@ export function DashboardTable() {
   const confirmDelete = useBoolean();
   const isStartVerification = useSelector((state) => state.fileUpload.isStartVerification);
   const isVerificationCompleted = useSelector((state) => state.fileUpload.isVerificationCompleted);
+  const { emailLists, isLoading, isError } = useSelector((state) => state.emailVerification); 
+
+  const dispatch = useDispatch();
+
+
 
   // Effect Hooks
   useEffect(() => {
+    console.log('just before calling fetch function in email slice')
+    dispatch(fetchEmailLists({type: "bulk"}));
+    console.log('just after calling fetch function in email slice')
+    
+
     if (isVerificationCompleted && processingRowId !== null) {
       setTableData((prevData) =>
         prevData.map((row) => (row.id === processingRowId ? { ...row, status: 'Verified' } : row))
       );
       setProcessingRowId(null);
     }
-  }, [isVerificationCompleted, processingRowId]);
+  }, [isVerificationCompleted, processingRowId, dispatch]);
+
+  // console.log('the email lists are: ', emailLists)
 
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
 

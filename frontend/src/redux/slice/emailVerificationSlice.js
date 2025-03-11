@@ -10,6 +10,13 @@ const initialState = {
   isError: false,
   message: '',
   verificationType: null, // "single" or "bulk"
+  emailLists: [], // Store fetched email lists
+  pagination: {
+    currentPage: 1,
+    totalPages: 1,
+    totalItems: 0,
+    itemsPerPage: 5,
+  },
   single: {
     email: '',
     result: '',
@@ -120,6 +127,25 @@ export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', as
   }
 });
 
+export const fetchEmailLists = createAsyncThunk(
+  "emails/fetchEmailLists",
+  async ({ type, page = 1, limit = 5 }, { rejectWithValue }) => {
+    console.log('we are reacing fetch email list async thunk')
+    try {
+      const response = await axiosInstance.get(endpoints.emailList.getEmailList, {
+        params: { type, page, limit },
+      });
+      console.log('we are in fetchEmailLit async thunk', response.data.data)
+      return response.data.data; // Extracting the `data` field from the response
+    } catch (error) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch email lists"
+      );
+    }
+  }
+);
+
+
 
 
 const emailVerificationSlice = createSlice({
@@ -196,6 +222,23 @@ const emailVerificationSlice = createSlice({
       state.isLoading = false;
       state.isError = true;
       state.message = action.payload;
+    })
+
+    .addCase(fetchEmailLists.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.message = "";
+    })
+    .addCase(fetchEmailLists.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.isSuccess = true;
+      state.emailLists = action.payload.emailLists;
+      state.pagination = action.payload.pagination; // Store pagination data
+    })
+    .addCase(fetchEmailLists.rejected, (state, action) => {
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload || "Failed to fetch email lists";
     });
   }
 });

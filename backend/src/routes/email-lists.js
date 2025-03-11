@@ -7,7 +7,7 @@ const {
   downloadBulkResults,
   verifySingleEmail,
   getAllEmailLists
-} = require("../controllers/backend/EmailVerificationController");
+} = require("../controllers/backend/EmailListsController");
 
 const router = express.Router();
 const upload = require("../middlewares/multer");

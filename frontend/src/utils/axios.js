@@ -44,11 +44,13 @@ export const endpoints = {
     getCredits: '/credits'
   },
   emailList: {
-    uploadBulkEmail: '/upload-bulk',
-    startBulkVerification: (jobId) => `/verify/bulk/${jobId}`,
-    checkBulkStatus: (jobId) => `/status/${jobId}`,
-    downloadBulkResults: (jobId) => `/download/${jobId}`,
-    verifySingleEmail: '/verify/single',
+    uploadBulkEmail: '/bulk',
+    startBulkVerification: (jobId) => `/email-lists/verify/bulk/${jobId}`,
+    checkBulkStatus: (jobId) => `/email-lists/status/${jobId}`,
+    downloadBulkResults: (jobId) => `/email-lists/download/${jobId}`,
+    verifySingleEmail: '/email-lists/verify/single',
+    getEmailList: '/email-lists',
+
   }
   
 };

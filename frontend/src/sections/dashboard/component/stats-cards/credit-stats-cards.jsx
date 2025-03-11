@@ -9,7 +9,7 @@ import StatsCards from 'src/components/stats-card/stats-card';
 
 
 export default function CreditStatsCards() {
-  const { credits, isCreditsLoading, isCreditsSuccess, isCreditsError, creditsMessage } = useSelector((state) => state.credits);
+  const { credits, isCreditsLoading, isCreditsSuccess, isCreditsError, creditsMessage } = useSelector((state) => state.credits); 
 
   const dispatch = useDispatch();
 
@@ -19,13 +19,6 @@ export default function CreditStatsCards() {
 
   // const { credits_consumed, total_credits, credits_remaining } = credits?.data 
   const { credits_consumed, total_credits, credits_remaining } = credits?.data || {};
-
-
-
-  console.log('credits consumed', credits_consumed)
-  console.log('credits total: ', total_credits)
-  console.log('credits remaining: ', credits_remaining)
-
 
   function calculateStats(allottedCredits, consumedCredits) {
     const remainingCredits = allottedCredits - consumedCredits;
