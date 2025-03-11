@@ -185,7 +185,7 @@ module.exports = {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-          return res.status(400).json({ success: false, errors: errors.array() });
+        return res.status(400).json({ success: false, errors: errors.array() });
       }
 
       const { email, shared_on, permission_type, folders = [] } = req.body;
@@ -194,24 +194,22 @@ module.exports = {
       const user = await User.findOne({ user_id });
 
       if (!user) {
-          return res.status(404).json({ success: false, message: "User not found" });
+        return res
+          .status(404)
+          .json({ success: false, message: "User not found" });
       }
 
       const newTeamMember = {
-          email,
-          shared_on: shared_on || new Date(),
-          permission_type,
-          folders
+        email,
+        shared_on: shared_on || new Date(),
+        permission_type,
+        folders,
       };
 
       user.teamMembers.push(newTeamMember);
       await user.save();
 
-      res.status(200).json({
-          success: true,
-          message: "Team member added successfully",
-          data: user.teamMembers
-      });
+      res.status(200).json(Response.success('Successfully added team member', user));
     } catch (error) {
       console.error("Error adding team member:", error);
       res
