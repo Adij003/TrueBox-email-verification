@@ -5,11 +5,11 @@ const Helper = require("../../utils/Helper");
 const { validationResult, param, body } = require("express-validator");
 
 module.exports = {
-  /**
-   * Create user
-   * @param {*} req
-   * @param {*} res
-   */
+/**
+* Create user
+* @param {*} req
+* @param {*} res
+*/
   create: async (req, res) => {
     try {
       if (!req.body.user_id) {
@@ -31,12 +31,12 @@ module.exports = {
     }
   },
 
-  /**
-   * This method is use for retrieve a single record.
-   * @param {*} req
-   * @param {*} res
-   * @returns User
-   */
+/**
+* This method is use for retrieve a single record.
+* @param {*} req
+* @param {*} res
+* @returns User
+*/
   getOne: async (req, res) => {
     try {
       // Define your validation rules here
@@ -74,12 +74,12 @@ module.exports = {
     }
   },
 
-  /**
-   * This method is use to update the single record.
-   * @param {*} req
-   * @param {*} res
-   * @returns User
-   */
+/**
+* This method is use to update the single record.
+* @param {*} req
+* @param {*} res
+* @returns User
+*/
   updateOne: async (req, res) => {
     try {
       // Define your validation rules here
@@ -159,12 +159,12 @@ module.exports = {
     }
   },
 
-  /**
-   * This method is use to fetch all the user record.
-   * @param {*} req
-   * @param {*} res
-   * @returns User
-   */
+/**
+* This method is use to fetch all the user record.
+* @param {*} req
+* @param {*} res
+* @returns User
+*/
   getAll: async (req, res) => {
     try {
       const Users = await User.find();
@@ -175,12 +175,12 @@ module.exports = {
     }
   },
 
-  /**
-   * This method is used to add a team member
-   * @param {*} req
-   * @param {*} res
-   * @returns User
-   */
+/**
+* This method is used to add a team member
+* @param {*} req
+* @param {*} res
+* @returns User
+*/
   addTeamMember: async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -218,29 +218,25 @@ module.exports = {
     }
   },
 
-  /**
-   * This method is use to delete a single record.
-   * @param {*} req
-   * @param {*} res
-   * @returns User
-   */
+/**
+* This method is use to delete a single record.
+* @param {*} req
+* @param {*} res
+* @returns User
+*/
 
   deleteOne: async (req, res) => {
     try {
-      // Define your validation rules here
       const validationRules = [
         param("user_id", "Invalid user ID").custom(Helper.isValidObjectId),
       ];
-
-      // Run the validation rules
+      
       await Promise.all(
         validationRules.map(async (rule) => await rule.run(req))
       );
 
-      // Get validation errors
       const errors = validationResult(req);
 
-      // Check for validation errors
       if (!errors.isEmpty()) {
         return res
           .status(400)
@@ -255,7 +251,6 @@ module.exports = {
         throw "User not found!";
       }
 
-      // Destroy the current session
       req.session.destroy((err) => {
         if (err) {
           Logs.error(err);
