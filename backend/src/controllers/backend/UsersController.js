@@ -1,4 +1,4 @@
-const  User  = require("../../models/User");
+const User = require("../../models/User");
 const Logs = require("../../utils/Logs");
 const Response = require("../../utils/Response");
 const Helper = require("../../utils/Helper");
@@ -175,53 +175,43 @@ module.exports = {
     }
   },
 
+  /**
+   * This method is used to add a team member
+   * @param {*} req
+   * @param {*} res
+   * @returns User
+   */
   addTeamMember: async (req, res) => {
     try {
-      const { email, shared_on, permission_type, folders = [] } = req.body;
-      const user_id = req.user.id; // Directly from req.user_id
-
-      console.log("All the user data", req.user);
-
-      // Validate input
-      if (!email || !permission_type) {
-        return res
-          .status(400)
-          .json({
-            success: false,
-            message: "Email and permission type are required",
-          });
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+          return res.status(400).json({ success: false, errors: errors.array() });
       }
 
-      // Find the user by ID
+      const { email, shared_on, permission_type, folders = [] } = req.body;
+      const user_id = req.user.id;
+
       const user = await User.findOne({ user_id });
 
       if (!user) {
-        return res
-          .status(404)
-          .json({ success: false, message: "User not found" });
+          return res.status(404).json({ success: false, message: "User not found" });
       }
 
-      // Create the new team member object
       const newTeamMember = {
-        email,
-        shared_on: shared_on || new Date(),
-        permission_type,
-        folders: folders || [],
+          email,
+          shared_on: shared_on || new Date(),
+          permission_type,
+          folders
       };
 
-      // Add to the teamMembers array
       user.teamMembers.push(newTeamMember);
-
-      // Save the updated user document
       await user.save();
 
-      res
-        .status(200)
-        .json({
+      res.status(200).json({
           success: true,
           message: "Team member added successfully",
-          data: user.teamMembers,
-        });
+          data: user.teamMembers
+      });
     } catch (error) {
       console.error("Error adding team member:", error);
       res
