@@ -129,25 +129,14 @@ export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', as
 export const fetchEmailLists = createAsyncThunk(
   "emails/fetchEmailLists",
   async ({ type, page = 1, limit = 5 }, { rejectWithValue }) => {
-    console.log("We are reaching fetch email list async thunk");
-
-    try {
-      // const token = localStorage.getItem("token"); // Retrieve token from localStorage
-
-      // if (!token) {
-      //   throw new Error("No authentication token found");
-      // }
-
+    try {    
       const response = await axiosInstance.get(endpoints.emailList.getEmailList, {
         params: { type, page, limit },
         headers: {
           "Content-Type": "application/json",
-          // "Authorization": `Bearer ${token}`, // Include the token
         },
       });
-
-      console.log("We are in fetchEmailList async thunk", response.data.data);
-      return response.data.data; // Extracting the `data` field from the response
+      return response.data.data;
     } catch (error) {
       console.error("Fetch email lists error:", error);
       return rejectWithValue(
@@ -242,7 +231,7 @@ const emailVerificationSlice = createSlice({
     .addCase(fetchEmailLists.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      state.emailLists = action.payload.emailLists || []; // Ensure it's an array
+      state.emailLists = action.payload.emailLists || []; // Ensuriong that it's an array
       state.pagination = action.payload.pagination || { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 5 };
     })
     .addCase(fetchEmailLists.rejected, (state, action) => {

@@ -70,7 +70,7 @@ const TABLE_HEAD = [
   },
   {
     id: 'consumed',
-    label: 'Number of Emails/Credits Consumed',
+    label: 'Credits Consumed',
     width: 400,
     whiteSpace: 'nowrap',
     tooltip:
@@ -87,46 +87,7 @@ const TABLE_HEAD = [
   { id: '', width: 10 },
 ];
 
-// data/mockData.js
-const dataOn = [
-  {
-    status: 'uploading',
-    name: 'List 1',
-    numberOfEmails: 128,
-    creditconsumed: '0 Credit Consumed',
-    date: 'Oct 23, 2024 17:45:32',
-  },
-  {
-    status: 'Unverified',
-    name: 'List 2',
-    numberOfEmails: 65,
-    creditconsumed: '65 Credit Consumed',
-    date: 'Oct 23, 2024 17:45:32',
-  },
-  {
-    status: 'Unverified',
-    name: 'List 3',
-    numberOfEmails: 250,
-    creditconsumed: '0 Credit Consumed',
-    date: 'Oct 23, 2024 17:45:32',
-    requiresCredits: true, // Add this flag for the new row
-  },
-  {
-    status: 'processing',
-    name: 'List 4',
-    numberOfEmails: 65,
-    creditconsumed: '65 Credit Consumed',
-    date: 'Oct 23, 2024 17:45:32',
-  },
-  {
-    status: 'Verified',
-    name: 'List 5',
-    numberOfEmails: 653343,
-    creditconsumed: '653343 Credit Consumed',
-    date: 'Oct 23, 2024 17:45:32',
-  },
-];
-// utils/filterUtils.js
+
 function applyFilter({ inputData, comparator, filters }) {
   const { status, name } = filters;
 
@@ -134,7 +95,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
   if (name) {
     filteredData = filteredData.filter((item) =>
-      item.name.toLowerCase().includes(name.toLowerCase())
+      item.emailListName.toLowerCase().includes(name.toLowerCase())
     );
   }
 
@@ -152,17 +113,24 @@ function applyFilter({ inputData, comparator, filters }) {
 
   return stabilizedThis.map((el) => el[0]);
 }
+
  
 export function DashboardTable() {
   const theme = useTheme();
   const table = useTable({ defaultOrderBy: 'orderNumber' });
+  const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification); 
+  const [tableData, setTableData] = useState([]);
 
-  const [tableData, setTableData] = useState(
-    dataOn.map((item, index) => ({
-      ...item,
-      id: index,
-    }))
-  );
+  useEffect(() => {
+    if (emailLists) {
+      setTableData(
+        emailLists.map((item, index) => ({
+          ...item,
+          id: index,
+        }))
+      );
+    }
+  }, [emailLists]);
 
   const filters = useSetState({
     name: '',
@@ -176,7 +144,7 @@ export function DashboardTable() {
   const confirmDelete = useBoolean();
   const isStartVerification = useSelector((state) => state.fileUpload.isStartVerification);
   const isVerificationCompleted = useSelector((state) => state.fileUpload.isVerificationCompleted);
-  const { emailLists, isLoading, isError } = useSelector((state) => state.emailVerification); 
+
 
   const dispatch = useDispatch();
 
@@ -184,10 +152,7 @@ export function DashboardTable() {
 
   // Effect Hooks
   useEffect(() => {
-    console.log('just before calling fetch function in email slice')
-    dispatch(fetchEmailLists({type: "bulk"}));
-    console.log('just after calling fetch function in email slice')
-    
+    dispatch(fetchEmailLists({type: "bulk"}));    
 
     if (isVerificationCompleted && processingRowId !== null) {
       setTableData((prevData) =>
@@ -197,7 +162,10 @@ export function DashboardTable() {
     }
   }, [isVerificationCompleted, processingRowId, dispatch]);
 
-  // console.log('the email lists are: ', emailLists)
+  // console.log('here we are logging the array: ', emailLists);
+  // console.log('here we are logging pagination: ', pagination);
+  
+
 
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
 
@@ -336,14 +304,13 @@ export function DashboardTable() {
                   'soft'
                 }
                 color={
-                  (tab.value === 'Verified' && 'success') ||
-                  (tab.value === 'processing' && 'info') ||
-                  (tab.value === 'uploading' && 'warning') ||
-                  (tab.value === 'Unverified' && 'error') ||
+                  (tab.value === 'completed' && 'success') ||
+                  (tab.value === 'verifying' && 'info') ||
+                  (tab.value === 'ready' && 'warning') ||
                   'default'
                 }
               >
-                {['Verified', 'processing', 'uploading', 'Unverified'].includes(tab.value)
+                {['completed', 'processing', 'verifying', 'ready'].includes(tab.value)
                   ? tableData.filter((user) => user.status === tab.value).length
                   : tableData.length}
               </Label>

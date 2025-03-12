@@ -198,7 +198,7 @@ const BouncifyService = require("../../services/bouncify-service");
       console.log('user details: ', req.user)
       console.log('user user_id: ', req.user.user_id)
 
-      let filter = { _id: req.user.id };
+      let filter = { user_id: req.user.id };
       console.log('user id from req: ', filter)
 
       if (type) {

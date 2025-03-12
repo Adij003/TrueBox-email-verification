@@ -137,6 +137,7 @@ export function ActivityLogTable() {
     defaultSelected: [], // Add this to initialize selected state
   });
 
+
   const [tableData, setTableData] = useState(dataOn);
 
   const filters = useSetState({

@@ -44,7 +44,7 @@ export function DashboardTableRow({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [alertState, setAlertState] = useState(null);
 
-  const csvfilesname = [{ name: row.name, numberOfEmails: row.numberOfEmails }];
+  const csvfilesname = [{ name: row.emailListName, numberOfEmails: row.numberOfEmails }];
   const timezone = '(UTC+05:30) Asia/Kolkata';
   const currentFile = csvfilesname[dashboardTableIndex % csvfilesname.length];
   const navigate = useNavigate();
@@ -104,13 +104,13 @@ export function DashboardTableRow({
   // Button text mapping
   const getButtonText = (status) => {
     switch (status) {
-      case 'Verified':
+      case 'completed':
         return 'Download Report';
-      case 'processing':
+      case 'verifying':
         return 'Verification In Progress';
-      case 'uploading':
-        return 'Uploading';
-      case 'Unverified':
+      case 'ready':
+        return 'Start Verification';
+      case 'pending':
         return 'Start Verification';
       default:
         return '';
@@ -155,7 +155,7 @@ export function DashboardTableRow({
               disableInteractive
             >
               <Label variant="soft" color={getStatusColor(row.status)}>
-                {row.status}
+                {row.status} 
               </Label>
             </Tooltip>
           </Stack>
@@ -192,7 +192,7 @@ export function DashboardTableRow({
               arrow
               placement="top"
               disableInteractive
-              title={`Email List Uploaded: ${row.date}, ${timezone}`}
+              title={`Email List Uploaded: ${row.createdAt}, ${timezone}`}
             >
               <Box
                 component="span"
@@ -205,7 +205,7 @@ export function DashboardTableRow({
                   display: 'inline-block',
                 }}
               >
-                {row.date}
+                {row.createdAt} 
               </Box>
             </Tooltip>
           </Stack>
@@ -218,7 +218,7 @@ export function DashboardTableRow({
               placement="top"
               disableInteractive
             > */}
-            <Tooltip title='Number of email addresses in the uploaded email list.' arrow placement='top' disableInteractive>
+            <Tooltip title='Number of credits consumed' arrow placement='top' disableInteractive>
               <Typography
                 component="span"
                 fontSize={14}
@@ -230,11 +230,11 @@ export function DashboardTableRow({
                   maxWidth: '300px',
                 }}
               >
-                Contains {currentFile.numberOfEmails} Emails
+                {row.creditsConsumed}  
               </Typography>
             </Tooltip>
           </Stack>
-          <Stack spacing={2} direction="row" alignItems="center">
+          {/* <Stack spacing={2} direction="row" alignItems="center">
             {(row.status === 'processing' || row.status === 'Verified') && (
               <Tooltip
                 arrow
@@ -258,7 +258,7 @@ export function DashboardTableRow({
                 </Typography>
               </Tooltip>
             )}
-          </Stack>
+          </Stack> */}
         </TableCell>
         <TableCell width={300} align="right" sx={{ pr: 1 }}>
           <Stack direction="row" spacing={1} justifyContent="flex-end">

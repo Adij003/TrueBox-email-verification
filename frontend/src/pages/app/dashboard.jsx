@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useTheme } from '@emotion/react';
 import { Helmet } from 'react-helmet-async';
 
@@ -21,6 +22,7 @@ import {
 } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/app';
+import { verifySingleEmail } from 'src/redux/slice/emailVerificationSlice'
 import { listItems } from 'src/_mock/app-big-card/_dashboardBigCardListItems';
 
 import { Iconify } from 'src/components/iconify';
@@ -45,6 +47,9 @@ export default function Page() {
   const [selectedFolder, setSelectedFolder] = useState('Home');
   const [isFromSingleEmail, setIsFromSingleEmail] = useState(false);
 
+
+  const dispatch = useDispatch();
+
   const [alertState, setAlertState] = useState({
     open: false,
     severity: 'success',
@@ -68,41 +73,31 @@ export default function Page() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  const handleVerify = () => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsFromSingleEmail(true);
+  const handleVerify = async () => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  setIsFromSingleEmail(true);
 
-    if (emailRegex.test(email)) {
-      toast.success(`The email "${email}" is valid!`, {
+  if (emailRegex.test(email)) {
+    try {
+      const resultAction = await dispatch(verifySingleEmail({ email })).unwrap();
+      toast.success(`Verification successful: ${resultAction.message || 'Email is valid'}`, {
         duration: Infinity,
-        style: {
-          marginTop: '15px',
-        },
+        style: { marginTop: '15px' },
       });
-    } else {
-      toast.error(`The email "${email}" is invalid!`, {
+    } catch (error) {
+      toast.error(`Verification failed: ${error} try logging in again`, {
         duration: Infinity,
-        style: {
-          marginTop: '15px',
-        },
+        style: { marginTop: '15px' },
       });
     }
-    setEmail('');
-  };
-
-  // function calculateStats(allottedCredits, consumedCredits) {
-  //   const remainingCredits = allottedCredits - consumedCredits;
-  //   return {
-  //     allotted: allottedCredits,
-  //     consumed: consumedCredits,
-  //     remaining: remainingCredits,
-  //   };
-  // }
-
-  // const allottedCredits = 10000;
-  // const consumedCredits = 32;
-
-  // const stats = calculateStats(allottedCredits, consumedCredits);
+  } else {
+    toast.error(`The email "${email}" is invalid!`, {
+      duration: Infinity,
+      style: { marginTop: '15px' },
+    });
+  }
+  setEmail('');
+};
 
   const [dialogState, setDialogState] = useState({
     singleEmail: false,
