@@ -61,8 +61,9 @@ export const uploadBulkEmails = createAsyncThunk(
   "emails/uploadBulkEmails",
   async ({ file, emailListName }, { rejectWithValue }) => {
     try {
+    console.log('we are reaching here and the email data is: ', file)
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("csv_file", file);
       formData.append("emailListName", emailListName); 
 
       const response = await axiosInstance.post(
