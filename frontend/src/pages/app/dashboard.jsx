@@ -1,5 +1,5 @@
 import { toast } from 'sonner';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useTheme } from '@emotion/react';
 import { Helmet } from 'react-helmet-async';
@@ -30,7 +30,7 @@ import BigCard from 'src/components/app-big-card/big-card';
 // import StatsCards from 'src/components/stats-card/stats-card';
 import PageHeader from 'src/components/page-header/page-header';
 
-import Upload from 'src/sections/dashboard/component/upload/upload-file';
+import UploadComponent from 'src/sections/dashboard/component/upload/upload-file';
 import { DashboardTable } from 'src/sections/dashboard/component/table/dashboard-table';
 // import { FolderSection } from 'src/sections/dashboard/component/folder/dashboardfolder';
 import CreditStatsCards from 'src/sections/dashboard/component/stats-cards/credit-stats-cards';
@@ -46,7 +46,13 @@ export default function Page() {
   const [activeTable, setActiveTable] = useState('dashboard');
   const [selectedFolder, setSelectedFolder] = useState('Home');
   const [isFromSingleEmail, setIsFromSingleEmail] = useState(false);
+  const uploadRef = useRef(null);
 
+  const handleUploadClick = () => {
+    if (uploadRef.current) {
+        uploadRef.current.uploadBulkEmail();  // Calling function in child
+    }
+};
 
   const dispatch = useDispatch();
 
@@ -120,6 +126,11 @@ export default function Page() {
       ...prev,
       [type]: false,
     }));
+  };
+
+    const handleUploadSuccess = () => {
+    toast.success("Bulk email upload successful!");
+    handleDialogClose('bulkEmail');
   };
 
   return (
@@ -246,10 +257,10 @@ export default function Page() {
               here.
             </Typography>
           </Box>
-        </DialogTitle>
+        </DialogTitle> 
         <Divider />
         <DialogContent sx={{ pt: 3 }}>
-          <Upload setAlertState={setAlertState} />
+          <UploadComponent setAlertState={setAlertState} onUploadSuccess={handleUploadSuccess} ref={uploadRef} />
         </DialogContent>
         <DialogActions>
           <Box
@@ -261,7 +272,9 @@ export default function Page() {
               justifyContent: 'flex-end',
             }}
           >
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary"
+            onClick={handleUploadClick}
+            >
               Upload
             </Button>
             <Button onClick={() => handleDialogClose('bulkEmail')} variant="outlined">

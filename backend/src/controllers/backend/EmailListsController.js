@@ -16,6 +16,7 @@ const BouncifyService = require("../../services/bouncify-service");
 
   (exports.uploadBulkEmails = async (req, res) => {
     try {
+      console.log('we are reaching the uploadBulkEmail controller')
       if (!req.file) return res.status(400).json(Response.error("CSV file is required"));
       if (!req.body.emailListName) return res.status(400).json(Response.error("Email list name is required"));
 
@@ -195,11 +196,7 @@ const BouncifyService = require("../../services/bouncify-service");
   (exports.getAllEmailLists = async (req, res) => {
     try {
       const { type, page = 1, limit = 5 } = req.query;
-      console.log('user details: ', req.user)
-      console.log('user user_id: ', req.user.user_id)
-
       let filter = { user_id: req.user.id };
-      console.log('user id from req: ', filter)
 
       if (type) {
         if (!["single", "bulk"].includes(type)) {
@@ -220,15 +217,7 @@ const BouncifyService = require("../../services/bouncify-service");
           .limit(itemsPerPage),
         EmailList.countDocuments(filter),
       ]);
-      console.log('we are reaching here')
       const totalPages = Math.ceil(totalCount / itemsPerPage);
-      console.log('Fetched email lists:', emailLists);
-      console.log('Pagination:', {
-        currentPage: Number(page),
-        totalPages,
-        totalItems: totalCount,
-        itemsPerPage,
-      });
 
       return res.status(200).json(
         Response.success("Email lists fetched successfully", {

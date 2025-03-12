@@ -11,7 +11,13 @@ const router = express.Router();
 const upload = require("../middlewares/multer"); 
 
 // Route to upload bulk emails via CSV file
-router.post("/bulk", upload.single("csv_file"), uploadBulkEmails);
+// router.post("/bulk", upload.single("csv_file"), uploadBulkEmails);
+
+router.post("/bulk", (req, res, next) => {
+  console.log("Body:", req.body);
+  console.log("Files:", req.file);
+  next();
+}, upload.single("csv_file"), uploadBulkEmails);
 
 // Route to start bulk email verification
 router.patch("/verify/bulk/:job_id", startBulkVerification);

@@ -1,32 +1,48 @@
-import { useState } from 'react';
+import { toast } from 'sonner';
+import { useDispatch } from 'react-redux';
+import React, { useState, forwardRef, useImperativeHandle } from 'react';
 
-import { Box, Link, TextField, Autocomplete } from '@mui/material';
+import { Box, Link, TextField } from '@mui/material';
+
+import { uploadBulkEmails } from 'src/redux/slice/emailVerificationSlice';
 
 import FileUpload from 'src/components/upload/upload';
 
-export default function Upload({ setAlertState }) {
-  const [listName, setListName] = useState('');
-  const [listNameError, setListNameError] = useState(false);
-  const [selectedFolder, setSelectedFolder] = useState('Home');
 
-  const folders = [
-    'Home (0)',
-    'Magnet Brains (2)',
-    'Pabbly Hook (5)',
-    'Pabbly Connect (10)',
-    'Pabbly Subcription Billing (0)',
-    'Pabbly Admin (50)',
-    'Pabbly Chatflow (2)',
-    'Pabbly Form Builder (0)',
-    'Pabbly Email Marketing (2)',
-    'Pabbly Plus (4)',
-  ];
+const UploadComponent = forwardRef(({ setAlertState, onUploadSuccess }, ref) => {
+  const [emailListName, setListName] = useState('');
+  const [listNameError, setListNameError] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const dispatch = useDispatch();
+
+ 
+
+  const uploadBulkEmail = async () => {
+    if (!emailListName.trim()) {
+      setListNameError(true);
+      toast.error('Please enter a valid list name.');
+      return;
+    }
+
+    if (!selectedFile) {
+      toast.error('Please select a CSV file to upload.');
+      return;
+    }
+
+    try {
+      const result = await dispatch(uploadBulkEmails({ file: selectedFile, emailListName })).unwrap();
+      toast.success(`Bulk upload successful: ${result.message || 'Emails uploaded successfully.'}`);
+      onUploadSuccess();
+    } catch (error) {
+      toast.error(`Upload failed: ${error}`);
+    }
+  };
 
   const handleListNameChange = (event) => {
     const { value } = event.target;
     setListName(value);
 
-    // Remove error state if user starts typing
     if (value.trim() !== '') {
       setListNameError(false);
     } else {
@@ -34,16 +50,21 @@ export default function Upload({ setAlertState }) {
     }
   };
 
-  const handleFolderChange = (event, newValue) => {
-    setSelectedFolder(newValue);
+  const handleFileSelect = (file) => {
+    console.log("Selected File:", file);
+    setSelectedFile(file);
   };
 
-  // Add blur handler to validate when user leaves the field
   const handleListNameBlur = () => {
-    if (listName.trim() === '') {
+    if (emailListName.trim() === '') {
       setListNameError(true);
     }
   };
+
+   // Expose uploadBulkEmail function to parent
+   useImperativeHandle(ref, () => ({
+    uploadBulkEmail
+  }));
 
   return (
     <Box>
@@ -51,7 +72,7 @@ export default function Upload({ setAlertState }) {
         <TextField
           label="Email List Name"
           fullWidth
-          value={listName}
+          value={emailListName}
           onChange={handleListNameChange}
           onBlur={handleListNameBlur}
           placeholder="Enter the name of the email list here"
@@ -74,7 +95,6 @@ export default function Upload({ setAlertState }) {
               )}
             </span>
           }
-          // required
           sx={{
             '& .MuiOutlinedInput-root': {
               borderRadius: 1,
@@ -82,38 +102,7 @@ export default function Upload({ setAlertState }) {
             mb: '24px',
           }}
         />
-        <Autocomplete
-          sx={{ mb: 3 }}
-          options={folders}
-          getOptionLabel={(option) => option}
-          value={selectedFolder}
-          onChange={handleFolderChange}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Select Folder"
-              placeholder="Choose the folder where the email list should be uploaded"
-              helperText={
-                <span>
-                  Choose the folder where the email list should be uploaded.{' '}
-                  <Link
-                    href="https://forum.pabbly.com/threads/verify-email.26310/"
-                    underline="always"
-                    onClick={() => console.log('Learn more clicked')}
-                    target="_blank"
-                  >
-                    Learn more
-                  </Link>
-                </span>
-              }
-              sx={{
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: 1,
-                },
-              }}
-            />
-          )}
-        />
+
         <FileUpload
           uploadInformation="Upload File OR Drag and Drop file here (Only CSV files allowed). Download Sample File here."
           allowedFileTypes={['text/csv']}
@@ -122,10 +111,13 @@ export default function Upload({ setAlertState }) {
           setAlertState={setAlertState}
           onSampleFileClick={() => {
             // Handle sample file download here
-            // e.g., window.open('/path/to/sample.csv', '_blank');
           }}
+          onFileUpload={handleFileSelect}
+          selectedFile={selectedFile}
         />
       </Box>
     </Box>
   );
-}
+});
+
+export default UploadComponent;
