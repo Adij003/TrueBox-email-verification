@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 
 import { startVerification } from 'src/redux/slice/upload-slice';
-import { checkBulkStatus, fetchEmailLists, startBulkVerification } from 'src/redux/slice/emailVerificationSlice';
+import { checkBulkStatus, fetchEmailLists, downloadBulkResults,  startBulkVerification } from 'src/redux/slice/emailVerificationSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -65,30 +65,25 @@ export function DashboardTableRow({
     dispatch(startVerification());
   };
 
-  const handleAction = async () => {
+  const handleAction = () => {
     switch (row.status) {
       case 'pending':
-        // Dispatch startBulkVerification and wait for it to complete
-        await dispatch(startBulkVerification(row.job_id));
-        // After that, dispatch fetchEmailLists
-        dispatch(fetchEmailLists({ type: "bulk" }));
+      dispatch(startBulkVerification(row.job_id));
+      dispatch(fetchEmailLists({ type: "bulk" }));
+          // setIsDrawerOpen(true);
         break;
-  
       case 'completed':
-        setIsDrawerOpen(true);
+        dispatch(downloadBulkResults(row.job_id));
+        // setIsDrawerOpen(true);
         break;
-  
-      case 'verifying':
+      case 'verifyin':
       case 'ready':
-        // You can add any additional logic for these statuses
+        // setIsDrawerOpen(true);
         break;
-  
       case 'in-progress':
-        // Dispatch checkBulkStatus, then fetchEmailLists
-        dispatch(checkBulkStatus(row.job_id));
-        dispatch(fetchEmailLists({ type: "bulk" }));
+        dispatch(checkBulkStatus(row.job_id))
+        dispatch(fetchEmailLists({type: "bulk"}))
         break;
-  
       default:
         break;
     }

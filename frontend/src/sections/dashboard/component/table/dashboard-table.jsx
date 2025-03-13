@@ -149,8 +149,6 @@ export function DashboardTable() {
 
   const dispatch = useDispatch();
 
-
-
   // Effect Hooks
   useEffect(() => {
     dispatch(fetchEmailLists({type: "bulk"}));    
