@@ -120,6 +120,7 @@ export function DashboardTable() {
   const table = useTable({ defaultOrderBy: 'orderNumber' });
   const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification); 
   const [tableData, setTableData] = useState([]);
+  const { currentPage, totalPages, totalItems, itemsPerPage} = pagination
 
   useEffect(() => {
     if (emailLists) {
@@ -162,8 +163,8 @@ export function DashboardTable() {
     }
   }, [isVerificationCompleted, processingRowId, dispatch]);
 
-  // console.log('here we are logging the array: ', emailLists);
-  // console.log('here we are logging pagination: ', pagination);
+
+
   
 
 
@@ -378,7 +379,7 @@ export function DashboardTable() {
                     onSelectRow={() => table.onSelectRow(row.id)}
                     onOpenPopover={(event) => handleOpenPopover(event, row)}
                     dashboardTableIndex={table.page * table.rowsPerPage + index}
-                    onStartVerification={() => handleStartVerification(row.id)}
+                    // onStartVerification={() => handleStartVerification(row.id)}
                     isProcessing={processingRowId === row.id && isStartVerification}
                     isCompleted={processingRowId === row.id && isVerificationCompleted}
                   />
@@ -503,6 +504,12 @@ export function DashboardTable() {
         onPageChange={table.onChangePage}
         onChangeDense={table.onChangeDense}
         onRowsPerPageChange={table.onChangeRowsPerPage}
+        // page={currentPage}
+        // count={totalItems}
+        // rowsPerPage={itemsPerPage}
+        // onPageChange={table.onChangePage}
+        // onChangeDense={table.onChangeDense}
+        // onRowsPerPageChange={table.onChangeRowsPerPage}
       />
     </Card>
   );

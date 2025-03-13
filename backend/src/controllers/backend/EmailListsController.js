@@ -16,7 +16,6 @@ const BouncifyService = require("../../services/bouncify-service");
 
   (exports.uploadBulkEmails = async (req, res) => {
     try {
-      console.log('we are reaching the uploadBulkEmail controller')
       if (!req.file) return res.status(400).json(Response.error("CSV file is required"));
       if (!req.body.emailListName) return res.status(400).json(Response.error("Email list name is required"));
 

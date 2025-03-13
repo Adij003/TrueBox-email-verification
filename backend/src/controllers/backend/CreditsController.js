@@ -45,6 +45,6 @@ exports.getCreditInfo = async (req, res) => {
     Logs.error("Error fetching user credit info", error);
     return res
       .status(500)
-      .json(Response.error("Error in fetching user credit details", error));
+      .json(Response.error("Error in fetching user credit details", error.message));
   }
 };

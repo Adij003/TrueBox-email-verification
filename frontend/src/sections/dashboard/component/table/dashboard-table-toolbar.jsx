@@ -1,3 +1,4 @@
+import { useDispatch } from 'react-redux';
 import { useState, useCallback } from 'react';
 
 // MUI imports
@@ -17,6 +18,8 @@ import {
 // Hooks
 
 import { toast } from 'sonner';
+
+import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
 
 // Components
 import { Iconify } from 'src/components/iconify';
@@ -73,9 +76,11 @@ export function DashboardTableToolbar({ filters, onResetPage, numSelected }) {
   const handleActionsOpen = (event) => setAnchorEl(event.currentTarget);
   const handleActionsClose = () => setAnchorEl(null);
 
+  const dispatch = useDispatch();
 
-
-
+const handleRefreshEmailList = () => {
+  dispatch(fetchEmailLists({ type: "bulk" }))
+}
 
 
 
@@ -226,6 +231,7 @@ export function DashboardTableToolbar({ filters, onResetPage, numSelected }) {
             }}
             size="large"
             color="primary"
+            onClick={handleRefreshEmailList}
           >
             <Iconify
               icon="tabler:refresh"

@@ -18,6 +18,7 @@ import {
 } from '@mui/material';
 
 import { startVerification } from 'src/redux/slice/upload-slice';
+import { checkBulkStatus, fetchEmailLists, startBulkVerification } from 'src/redux/slice/emailVerificationSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -37,7 +38,7 @@ export function DashboardTableRow({
   dashboardTableIndex,
   onOpenPopover,
   onViewReport,
-  onStartVerification,
+  // onStartVerification,
   isProcessing,
   isCompleted,
 }) {
@@ -60,26 +61,34 @@ export function DashboardTableRow({
   };
 
   const handleStartVerification = () => {
-    onStartVerification();
+    // onStartVerification();
     dispatch(startVerification());
   };
 
-  const handleAction = () => {
+  const handleAction = async () => {
     switch (row.status) {
       case 'pending':
-        onStartVerification();
-        if (!row.requiresCredits) {
-          dispatch(startVerification());
-          setIsDrawerOpen(true);
-        }
+        // Dispatch startBulkVerification and wait for it to complete
+        await dispatch(startBulkVerification(row.job_id));
+        // After that, dispatch fetchEmailLists
+        dispatch(fetchEmailLists({ type: "bulk" }));
         break;
+  
       case 'completed':
         setIsDrawerOpen(true);
         break;
-      case 'verifyin':
+  
+      case 'verifying':
       case 'ready':
-        // setIsDrawerOpen(true);
+        // You can add any additional logic for these statuses
         break;
+  
+      case 'in-progress':
+        // Dispatch checkBulkStatus, then fetchEmailLists
+        dispatch(checkBulkStatus(row.job_id));
+        dispatch(fetchEmailLists({ type: "bulk" }));
+        break;
+  
       default:
         break;
     }
@@ -112,6 +121,8 @@ export function DashboardTableRow({
         return 'Start Verification';
       case 'pending':
         return 'Start Verification';
+      case 'in-progress':
+       return 'Check Status';
       default:
         return '';
     }
@@ -206,7 +217,6 @@ export function DashboardTableRow({
                 }}
               >
                 {row.createdAt} 
-                {row.job_id}
               </Box>
             </Tooltip>
           </Stack>

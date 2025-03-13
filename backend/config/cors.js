@@ -24,8 +24,8 @@ const corsOptions = {
       return callback(error, false);
     }
   },
-  // origin: "*", // wildcard
-  methods: "GET, POST, PUT, DELETE, OPTIONS",
+  // origin: "*", // wildcard   
+  methods: "GET, POST, PUT, DELETE, OPTIONS, PATCH",
   allowedHeaders:
     "Content-Type, Content-Length, Accept-Encoding, X-Requested-With, Authorization, x-csrf-token",
   optionsSuccessStatus: 200, // Some legacy browsers choke on 204,
