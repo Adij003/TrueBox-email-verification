@@ -416,13 +416,13 @@ export function DashboardTable() {
         <MenuList>
           {selectedRow && selectedRow.status !== 'processing' && (
             <>
-              <Tooltip title="Move to folder" arrow placement="left">
+              {/* <Tooltip title="Move to folder" arrow placement="left">
                 <MenuItem onClick={handleMoveToFolder}>
                   <Iconify icon="fluent:folder-move-16-filled" />
-                  Move to folder
+                  Move to folder 
                 </MenuItem>
               </Tooltip>
-              <Divider style={{ borderStyle: 'dashed' }} />
+              <Divider style={{ borderStyle: 'dashed' }} /> */}
               <Tooltip title="Delete email list." arrow placement="left">
                 <MenuItem onClick={handleConfirmDelete} sx={{ color: 'error.main' }}>
                   <Iconify icon="solar:trash-bin-trash-bold" />
@@ -444,7 +444,7 @@ export function DashboardTable() {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title="Do you really want to delete the email list?"
-        content="Note that when an email list is deleted it is moved to the trash folder."
+        // content="Note that when an email list is deleted it is moved to the trash folder."
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
             Delete

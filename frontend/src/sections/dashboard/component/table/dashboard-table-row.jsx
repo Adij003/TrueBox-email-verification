@@ -66,19 +66,19 @@ export function DashboardTableRow({
 
   const handleAction = () => {
     switch (row.status) {
-      case 'Unverified':
+      case 'pending':
         onStartVerification();
         if (!row.requiresCredits) {
           dispatch(startVerification());
           setIsDrawerOpen(true);
         }
         break;
-      case 'Verified':
+      case 'completed':
         setIsDrawerOpen(true);
         break;
-      case 'processing':
-      case 'uploading':
-        setIsDrawerOpen(true);
+      case 'verifyin':
+      case 'ready':
+        // setIsDrawerOpen(true);
         break;
       default:
         break;
@@ -206,6 +206,7 @@ export function DashboardTableRow({
                 }}
               >
                 {row.createdAt} 
+                {row.job_id}
               </Box>
             </Tooltip>
           </Stack>

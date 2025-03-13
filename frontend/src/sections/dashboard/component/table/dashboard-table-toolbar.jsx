@@ -178,7 +178,7 @@ export function DashboardTableToolbar({ filters, onResetPage, numSelected }) {
 
         <DeleteDialog
           title="Do you really want to delete the email list(s)?"
-          content="Note that when an email list is deleted it is moved to the trash folder."
+          // content="Note that when an email list is deleted it is moved to the trash folder."
           open={deleteOpen}
           onClose={handleDeleteClose}
           action={
