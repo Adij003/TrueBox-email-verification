@@ -217,7 +217,6 @@ const BouncifyService = require("../../services/bouncify-service");
         EmailList.countDocuments(filter),
       ]);
       const totalPages = Math.ceil(totalCount / itemsPerPage);
-
       return res.status(200).json(
         Response.success("Email lists fetched successfully", {
           emailLists,

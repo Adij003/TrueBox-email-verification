@@ -32,7 +32,6 @@ const UploadComponent = forwardRef(({ setAlertState, onUploadSuccess }, ref) => 
 
     try {
       const result = await dispatch(uploadBulkEmails({ file: selectedFile, emailListName })).unwrap();
-      toast.success(`Bulk upload successful: ${result.message || 'Emails uploaded successfully.'}`);
       onUploadSuccess();
     } catch (error) {
       toast.error(`Upload failed: ${error}`);

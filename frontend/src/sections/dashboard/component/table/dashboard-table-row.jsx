@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 
 import { startVerification } from 'src/redux/slice/upload-slice';
-import { checkBulkStatus, fetchEmailLists, downloadBulkResults,  startBulkVerification } from 'src/redux/slice/emailVerificationSlice';
+import { checkBulkStatus, downloadBulkResults,  startBulkVerification } from 'src/redux/slice/emailVerificationSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -69,7 +69,6 @@ export function DashboardTableRow({
     switch (row.status) {
       case 'pending':
       dispatch(startBulkVerification(row.job_id));
-      dispatch(fetchEmailLists({ type: "bulk" }));
           // setIsDrawerOpen(true);
         break;
       case 'completed':
@@ -82,7 +81,6 @@ export function DashboardTableRow({
         break;
       case 'in-progress':
         dispatch(checkBulkStatus(row.job_id))
-        dispatch(fetchEmailLists({type: "bulk"}))
         break;
       default:
         break;

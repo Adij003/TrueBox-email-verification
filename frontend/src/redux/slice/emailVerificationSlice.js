@@ -109,32 +109,25 @@ export const downloadBulkResults = createAsyncThunk(
       const response = await axiosInstance.post(
         endpoints.emailList.downloadBulkResults(jobId),
         {},
-        { responseType: 'blob' } // Make sure to specify the response type as 'blob'
+        { responseType: 'blob' } 
       );
-      console.log('response from download bulk result', response.data);
-
-      // Create a Blob URL from the response data
+    
       const blob = response.data;
       const url = window.URL.createObjectURL(blob);
 
-      // Create a temporary <a> element
       const link = document.createElement('a');
       link.href = url;
       
-      // Provide a default file name for the download
-      link.download = 'bulk_results.csv'; // You can customize the name here
+      link.download = 'bulk_results.csv'; 
 
-      // Append the link to the document
       document.body.appendChild(link);
 
-      // Trigger the download by simulating a click
       link.click();
 
-      // Clean up: remove the temporary link and revoke the Blob URL
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
 
-      return response.data; // Optionally return the response data if you need it elsewhere
+      return response.data; 
     } catch (error) {
       return rejectWithValue(error.response?.data?.message || 'Something went wrong in EmailVerificaiton Reducer');
     }

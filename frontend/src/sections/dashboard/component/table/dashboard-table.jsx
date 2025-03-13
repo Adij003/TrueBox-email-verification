@@ -117,10 +117,16 @@ function applyFilter({ inputData, comparator, filters }) {
  
 export function DashboardTable() {
   const theme = useTheme();
-  const table = useTable({ defaultOrderBy: 'orderNumber' });
   const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification); 
   const [tableData, setTableData] = useState([]);
   const { currentPage, totalPages, totalItems, itemsPerPage} = pagination
+
+  const table = useTable({ 
+    defaultOrderBy: 'orderNumber',
+    defaultRowsPerPage: itemsPerPage,
+    defaultcurrentPage: currentPage,
+  });
+
 
   useEffect(() => {
     if (emailLists) {
@@ -131,7 +137,7 @@ export function DashboardTable() {
         }))
       );
     }
-  }, [emailLists]);
+  }, [emailLists, table]);
 
   const filters = useSetState({
     name: '',
@@ -151,7 +157,10 @@ export function DashboardTable() {
 
   // Effect Hooks
   useEffect(() => {
-    dispatch(fetchEmailLists({type: "bulk"}));    
+    dispatch(fetchEmailLists({
+      type: "bulk",
+      page: table.page+1
+    }));    
 
     if (isVerificationCompleted && processingRowId !== null) {
       setTableData((prevData) =>
@@ -159,10 +168,10 @@ export function DashboardTable() {
       );
       setProcessingRowId(null);
     }
-  }, [isVerificationCompleted, processingRowId, dispatch]);
+  }, [isVerificationCompleted, processingRowId, dispatch, table.page]);
 
 
-
+  console.log('pagination emailList: ', emailLists)
   
 
 
@@ -494,20 +503,15 @@ export function DashboardTable() {
           </Button>
         </DialogActions>
       </Dialog>
-
+    
       <TablePaginationCustom
         page={table.page}
-        count={dataFiltered.length}
+        count={totalItems}
         rowsPerPage={table.rowsPerPage}
         onPageChange={table.onChangePage}
         onChangeDense={table.onChangeDense}
         onRowsPerPageChange={table.onChangeRowsPerPage}
-        // page={currentPage}
-        // count={totalItems}
-        // rowsPerPage={itemsPerPage}
-        // onPageChange={table.onChangePage}
-        // onChangeDense={table.onChangeDense}
-        // onRowsPerPageChange={table.onChangeRowsPerPage}
+
       />
     </Card>
   );
