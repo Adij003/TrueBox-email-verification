@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router';
@@ -195,7 +196,7 @@ export function DashboardTableRow({
               arrow
               placement="top"
               disableInteractive
-              title={`Email List Uploaded: ${row.createdAt}, ${timezone}`}
+              title={`Email List Uploaded: ${dayjs(row.createdAt).format("YYYY-MM-DD")}`}
             >
               <Box
                 component="span"
@@ -208,7 +209,7 @@ export function DashboardTableRow({
                   display: 'inline-block',
                 }}
               >
-                {row.createdAt} 
+                {dayjs(row.createdAt).format("YYYY-MM-DD")} 
               </Box>
             </Tooltip>
           </Stack>

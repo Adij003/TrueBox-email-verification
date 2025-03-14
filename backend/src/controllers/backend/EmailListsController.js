@@ -163,7 +163,7 @@ const BouncifyService = require("../../services/bouncify-service");
     }
 
     const data = await BouncifyService.verifySingleEmail(req.body.email);
-    const newVerification = new EmailList({ user_id: req.user.id, type: "single", ...data, creditsConsumed: 1 });
+    const newVerification = new EmailList({ user_id: req.user.id, type: "single", ...data, creditsConsumed: 1, status: 'completed' });
     await newVerification.save();
 
     const updatedCreditInfo = await Credit.findOneAndUpdate(
@@ -192,46 +192,58 @@ const BouncifyService = require("../../services/bouncify-service");
 * @param {Object} res - response object.
 * @returns {Object} JSON response with the list of emails or an error message.
 */
-  (exports.getAllEmailLists = async (req, res) => {
-    try {
-      const { type, page = 1, limit = 5 } = req.query;
+exports.getAllEmailLists = async (req, res) => {
+  try {
+      const { type, status, page = 1, limit = 5 } = req.query;
       let filter = { user_id: req.user.id };
 
+      // Validate type if provided
       if (type) {
-        if (!["single", "bulk"].includes(type)) {
-          return res
-            .status(400)
-            .json(Response.error("Invalid type. Use 'single' or 'bulk'"));
-        }
-        filter.type = type;
+          if (!["single", "bulk"].includes(type)) {
+              return res
+                  .status(400)
+                  .json(Response.error("Invalid type. Use 'single' or 'bulk'"));
+          }
+          filter.type = type;
+      }
+
+      if (status) {
+          if (!["completed", "pending", "in-progress"].includes(status)) {
+              return res
+                  .status(400)
+                  .json(Response.error("Invalid status. Use 'completed', 'pending', or 'in-progress'"));
+          }
+          filter.status = status;
       }
 
       const itemsPerPage = Math.min(Math.max(parseInt(limit), 1), 100);
       const skip = (Math.max(parseInt(page), 1) - 1) * itemsPerPage;
 
       const [emailLists, totalCount] = await Promise.all([
-        EmailList.find(filter)
-          .sort({ createdAt: -1 })
-          .skip(skip)
-          .limit(itemsPerPage),
-        EmailList.countDocuments(filter),
+          EmailList.find(filter)
+              .sort({ createdAt: -1 })
+              .skip(skip)
+              .limit(itemsPerPage),
+          EmailList.countDocuments(filter),
       ]);
+
       const totalPages = Math.ceil(totalCount / itemsPerPage);
+
       return res.status(200).json(
-        Response.success("Email lists fetched successfully", {
-          emailLists,
-          pagination: {
-            currentPage: Number(page),
-            totalPages,
-            totalItems: totalCount,
-            itemsPerPage,
-          },
-        })
+          Response.success("Email lists fetched successfully", {
+              emailLists,
+              pagination: {
+                  currentPage: Number(page),
+                  totalPages,
+                  totalItems: totalCount,
+                  itemsPerPage,
+              },
+          })
       );
-    } catch (error) {
+  } catch (error) {
       Logs.error("Error fetching email lists", error);
       return res
-        .status(500)
-        .json(Response.error("Error fetching email lists", error.message));
-    }
-  });
+          .status(500)
+          .json(Response.error("Error fetching email lists", error.message));
+  }
+};

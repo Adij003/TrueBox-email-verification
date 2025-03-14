@@ -29,6 +29,10 @@ const CreditSchema = new mongoose.Schema({
           type: Date,
           default: Date.now,
         },
+        status: {
+          type: String,
+          default: 'completed'
+        },
       },
     ],
     default: [{ amountAdded: 100, timestamp: Date.now() }],

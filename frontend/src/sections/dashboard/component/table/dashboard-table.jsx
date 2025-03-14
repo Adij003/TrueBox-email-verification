@@ -118,7 +118,6 @@ export function DashboardTable() {
   const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification); 
   const [tableData, setTableData] = useState([]);
   const { currentPage, totalPages, totalItems, itemsPerPage} = pagination;
-  const [renderTrigger, setRenderTrigger] = useState(false);
 
   const table = useTable({ 
     defaultOrderBy: 'orderNumber',
@@ -207,7 +206,7 @@ export function DashboardTable() {
     filters: filters.state,
   });
 
-  const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
+  const dataInPage = rowInPage(emailLists, table.page, table.rowsPerPage);
 
   const canReset =
     !!filters.state.name ||

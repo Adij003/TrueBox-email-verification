@@ -137,6 +137,7 @@ export const downloadBulkResults = createAsyncThunk(
 export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', async (emailData, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.post(endpoints.emailList.verifySingleEmail, emailData);
+
     return response.data;
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || 'Something went wrong in EmailVerificaiton Reducer');
@@ -145,10 +146,10 @@ export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', as
 
 export const fetchEmailLists = createAsyncThunk(
   "emails/fetchEmailLists",
-  async ({ type, page, limit }, { rejectWithValue }) => {
+  async ({ type, status, page, limit }, { rejectWithValue }) => {
     try {    
       const response = await axiosInstance.get(endpoints.emailList.getEmailList, {
-        params: { type, page, limit },
+        params: { type, status, page, limit },
         headers: {
           "Content-Type": "application/json",
         },

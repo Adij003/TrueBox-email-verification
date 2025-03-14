@@ -1,5 +1,6 @@
 import { useTheme } from '@emotion/react';
-import { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -11,14 +12,15 @@ import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsBetween } from 'src/utils/format-time';
 
+import { fetchCredits } from 'src/redux/slice/creditSlice';
+import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
+
 import { Scrollbar } from 'src/components/scrollbar';
 import {
   useTable,
   rowInPage,
-  emptyRows,
   TableNoData,
   getComparator,
-  TableEmptyRows,
   TableHeadCustom,
   TablePaginationCustom,
 } from 'src/components/table';
@@ -60,7 +62,7 @@ const dataOn = [
     dateCreatedOn: 'Oct 23, 2024 17:45:32',
     message: 'List 1',
     status: 'Bulk Verification',
-    folder:'Pabbly Connect',
+    folder: 'Pabbly Connect',
     credits: 'Consumed',
     noOfCredits: 9,
   },
@@ -69,7 +71,7 @@ const dataOn = [
     message: 'List 2',
     status: 'Bulk Verification',
     credits: 'Consumed',
-    folder:'Pabbly Hook',
+    folder: 'Pabbly Hook',
     noOfCredits: 7,
   },
   {
@@ -98,16 +100,33 @@ export function CreditTable() {
   const [tableData, setTableData] = useState(dataOn);
   const theme = useTheme();
 
+  const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification);
+
+  const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
+  const { credits } = useSelector((state) => state.credits)
+  const { creditsAddingHistory } = credits?.data || {};
+
+
   const filters = useSetState({
     name: '',
     status: 'all',
   });
+  const dispatch = useDispatch();
 
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: emailLists,
     comparator: getComparator(table.order, table.orderBy),
     filters: filters.state,
   });
+
+  useEffect(() => {
+    dispatch(fetchEmailLists({
+      page: table.page + 1,
+      limit: table.rowsPerPage,
+      status: 'completed'
+    }));
+    dispatch(fetchCredits())
+  }, [dispatch, table.page, table.rowsPerPage]);
 
   const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
 
@@ -137,7 +156,7 @@ export function CreditTable() {
               disableInteractive
               title="View all the email verification logs here."
             > */}
-              <Typography variant="h6">Email Verification Logs</Typography>
+            <Typography variant="h6">Email Verification Logs</Typography>
             {/* </Tooltip> */}
           </Box>
         }
@@ -177,11 +196,7 @@ export function CreditTable() {
             />
 
             <TableBody>
-              {dataInPage
-                .slice(
-                  table.page * table.rowsPerPage,
-                  table.page * table.rowsPerPage + table.rowsPerPage
-                )
+              {emailLists
                 .map((row, index) => (
                   <CreditTableRow
                     key={index}
@@ -189,11 +204,13 @@ export function CreditTable() {
                     selected={table.selected.includes(row.id)}
                   />
                 ))}
-
-              <TableEmptyRows
-                height={table.dense ? 56 : 56 + 20}
-                emptyRows={emptyRows(table.page, table.rowsPerPage, dataOn.length)}
-              />
+              {table.page === 0 && creditsAddingHistory?.map((row, index) => (
+                <CreditTableRow
+                  key={index}
+                  row={row}
+                  selected={table.selected.includes(row.id)}
+                />
+              ))}
               {tableData.length === 0 ? (
                 <TableNoData
                   title="Not Data Found"
@@ -214,7 +231,7 @@ export function CreditTable() {
 
       <TablePaginationCustom
         page={table.page}
-        count={dataFiltered.length}
+        count={totalItems}
         rowsPerPage={table.rowsPerPage}
         onPageChange={table.onChangePage}
         onChangeDense={table.onChangeDense}
@@ -231,10 +248,10 @@ function applyFilter({ inputData, comparator, filters, dateError }) {
 
   // Filter by message (name)
   if (name) {
-   
+
     filteredData = filteredData.filter(
-      (order) => order.message && order.message.toLowerCase().includes(name.toLowerCase())||
-     order.folder && order.folder.toLowerCase().includes(name.toLowerCase())
+      (order) => order.message && order.message.toLowerCase().includes(name.toLowerCase()) ||
+        order.folder && order.folder.toLowerCase().includes(name.toLowerCase())
     );
   }
 

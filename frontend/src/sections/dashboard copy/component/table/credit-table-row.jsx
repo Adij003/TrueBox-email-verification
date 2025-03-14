@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import { Tooltip } from '@mui/material';
@@ -44,7 +46,7 @@ export function CreditTableRow({ row, selected }) {
             arrow
             placement="top"
             disableInteractive
-            title={`Action occurred at: ${row.dateCreatedOn} ${timezone}`}
+            title={`Action occurred at: ${row.createdAt}`}
           >
             <Box
               component="span"
@@ -57,7 +59,7 @@ export function CreditTableRow({ row, selected }) {
                 display: 'inline-block',
               }}
             >
-              {row.dateCreatedOn}
+               {row.createdAt ? dayjs(row.createdAt).format("YYYY-MM-DD") : dayjs(row.timestamp).format("YYYY-MM-DD")}
             </Box>
           </Tooltip>
         </Stack>
@@ -81,12 +83,14 @@ export function CreditTableRow({ row, selected }) {
               placement="top"
               disableInteractive
               title={
-                row.status === 'Email Credits Purchased'
+                (row.creditsConsumed >= 0)
                   ? 'Email credits alloted to the account.'
-                  : `${row.status === 'Single Verification' ? 'Email address' : 'Email list'}: ${row.message}`
+                  : `${row.type === 'single' ? 'Email address' : 'Email list'}: ${row.status}`
               }
             >
-              <span>{row.message}</span>
+              {/* <span>{row.message}</span> */}
+              <span>{row.amountAdded ? `Credits added` : row.message}</span>
+
             </Tooltip>
           </Box>
         </Stack>
@@ -103,18 +107,21 @@ export function CreditTableRow({ row, selected }) {
               fontSize: '0.875rem',
             }}
           >
-            {row.status === 'Single Verification' ? (
+            {(row.type === 'single') ? (
               <Tooltip arrow placement="top" disableInteractive title="Email address">
-                <span>Email address</span>{' '}
+                <span>{row.result}</span>{' '}
               </Tooltip>
             ) : (
               <Tooltip
                 arrow
                 placement="top"
                 disableInteractive
-                title={`Folder Name: ${row.folder}`}
+                title="Email List"
               >
-                <span>{row.folder}</span>{' '}
+                
+                <span>{row.amountAdded ? '' : `Emails verified: ${row.verified}`}</span>{' '}
+
+
               </Tooltip>
             )}
           </Box>
@@ -138,7 +145,7 @@ export function CreditTableRow({ row, selected }) {
               display: 'inline-block',
             }}
           >
-            {row.credits === 'Alloted' ? row.noOfCredits : `-${row.noOfCredits}`}
+            {row.amountAdded ? row.amountAdded : `-${row.creditsConsumed}`}
           </Box>
         </Tooltip>
       </TableCell>
