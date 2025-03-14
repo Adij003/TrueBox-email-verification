@@ -39,10 +39,8 @@ import { ConfirmDialog } from 'src/components/confirm-dialog';
 import {
   useTable,
   rowInPage,
-  emptyRows,
   TableNoData,
   getComparator,
-  TableEmptyRows,
   TableHeadCustom,
   TablePaginationCustom,
 } from 'src/components/table';
@@ -135,22 +133,9 @@ export function DashboardTable() {
     dispatch(fetchEmailLists({
       type: "bulk",
       page: table.page + 1,
-      limit: 5
+      limit: table.rowsPerPage
     }));    
-  }, [dispatch, table.page]);
-
-
-  // useEffect(() => {
-  //   if (emailLists) {
-  //     setTableData(
-  //       emailLists.map((item, index) => ({
-  //         ...item,
-  //         id: index,
-  //       }))
-  //     );
-  //   }
-
-  // }, [emailLists]);
+  }, [dispatch, table.page, table.rowsPerPage]);
 
   const filters = useSetState({
     name: '',
@@ -164,12 +149,6 @@ export function DashboardTable() {
   const confirmDelete = useBoolean();
   const isStartVerification = useSelector((state) => state.fileUpload.isStartVerification);
   const isVerificationCompleted = useSelector((state) => state.fileUpload.isVerificationCompleted);
-
-
-
-
-  
-
 
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
 
