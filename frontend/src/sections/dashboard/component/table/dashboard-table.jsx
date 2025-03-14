@@ -62,14 +62,14 @@ const STATUS_OPTIONS = [
 
 const TABLE_HEAD = [
   {
-    id: 'filename',
+    id: 'emailListName',
     label: 'Status/Name/Date',
     width: 400,
     whiteSpace: 'nowrap',
     tooltip: 'View email verification status, email list name and upload date.',
   },
   {
-    id: 'consumed',
+    id: 'creditsConsumed',
     label: 'Credits Consumed',
     width: 400,
     whiteSpace: 'nowrap',
@@ -119,7 +119,8 @@ export function DashboardTable() {
   const theme = useTheme();
   const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification); 
   const [tableData, setTableData] = useState([]);
-  const { currentPage, totalPages, totalItems, itemsPerPage} = pagination
+  const { currentPage, totalPages, totalItems, itemsPerPage} = pagination;
+  const [renderTrigger, setRenderTrigger] = useState(false);
 
   const table = useTable({ 
     defaultOrderBy: 'orderNumber',
@@ -127,17 +128,29 @@ export function DashboardTable() {
     defaultcurrentPage: currentPage,
   });
 
+  const dispatch = useDispatch();
 
+  // Effect Hooks
   useEffect(() => {
-    if (emailLists) {
-      setTableData(
-        emailLists.map((item, index) => ({
-          ...item,
-          id: index,
-        }))
-      );
-    }
-  }, [emailLists, table]);
+    dispatch(fetchEmailLists({
+      type: "bulk",
+      page: table.page + 1,
+      limit: 5
+    }));    
+  }, [dispatch, table.page]);
+
+
+  // useEffect(() => {
+  //   if (emailLists) {
+  //     setTableData(
+  //       emailLists.map((item, index) => ({
+  //         ...item,
+  //         id: index,
+  //       }))
+  //     );
+  //   }
+
+  // }, [emailLists]);
 
   const filters = useSetState({
     name: '',
@@ -153,25 +166,8 @@ export function DashboardTable() {
   const isVerificationCompleted = useSelector((state) => state.fileUpload.isVerificationCompleted);
 
 
-  const dispatch = useDispatch();
-
-  // Effect Hooks
-  useEffect(() => {
-    dispatch(fetchEmailLists({
-      type: "bulk",
-      page: table.page+1
-    }));    
-
-    if (isVerificationCompleted && processingRowId !== null) {
-      setTableData((prevData) =>
-        prevData.map((row) => (row.id === processingRowId ? { ...row, status: 'Verified' } : row))
-      );
-      setProcessingRowId(null);
-    }
-  }, [isVerificationCompleted, processingRowId, dispatch, table.page]);
 
 
-  console.log('pagination emailList: ', emailLists)
   
 
 
@@ -188,28 +184,7 @@ export function DashboardTable() {
     // navigate('/credits/purchase');
   };
 
-  const handleStartVerification = (rowId) => {
-    const targetRow = tableData.find((item) => item.id === rowId);
 
-    if (targetRow.requiresCredits) {
-      setCreditDialogOpen(true);
-      return;
-    }
-
-    setProcessingRowId(rowId);
-    setTableData((prevData) =>
-      prevData.map((item) => {
-        if (item.id === rowId) {
-          return {
-            ...item,
-            status: 'processing',
-            creditconsumed: `${item.numberOfEmails} Credit Consumed`,
-          };
-        }
-        return item;
-      })
-    );
-  };
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -248,7 +223,7 @@ export function DashboardTable() {
 
   // Computed values
   const dataFiltered = applyFilter({
-    inputData: tableData,
+    inputData: emailLists,
     comparator: getComparator(table.order, table.orderBy),
     filters: filters.state,
   });
@@ -315,12 +290,14 @@ export function DashboardTable() {
                   (tab.value === 'completed' && 'success') ||
                   (tab.value === 'verifying' && 'info') ||
                   (tab.value === 'ready' && 'warning') ||
+                  (tab.value === 'pending' && 'info') ||
+
                   'default'
                 }
               >
-                {['completed', 'processing', 'verifying', 'ready'].includes(tab.value)
-                  ? tableData.filter((user) => user.status === tab.value).length
-                  : tableData.length}
+                {['completed', 'processing', 'verifying', 'ready', 'pending'].includes(tab.value)
+                  ? emailLists.filter((user) => user.status === tab.value).length
+                  : emailLists.length}
               </Label>
             }
           />
@@ -373,12 +350,13 @@ export function DashboardTable() {
             />
 
             <TableBody>
-              {dataFiltered
-                .slice(
-                  table.page * table.rowsPerPage,
-                  table.page * table.rowsPerPage + table.rowsPerPage
-                )
-                .map((row, index) => (
+              {
+              // dataFiltered
+              //   .slice(
+              //     table.page * table.rowsPerPage,
+              //     table.page * table.rowsPerPage + table.rowsPerPage
+              //   )
+                emailLists.map((row, index) => (
                   <DashboardTableRow
                     key={row.id}
                     row={row}
@@ -392,12 +370,12 @@ export function DashboardTable() {
                   />
                 ))}
 
-              <TableEmptyRows
+              {/* <TableEmptyRows
                 height={table.dense ? 56 : 56 + 20}
-                emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-              />
+                emptyRows={emptyRows(table.page, table.rowsPerPage, emailLists.length)}
+              /> */}
 
-              {tableData.length === 0 ? (
+              {emailLists.length === 0 ? (
                 <TableNoData
                   title="Not Data Found"
                   description="No data found in the table"

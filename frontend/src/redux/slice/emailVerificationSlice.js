@@ -10,7 +10,7 @@ const initialState = {
   isError: false,
   message: '',
   verificationType: null, // "single" or "bulk"
-  emailLists: [], // Store fetched email lists
+  emailLists: [], 
   pagination: {
     currentPage: 1,
     totalPages: 1,
@@ -145,7 +145,7 @@ export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', as
 
 export const fetchEmailLists = createAsyncThunk(
   "emails/fetchEmailLists",
-  async ({ type, page = 1, limit = 5 }, { rejectWithValue }) => {
+  async ({ type, page, limit }, { rejectWithValue }) => {
     try {    
       const response = await axiosInstance.get(endpoints.emailList.getEmailList, {
         params: { type, page, limit },

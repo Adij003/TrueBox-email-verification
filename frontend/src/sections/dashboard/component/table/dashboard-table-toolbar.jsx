@@ -79,7 +79,9 @@ export function DashboardTableToolbar({ filters, onResetPage, numSelected }) {
   const dispatch = useDispatch();
 
 const handleRefreshEmailList = () => {
-  dispatch(fetchEmailLists({ type: "bulk"}))
+  dispatch(fetchEmailLists({ type: "bulk",
+    skip: 5
+  }))
 }
 
 
