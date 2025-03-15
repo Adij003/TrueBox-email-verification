@@ -216,13 +216,10 @@ exports.getAllEmailLists = async (req, res) => {
           filter.status = status;
       }
 
-      // Search filter: If 'search' query is provided, match against 'name' and 'email'
-      if (search) {
-          const searchRegex = new RegExp(search, "i"); // Case-insensitive search
-          filter.$or = [
-              { emailListName: searchRegex },
-              { email: searchRegex }
-          ];
+      console.log(search)
+      if(search){
+        filter.emailListName = { $regex: search, $options: 'i' }
+        console.log('filter: ', filter)
       }
 
       const itemsPerPage = Math.min(Math.max(parseInt(limit), 1), 100);
@@ -235,6 +232,7 @@ exports.getAllEmailLists = async (req, res) => {
               .limit(itemsPerPage),
           EmailList.countDocuments(filter),
       ]);
+      console.log(emailLists)
 
       const totalPages = Math.ceil(totalCount / itemsPerPage);
 

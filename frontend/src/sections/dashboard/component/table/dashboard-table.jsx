@@ -230,9 +230,9 @@ export function DashboardTable() {
         type: "bulk",
         page: table.page + 1,
         limit: table.rowsPerPage,
-        search
+        search: search.search
       }));
-      console.log("API call with search:", search);
+
       console.log("Email list", emailLists);
 
     }, 500); // 500ms delay
