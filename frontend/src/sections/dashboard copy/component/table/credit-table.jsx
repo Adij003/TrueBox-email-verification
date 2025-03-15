@@ -150,7 +150,7 @@ export function CreditTable() {
     setIsAppliedFilter(true)
       return dispatch(fetchEmailLists({
         page: table.page + 1,
-        limit: table.rowsPerPage-1,
+        limit: table.rowsPerPage,
         status: 'completed'
       }))
     }
@@ -160,6 +160,29 @@ export function CreditTable() {
       page: table.page + 1,
       limit: table.rowsPerPage,
       status: 'completed'
+    }))
+  }
+  
+  let timeout;
+  const handleSearch = (search) => {
+    setIsAppliedFilter(false);
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      dispatch(fetchEmailLists({
+        page: table.page + 1,
+        limit: table.rowsPerPage,
+        search: search?.search?.state?.name || ""  
+      }));
+    }, 1500);
+  };
+
+  const handleRefresh = () => {
+    setIsAppliedFilter(true)
+    dispatch(fetchEmailLists({ 
+      status: 'completed',
+      skip: 5,
+      limit: table.rowsPerPage-1,
+
     }))
   }
 
@@ -183,12 +206,12 @@ export function CreditTable() {
       />
       <Divider />
 
-      <CreditTableToolbar filters={filters} onResetPage={table.onResetPage} onApplyFilter={handleFilterApply} />
+      <CreditTableToolbar filters={filters} onResetPage={table.onResetPage} onApplyFilter={handleFilterApply} onApplySearch={handleSearch} onRefresh={handleRefresh} />
 
       {canReset && (
         <CreditTableFiltersResult
           filters={filters}
-          totalResults={dataFiltered.length}
+          totalResults={emailLists.length}
           onResetPage={table.onResetPage}
           sx={{ p: 2.5, pt: 0 }}
         />
@@ -229,19 +252,13 @@ export function CreditTable() {
                   selected={table.selected.includes(row.id)}
                 />
               ))}
-              {tableData.length === 0 ? (
+              {emailLists.length === 0 &&
                 <TableNoData
                   title="Not Data Found"
                   description="No data found in the table"
                   notFound={notFound}
                 />
-              ) : (
-                <TableNoData
-                  title="Not Search Found"
-                  description={`No search found with keyword "${filters.state.name}"`}
-                  notFound={notFound}
-                />
-              )}
+             }
             </TableBody>
           </Table>
         </Scrollbar>

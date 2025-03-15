@@ -1,8 +1,11 @@
 import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Chip from '@mui/material/Chip';
 
 import { fDateRangeShortLabel } from 'src/utils/format-time';
+
+import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
 
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
@@ -23,11 +26,13 @@ export function CreditTableFiltersResult({ filters, totalResults, onResetPage, s
     onResetPage();
     filters.setState({ startDate: null, endDate: null });
   }, [filters, onResetPage]);
-
-  const handleReset = useCallback(() => {
-    onResetPage();
-    filters.onResetState();
-  }, [filters, onResetPage]);
+  const dispatch = useDispatch();
+  const handleReset = () => {
+    handleRemoveKeyword()
+    dispatch(fetchEmailLists({
+      status: 'completed'
+    }))
+  }
 
   return (
     <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>

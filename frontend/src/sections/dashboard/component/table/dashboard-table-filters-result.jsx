@@ -1,33 +1,42 @@
 import { useCallback } from 'react';
+import { useDispatch } from 'react-redux';
 
 import Chip from '@mui/material/Chip';
 
 import { fDateRangeShortLabel } from 'src/utils/format-time';
+
+import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
 
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
 // ----------------------------------------------------------------------
 
 export function DashboardTableFiltersResult({ filters, totalResults, onResetPage, sx }) {
+  const dispatch = useDispatch();
+
   const handleRemoveKeyword = useCallback(() => {
     onResetPage();
     filters.setState({ name: '' });
   }, [filters, onResetPage]);
+  
+  const handleRemoveStatus = () => {
+    dispatch(fetchEmailLists({
+      type: "bulk"
+    }))
+  }
 
-  const handleRemoveStatus = useCallback(() => {
-    onResetPage();
-    filters.setState({ status: 'all' });
-  }, [filters, onResetPage]);
+  const handleRemoveDate = () => {
+    dispatch(fetchEmailLists({
+      type: "bulk"
+    }))
+  }
 
-  const handleRemoveDate = useCallback(() => {
-    onResetPage();
-    filters.setState({ startDate: null, endDate: null });
-  }, [filters, onResetPage]);
-
-  const handleReset = useCallback(() => {
-    onResetPage();
-    filters.onResetState();
-  }, [filters, onResetPage]);
+  const handleReset = () => {
+    handleRemoveKeyword()
+    dispatch(fetchEmailLists({
+      type: "bulk"
+    }))
+  }
 
   return (
     <FiltersResult totalResults={totalResults} onReset={handleReset} sx={sx}>

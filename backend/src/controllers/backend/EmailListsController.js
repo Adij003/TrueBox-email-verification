@@ -216,11 +216,12 @@ exports.getAllEmailLists = async (req, res) => {
           filter.status = status;
       }
 
-      console.log(search)
-      if(search){
-        filter.emailListName = { $regex: search, $options: 'i' }
-        console.log('filter: ', filter)
-      }
+      if (search) {
+        filter.$or = [
+            { emailListName: { $regex: search, $options: 'i' } },
+            { email: { $regex: search, $options: 'i' } }
+        ];
+    }
 
       const itemsPerPage = Math.min(Math.max(parseInt(limit), 1), 100);
       const skip = (Math.max(parseInt(page), 1) - 1) * itemsPerPage;
@@ -232,8 +233,6 @@ exports.getAllEmailLists = async (req, res) => {
               .limit(itemsPerPage),
           EmailList.countDocuments(filter),
       ]);
-      console.log(emailLists)
-
       const totalPages = Math.ceil(totalCount / itemsPerPage);
 
       return res.status(200).json(

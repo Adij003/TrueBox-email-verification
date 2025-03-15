@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useTheme } from '@emotion/react';
 
 import {
@@ -18,8 +19,9 @@ import {
 } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
+// import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
 
-export function CreditTableToolbar({ filters, onResetPage, publish, onChangePublish, onApplyFilter }) {
+export function CreditTableToolbar({ filters, onResetPage, publish, onChangePublish, onApplyFilter, onApplySearch, onRefresh }) {
   const theme = useTheme();
   const isBelow600px = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -28,11 +30,15 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
 
   const status = ['single', 'bulk', 'all'];
 
+  const [search, setSearch] = useState("")
+
   const handlePopoverClose = () => setAnchorEl(null);
 
   const handleFilterName = (event) => {
     onResetPage();
     filters.setState({ name: event.target.value });
+    setSearch(filters)
+    onApplySearch({search})
   };
 
   const [isFilterApplied, setFilterApplied] = useState(false); // Local filter state
@@ -40,6 +46,8 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
   const [selectedstatus, setselectedstatus] = useState(null);
 
   const [selectedFolder, setSelectedFolder] = useState(null);
+
+
 
   const handleFilterIconClick = (e) => {
     e.stopPropagation();
@@ -70,7 +78,7 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
 
   const handleApplyFilter = () => {
     if(onApplyFilter){
-      onApplyFilter({selectedFolder, selectedstatus})
+      onApplyFilter({selectedstatus})
       handleFilterClose()
     }
   };
@@ -106,6 +114,12 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
     'Pabbly Plus (4)',
   ];
 
+  const dispatch = useDispatch();
+
+  const handleRefreshEmailList = () => {
+    onRefresh()
+  }
+
   return (
     <>
       {/* <Stack
@@ -124,7 +138,7 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
             fullWidth
             value={filters.state.name}
             onChange={handleFilterName}
-            placeholder="Search by email, email list name and folder name..."
+            placeholder="Search by email, email list name..."
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -186,6 +200,24 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
               {isFilterApplied ? 'Filter Applied' : 'Filters'}
             </Button>
           </Tooltip>
+          <Tooltip title="Click here to refresh data." arrow placement="top">
+          <Button
+            sx={{
+              // ...buttonStyle,
+              whiteSpace: 'nowrap',
+              // width: isBelow600px ? '188px' : '188px',
+            }}
+            size="large"
+            color="primary"
+            onClick={handleRefreshEmailList}
+          >
+            <Iconify
+              icon="tabler:refresh"
+              sx={{ width: '24px', height: '24px', color: 'primary' }}
+              cursor="pointer"
+            />
+          </Button>
+        </Tooltip>
         </Box>
       </Stack>
 

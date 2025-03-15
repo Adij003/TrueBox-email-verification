@@ -233,9 +233,7 @@ export function DashboardTable() {
         search: search.search
       }));
 
-      console.log("Email list", emailLists);
-
-    }, 500); // 500ms delay
+    }, 1000); // 500ms delay
   };
 
   return (

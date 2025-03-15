@@ -21,17 +21,17 @@ export default function Page() {
       pageSubheading: 'View a summary of your email verification credits. ',
       link: 'https://forum.pabbly.com/threads/credits-summary.26312/',
     },
-    {
-      value: 'api',
-      path: '/app/settings/api',
-      icon: <Iconify icon="pajamas:api" width={24} />,
-      label: 'API',
-      tooltip: 'Get API key and secret key to perform email verifications directly.',
-      pageTitle: 'API',
-      pageSubheading:
-        'Generate your API Key and Secret Key to perform email verifications directly through the Pabbly Email Verification API. ',
-      link: 'https://forum.pabbly.com/threads/api.26313/',
-    },
+    // {
+    //   value: 'api',
+    //   path: '/app/settings/api',
+    //   icon: <Iconify icon="pajamas:api" width={24} />,
+    //   label: 'API',
+    //   tooltip: 'Get API key and secret key to perform email verifications directly.',
+    //   pageTitle: 'API',
+    //   pageSubheading:
+    //     'Generate your API Key and Secret Key to perform email verifications directly through the Pabbly Email Verification API. ',
+    //   link: 'https://forum.pabbly.com/threads/api.26313/',
+    // },
     {
       value: 'team-members',
       path: '/app/settings/team-members',

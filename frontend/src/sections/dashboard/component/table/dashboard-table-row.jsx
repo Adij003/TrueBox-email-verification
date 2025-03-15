@@ -39,7 +39,6 @@ export function DashboardTableRow({
   dashboardTableIndex,
   onOpenPopover,
   onViewReport,
-  // onStartVerification,
   isProcessing,
   isCompleted,
 }) {

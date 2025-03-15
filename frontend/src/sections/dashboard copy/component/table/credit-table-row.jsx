@@ -59,6 +59,28 @@ export function CreditTableRow({ row, selected }) {
                 display: 'inline-block',
               }}
             >
+               { row.amountAdded? ('Credits Added') : (row.email? row.email : row.emailListName)}
+            </Box>
+          </Tooltip>
+        </Stack>
+        <Stack spacing={2} direction="row" alignItems="center" mt="4px">
+          <Tooltip
+            arrow
+            placement="top"
+            disableInteractive
+            title={`Action occurred at: ${row.createdAt}`}
+          >
+            <Box
+              component="span"
+              sx={{
+                color: 'text.disabled',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: '300px',
+                display: 'inline-block',
+              }}
+            >
                {row.createdAt ? dayjs(row.createdAt).format("YYYY-MM-DD") : dayjs(row.timestamp).format("YYYY-MM-DD")}
             </Box>
           </Tooltip>
