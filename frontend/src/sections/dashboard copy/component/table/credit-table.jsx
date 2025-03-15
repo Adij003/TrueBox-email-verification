@@ -105,6 +105,7 @@ export function CreditTable() {
   const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
   const { credits } = useSelector((state) => state.credits)
   const { creditsAddingHistory } = credits?.data || {};
+  const [isAppliedFilter, setIsAppliedFilter] = useState(true)
 
 
   const filters = useSetState({
@@ -122,7 +123,7 @@ export function CreditTable() {
   useEffect(() => {
     dispatch(fetchEmailLists({
       page: table.page + 1,
-      limit: table.rowsPerPage,
+      limit: table.rowsPerPage-1,
       status: 'completed'
     }));
     dispatch(fetchCredits())
@@ -144,6 +145,23 @@ export function CreditTable() {
     },
     [filters, table]
   );
+  const handleFilterApply = (selectedFilter) => {
+    if(selectedFilter.selectedstatus === 'all'){
+    setIsAppliedFilter(true)
+      return dispatch(fetchEmailLists({
+        page: table.page + 1,
+        limit: table.rowsPerPage-1,
+        status: 'completed'
+      }))
+    }
+    setIsAppliedFilter(false)
+    dispatch(fetchEmailLists({
+      type: selectedFilter.selectedstatus,
+      page: table.page + 1,
+      limit: table.rowsPerPage,
+      status: 'completed'
+    }))
+  }
 
   return (
     <Card>
@@ -165,7 +183,7 @@ export function CreditTable() {
       />
       <Divider />
 
-      <CreditTableToolbar filters={filters} onResetPage={table.onResetPage} />
+      <CreditTableToolbar filters={filters} onResetPage={table.onResetPage} onApplyFilter={handleFilterApply} />
 
       {canReset && (
         <CreditTableFiltersResult
@@ -204,7 +222,7 @@ export function CreditTable() {
                     selected={table.selected.includes(row.id)}
                   />
                 ))}
-              {table.page === 0 && creditsAddingHistory?.map((row, index) => (
+              {isAppliedFilter && table.page === 0 && creditsAddingHistory?.map((row, index) => (
                 <CreditTableRow
                   key={index}
                   row={row}

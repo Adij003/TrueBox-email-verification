@@ -18,15 +18,16 @@ import {
 } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
+import { select } from 'src/theme/core/components/select';
 
-export function CreditTableToolbar({ filters, onResetPage, publish, onChangePublish }) {
+export function CreditTableToolbar({ filters, onResetPage, publish, onChangePublish, onApplyFilter }) {
   const theme = useTheme();
   const isBelow600px = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [anchorEl, setAnchorEl] = useState(null);
   const [filterAnchorEl, setFilterAnchorEl] = useState(null);
 
-  const status = ['Single Verification', 'Bulk Verification', 'Email Credits Purchased'];
+  const status = ['single', 'bulk', 'all'];
 
   const handlePopoverClose = () => setAnchorEl(null);
 
@@ -69,9 +70,9 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
   };
 
   const handleApplyFilter = () => {
-    if (hasAnyFilterSelected) {
-      setFilterApplied(true);
-      handleFilterClose();
+    if(onApplyFilter){
+      onApplyFilter({selectedFolder, selectedstatus})
+      handleFilterClose()
     }
   };
 
