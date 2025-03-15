@@ -31,7 +31,6 @@ export default function TeamMembersPage() {
   };
 
   const theme = useTheme();
-
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const navigate = useNavigate();
 

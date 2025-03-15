@@ -5,6 +5,7 @@ import axios, { endpoints } from 'src/utils/axios';
 const initialState = {
   user: null,
   status: 'idle',
+  userInfo: null,
   error: null,
 };
 
@@ -20,6 +21,19 @@ export const fetchUserSession = createAsyncThunk(
     }
   }
 );
+
+// async thunk to get team members and user info
+export const getTeamDetails = createAsyncThunk(
+  'auth/getTeamDetails',
+  async (_, {rejectWithValue}) => {
+    try{
+      const response = await axios.get(endpoints.auth.team);
+      return response.data;
+    }catch(error){
+      return rejectWithValue(error.response?.data?.message || error.message);
+    }
+  }
+)
 
 const userSlice = createSlice({
   name: 'user',
@@ -48,6 +62,17 @@ const userSlice = createSlice({
         state.user = null;
         state.status = 'unauthenticated';
         state.error = action.payload || action.error.message;
+      })
+      .addCase(getTeamDetails.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(getTeamDetails.fulfilled, (state, action) => {
+        state.userInfo = action.payload.data;
+        state.status = 'authenticated';
+      })
+      .addCase(getTeamDetails.rejected, (state, action) => {
+        state.error = action.payload || action.error.message;
+        state.status = 'error';
       });
   },
 });

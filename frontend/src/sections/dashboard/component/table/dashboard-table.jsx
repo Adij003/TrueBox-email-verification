@@ -351,7 +351,7 @@ export function DashboardTable() {
               //   )
                 emailLists.map((row, index) => (
                   <DashboardTableRow
-                    key={row.id}
+                    key={row._id}
                     row={row}
                     selected={table.selected.includes(row.id)}
                     onSelectRow={() => table.onSelectRow(row.id)}

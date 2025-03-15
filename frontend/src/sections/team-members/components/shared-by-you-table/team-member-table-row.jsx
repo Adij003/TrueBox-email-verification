@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { toast } from 'sonner';
 import React, { useState } from 'react';
 
@@ -42,7 +43,7 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
       folder: `Folder Name: ${rowData.folders_you_shared}`,
       sharedOn: `Folder Shared On: ${rowData.updatedAt} (UTC+05:30) Asia/Kolkata`,
       permission:
-        row.permission === 'Write Access'
+        row.permission_type === 'write'
           ? 'Team members can upload email lists, start verification, and download verification reports. They cannot create new folders, delete folders, or remove email lists.'
           : 'Team members can only download verification reports.',
     };
@@ -86,7 +87,7 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
             }}
           >
             <Tooltip title={getTooltip('sharedOn', row)} arrow placement="top" disableInteractive>
-              {row.createdAt}
+            {dayjs(row.shared_on).format('MMM DD, YY HH:mm:ss')}
             </Tooltip>
           </Stack>
         </TableCell>
@@ -147,7 +148,9 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
                 }}
               >
                 <Tooltip title={getTooltip('folder', row)} placement="bottom" arrow>
-                  {row.folders_you_shared}
+                  {row.folders.map((folder, index) => (
+                    <span key={index}>{folder}{index !== row.folders.length - 1 ? ', ' : ''}</span>
+                  ))} 
                 </Tooltip>
               </Box>
             </Stack>
@@ -181,7 +184,7 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
             }}
           >
             <Tooltip title={getTooltip('permission', row)} arrow placement="top" disableInteractive>
-              {row.permission}
+              {row.permission_type}
             </Tooltip>
           </Stack>
         </TableCell>

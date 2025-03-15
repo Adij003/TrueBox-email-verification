@@ -45,7 +45,7 @@ const TABLE_HEAD = [
   // { id: 'sno', label: 'S.No', width: 'flex', whiteSpace: 'nowrap', tooltip: 'Serial Number' },
 
   {
-    id: 'shared_on',
+    id: 'asdfasfd',
     label: 'Shared On',
     width: '200',
     whiteSpace: 'nowrap',

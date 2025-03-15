@@ -81,6 +81,7 @@ export const endpoints = {
  
   auth: {
     me: '/auth/verify-session',
+    team: '/users/team',
     signIn: 'auth/signin',
     signUp: '/auth/signup',
     logout: '/auth/logout'

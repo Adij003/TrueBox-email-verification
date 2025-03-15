@@ -61,7 +61,8 @@ module.exports = {
 
       const userId = req.params.user_id;
 
-      const user = await User.findById(userId);
+      // const user = await User.findById(userId)
+      const user = await User.findOne({ user_id: userId });
 
       if (!user) {
         throw "User not found!";
@@ -215,6 +216,16 @@ module.exports = {
       res
         .status(500)
         .json({ success: false, message: "Internal server error" });
+    }
+  },
+
+  getTeamMembers: async (req, res) => {
+    try{
+      const userId = req.user.id;
+      const user = await User.findOne({user_id: userId})
+      res.status(200).json(Response.success("User Details are: ", user))
+    } catch(error){
+      res.status(500).json(Response.error('Error fetching user info', error))
     }
   },
 

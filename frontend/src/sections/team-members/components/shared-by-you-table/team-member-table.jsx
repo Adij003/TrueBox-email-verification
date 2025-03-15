@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
-import { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -19,6 +20,8 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsAfter } from 'src/utils/format-time';
+
+import { getTeamDetails } from 'src/redux/slice/userSlice';
 
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -43,7 +46,7 @@ const TABLE_HEAD = [
   // { id: 'sno', label: 'S.No', width: 'flex', whiteSpace: 'nowrap', tooltip: 'Serial Number' },
 
   {
-    id: 'shared_on',
+    id: 'asdfasfddas',
     label: 'Shared On',
     width: '400',
     whiteSpace: 'nowrap',
@@ -56,12 +59,6 @@ const TABLE_HEAD = [
     width: '250',
     tooltip: 'Email address of the team member with whom the folder is shared.',
   },
-  // {
-  //   id: 'folders',
-  //   label: 'Folders You’ve Shared',
-  //   width: '200',
-  //   tooltip: 'Name of the folder shared.',
-  // },
   {
     id: 'permission',
     label: 'Permission Type',
@@ -144,6 +141,15 @@ export default function SharedbyYouTeamMemberTable({
 
   // LoadingButton
   const [isLoading, setIsLoading] = useState(false);
+  const {userInfo} = useSelector((state) => state.user)
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getTeamDetails())
+  }, [dispatch])
+
+
+  const { teamMembers = [] } = userInfo || {};
 
   return (
     <>
@@ -232,11 +238,7 @@ export default function SharedbyYouTeamMemberTable({
                 />
               ) : (
                 <TableBody>
-                  {dataFiltered
-                    .slice(
-                      table.page * table.rowsPerPage,
-                      table.page * table.rowsPerPage + table.rowsPerPage
-                    )
+                  {teamMembers
                     .map((row, index) => (
                       <SharedbyYouTeamMemberTableRow
                         key={row.id}

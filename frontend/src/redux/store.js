@@ -13,7 +13,7 @@ export const store = configureStore({
     listName: listNameReducer,
     user: userReducer, 
     credits: creditReducer,
-    emailVerification: emailVerificationReducer
+    emailVerification: emailVerificationReducer 
 
   },
 });
