@@ -194,7 +194,7 @@ const BouncifyService = require("../../services/bouncify-service");
 */
 exports.getAllEmailLists = async (req, res) => {
   try {
-      const { type, status, page = 1, limit = 5 } = req.query;
+      const { type, status, search, page = 1, limit = 5 } = req.query;
       let filter = { user_id: req.user.id };
 
       // Validate type if provided
@@ -214,6 +214,15 @@ exports.getAllEmailLists = async (req, res) => {
                   .json(Response.error("Invalid status. Use 'completed', 'pending', or 'in-progress'"));
           }
           filter.status = status;
+      }
+
+      // Search filter: If 'search' query is provided, match against 'name' and 'email'
+      if (search) {
+          const searchRegex = new RegExp(search, "i"); // Case-insensitive search
+          filter.$or = [
+              { emailListName: searchRegex },
+              { email: searchRegex }
+          ];
       }
 
       const itemsPerPage = Math.min(Math.max(parseInt(limit), 1), 100);

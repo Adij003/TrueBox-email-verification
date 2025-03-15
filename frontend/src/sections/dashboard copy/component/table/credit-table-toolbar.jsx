@@ -11,14 +11,13 @@ import {
   MenuList,
   TextField,
   Typography,
-  FormControl,
+  FormControl,  
   Autocomplete,
   useMediaQuery,
   InputAdornment,
 } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
-import { select } from 'src/theme/core/components/select';
 
 export function CreditTableToolbar({ filters, onResetPage, publish, onChangePublish, onApplyFilter }) {
   const theme = useTheme();
@@ -350,66 +349,6 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
                   value={selectedstatus}
                   onChange={(event, newValue) => setselectedstatus(newValue)}
                   renderInput={(params) => <TextField {...params} label="Select" />}
-                />
-              </FormControl>
-            </Box>
-            <Box
-              sx={{
-                display: 'flex',
-                flexDirection: {
-                  xs: 'column',
-                  sm: 'column',
-                  md: 'row',
-                },
-                gap: 2,
-                mb: 2,
-              }}
-            >
-              <FormControl fullWidth sx={{ mb: { xs: 2, sm: 2, md: 0 }, justifyContent: 'center' }}>
-                <Typography sx={{ fontSize: '14px', fontWeight: '600' }}>
-                  <Tooltip
-                    title=" Filter logs by selecting a folder to view only the logs within it."
-                    arrow
-                    placement="top"
-                  >
-                    <span>Folder</span>
-                  </Tooltip>
-                </Typography>
-              </FormControl>
-
-              <FormControl
-                fullWidth
-                sx={{
-                  mb: { xs: 2, sm: 2, md: 0 },
-                  width: { xs: '100%', sm: '100%', md: '390px' },
-                }}
-              >
-                <TextField
-                  id="select-currency-label-x"
-                  variant="outlined"
-                  fullWidth
-                  label="In"
-                  disabled
-                  size="small"
-                />
-              </FormControl>
-
-              <FormControl fullWidth sx={{ mb: { xs: 2, sm: 2, md: 0 } }}>
-                <Autocomplete
-                  sx={{
-                    '& .MuiInputBase-input': {
-                      fontSize: '14px',
-                    },
-                    '& .MuiInputLabel-root': {
-                      fontSize: '14px',
-                    },
-                  }}
-                  size="small"
-                  options={folder}
-                  value={selectedFolder}
-                  onChange={(event, newValue) => setSelectedFolder(newValue)}
-                  renderInput={(params) => <TextField {...params} label="Select" />}
-                  // sx={{ width: 300 }}
                 />
               </FormControl>
             </Box>

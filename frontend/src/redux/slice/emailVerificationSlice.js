@@ -146,10 +146,10 @@ export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', as
 
 export const fetchEmailLists = createAsyncThunk(
   "emails/fetchEmailLists",
-  async ({ type, status, page, limit }, { rejectWithValue }) => {
+  async ({ type, status, page, limit, search }, { rejectWithValue }) => {
     try {    
       const response = await axiosInstance.get(endpoints.emailList.getEmailList, {
-        params: { type, status, page, limit },
+        params: { type, status, page, limit, search },
         headers: {
           "Content-Type": "application/json",
         },

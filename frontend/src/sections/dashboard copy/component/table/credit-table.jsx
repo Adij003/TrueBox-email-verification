@@ -155,7 +155,7 @@ export function CreditTable() {
       }))
     }
     setIsAppliedFilter(false)
-    dispatch(fetchEmailLists({
+    return dispatch(fetchEmailLists({
       type: selectedFilter.selectedstatus,
       page: table.page + 1,
       limit: table.rowsPerPage,

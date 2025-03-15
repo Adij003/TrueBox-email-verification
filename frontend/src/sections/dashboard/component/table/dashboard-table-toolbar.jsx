@@ -1,5 +1,5 @@
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useState, useCallback } from 'react';
 
 // MUI imports
 import {
@@ -50,7 +50,7 @@ const FOLDER_STRUCTURE = [
   'Organization 9',
 ];
 
-export function DashboardTableToolbar({ filters, onResetPage, numSelected }) {
+export function DashboardTableToolbar({ filters, onResetPage, numSelected, onApplyFilter }) {
 
   const isBelow600px = useMediaQuery('(max-width:600px)');
 
@@ -59,19 +59,18 @@ export function DashboardTableToolbar({ filters, onResetPage, numSelected }) {
 
   const [moveFolderOpen, setMoveFolderOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
+  const [search, setSearch] = useState("")
 
 
   // Computed values
   const isActionsOpen = Boolean(anchorEl);
 
   // Handlers
-  const handleFilterName = useCallback(
-    (event) => {
-      onResetPage();
-      filters.setState({ name: event.target.value });
-    },
-    [filters, onResetPage]
-  );
+  const handleFilterName = (event) => {
+    filters.setState({ name: event.target.value });
+    setSearch(event.target.value)
+    onApplyFilter({search})
+    }
 
   const handleActionsOpen = (event) => setAnchorEl(event.currentTarget);
   const handleActionsClose = () => setAnchorEl(null);

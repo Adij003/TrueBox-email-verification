@@ -222,6 +222,22 @@ export function DashboardTable() {
     handleClosePopover();
   };
 
+  let timeout;
+  const handleFilterApply = (search) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => {
+      dispatch(fetchEmailLists({
+        type: "bulk",
+        page: table.page + 1,
+        limit: table.rowsPerPage,
+        search
+      }));
+      console.log("API call with search:", search);
+      console.log("Email list", emailLists);
+
+    }, 500); // 500ms delay
+  };
+
   return (
     <Card>
       <CardHeader
@@ -286,6 +302,7 @@ export function DashboardTable() {
         filters={filters}
         onResetPage={table.onResetPage}
         numSelected={table.selected.length}
+        onApplyFilter={handleFilterApply}
       />
 
       {canReset && (
