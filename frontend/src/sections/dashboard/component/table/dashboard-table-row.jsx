@@ -74,7 +74,9 @@ export function DashboardTableRow({
         dispatch(downloadBulkResults(row.job_id));
         // setIsDrawerOpen(true);
         break;
-      case 'verifyin':
+      case 'verifying':
+        dispatch(checkBulkStatus(row.job_id))
+        break;
       case 'ready':
         // setIsDrawerOpen(true);
         break;
@@ -108,7 +110,7 @@ export function DashboardTableRow({
       case 'completed':
         return 'Download Report';
       case 'verifying':
-        return 'Verification In Progress';
+        return 'Check Status';
       case 'ready':
         return 'Start Verification';
       case 'pending':

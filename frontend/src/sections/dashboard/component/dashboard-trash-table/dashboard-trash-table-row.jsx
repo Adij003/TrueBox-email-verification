@@ -104,7 +104,7 @@ export function DashboardTrashTableRow({
       case 'Verified':
         return 'Download Report';
       case 'processing':
-        return 'Verification In Progress';
+        return 'Check Status';
       case 'uploading':
         return 'Uploading';
       case 'Unverified':
