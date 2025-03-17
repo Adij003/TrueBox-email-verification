@@ -6,15 +6,15 @@ const CreditSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  total_credits: {
+  totalCredits: {
     type: Number,
     default: 100,
   },
-  credits_remaining: {
+  creditsRemaining: {
     type: Number,
     default: 100,
   },
-  credits_consumed: {
+  creditsConsumed: {
     type: Number,
     default: 0,
   },

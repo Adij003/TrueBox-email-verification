@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const UsersController = require('../controllers/backend/UsersController');
-const {validateTeamMember} = require('../utils/Validators')
+const {validateTeamMember} = require('../utils/validators-util')
 
 router.post('/', UsersController.create);
 router.get('/', UsersController.getAll);

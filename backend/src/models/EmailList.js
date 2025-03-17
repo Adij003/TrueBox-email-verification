@@ -37,7 +37,7 @@ const EmailVerificationSchema = new mongoose.Schema({
   success: { type: Boolean },
   
   // Bulk Email Verification Fields
-  job_id: {
+  jobId: {
     type: String,
     unique: true,
     required: function () {

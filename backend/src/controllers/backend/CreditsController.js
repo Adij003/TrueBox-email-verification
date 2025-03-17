@@ -1,6 +1,6 @@
 const axios = require("axios");
-const Logs = require("../../utils/Logs");
-const Response = require("../../utils/Response");
+const Logs = require("../../utils/logs-util");
+const Response = require("../../utils/response-util");
 const Credit = require("../../models/Credit");
 
   /**
@@ -22,18 +22,18 @@ exports.getCreditInfo = async (req, res) => {
     if (!userCreditInfo) {
       userCreditInfo = new Credit({
         user_id: req.user.id,
-        total_credits: 100, 
-        credits_remaining: responseCredits.data.credits_info.credits_remaining,
-        credits_consumed:
+        totalCredits: 100, 
+        creditsRemaining: responseCredits.data.credits_info.credits_remaining,
+        creditsConsumed:
           100 - responseCredits.data.credits_info.credits_remaining,
       });
 
       await userCreditInfo.save();
     } else {
-      userCreditInfo.credits_remaining =
+      userCreditInfo.creditsRemaining =
         responseCredits.data.credits_info.credits_remaining;
-      userCreditInfo.credits_consumed =
-        userCreditInfo.total_credits - userCreditInfo.credits_remaining;
+      userCreditInfo.creditsConsumed =
+        userCreditInfo.totalCredits - userCreditInfo.creditsRemaining;
       await userCreditInfo.save();
     }
     return res

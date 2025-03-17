@@ -5,9 +5,9 @@ const JwtStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
 const bcrypt = require('bcryptjs');
 const User = require('../src/models/User');
-const Logs = require('../src/utils/Logs');
-const Helper = require('../src/utils/Helper');
-const Accounts = require('../src/utils/Accounts');
+const Logs = require('../src/utils/logs-util');
+const Helper = require('../src/utils/helper-util');
+const Accounts = require('../src/utils/accounts-util');
 
 
 const LOCAL_STRATEGY_CONFIG = {

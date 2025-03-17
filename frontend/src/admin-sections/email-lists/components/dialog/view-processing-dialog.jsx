@@ -72,7 +72,7 @@ export default function ViewProcessingDrawer({ open, onClose, rowData }) {
           <Box sx={{ mb: 2, p: 2, bgcolor: 'background.neutral', borderRadius: 1 }}>
             <Box>
               <Typography variant="body2">
-                <strong>job_id :</strong> d5kcnspm2za601jpxsi40fsfwfnipm0mi81l
+                <strong>jobId :</strong> d5kcnspm2za601jpxsi40fsfwfnipm0mi81l
               </Typography>
               <Typography variant="body2">
                 <strong>success :</strong> 1

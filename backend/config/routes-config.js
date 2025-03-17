@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
-const sessionAuth = require('../src/middlewares/sessionAuth');
-const basicAuth = require('../src/middlewares/basicAuth');
-const jwtAuth = require('../src/middlewares/jwtAuth');
+const sessionAuth = require('../src/middlewares/session-auth-middleware');
+const basicAuth = require('../src/middlewares/basic-auth-middleware');
+const jwtAuth = require('../src/middlewares/jwt-auth-middleware');
 
 const csrf = require('csurf');
 // CSRF protection middleware
@@ -29,7 +29,7 @@ function loadRoutes(app) {
              */
             const setRouteOptions = (req, res, next) => {
                 req.routeOptions = {
-                    module_name: moduleName
+                    moduleName: moduleName
                 };
                 next();
             };

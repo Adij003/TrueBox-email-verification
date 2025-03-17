@@ -31,7 +31,7 @@ const initialState = {
     success: false,
   },
   bulk: {
-    job_id: '',
+    jobId: '',
     status: 'pending',
     previousCredits: 0,
     creditsConsumed: 0,
@@ -61,7 +61,6 @@ export const uploadBulkEmails = createAsyncThunk(
   "emails/uploadBulkEmails",
   async ({ file, emailListName }, { rejectWithValue }) => {
     try {
-    console.log('we are reaching here and the email data is: ', file)
       const formData = new FormData();
       formData.append("csv_file", file);
       formData.append("emailListName", emailListName); 
@@ -177,7 +176,7 @@ const emailVerificationSlice = createSlice({
     .addCase(uploadBulkEmails.fulfilled, (state, action) => {
       state.isLoading = false;
       state.isSuccess = true;
-      state.bulk.job_id = action.payload.job_id;
+      state.bulk.jobId = action.payload.jobId;
     })
     .addCase(uploadBulkEmails.rejected, (state, action) => {
       state.isLoading = false;

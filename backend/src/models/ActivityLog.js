@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema({
     user_id: { type: String, required: true },
-    module_name: { type: String },
-    event_source: { type: String },
+    moduleName: { type: String },
+    eventSource: { type: String },
     action: { type: String, required: true },
     url: { type: String, required: true },
     data: { type: String },

@@ -68,20 +68,20 @@ export function DashboardTableRow({
   const handleAction = () => {
     switch (row.status) {
       case 'pending':
-      dispatch(startBulkVerification(row.job_id));
+      dispatch(startBulkVerification(row.jobId));
         break;
       case 'completed':
-        dispatch(downloadBulkResults(row.job_id));
+        dispatch(downloadBulkResults(row.jobId));
         // setIsDrawerOpen(true);
         break;
       case 'verifying':
-        dispatch(checkBulkStatus(row.job_id))
+        dispatch(checkBulkStatus(row.jobId))
         break;
       case 'ready':
         // setIsDrawerOpen(true);
         break;
       case 'in-progress':
-        dispatch(checkBulkStatus(row.job_id))
+        dispatch(checkBulkStatus(row.jobId))
         break;
       default:
         break;

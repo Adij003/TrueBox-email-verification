@@ -1,22 +1,22 @@
 /**
- * Basic Authentication Middleware
+ * JWT Authentication Middleware
  */
 
-const Response = require('../utils/Response');
+const Response = require('../utils/response-util');
 const ActivityLog = require('../models/ActivityLog');
 const passport = require('passport');
-const Logs = require('../utils/Logs');
+const Logs = require('../utils/logs-util');
 
 module.exports = async (req, res, next) => {
 
-    passport.authenticate('basic', { session: false }, async (err, user, info) => {
+    passport.authenticate('jwt', { session: false }, async (err, user, info) => {
         try {
             if (err) {
                 throw err;
             }
 
             if (!user) {
-                throw "Invalid access!";
+                throw "Invalid token!";
             }
 
             /**
@@ -30,17 +30,17 @@ module.exports = async (req, res, next) => {
 
                 const newActivityLog = new ActivityLog({
                     user_id: user.id,
-                    module_name: req.routeOptions && req.routeOptions.module_name ? req.routeOptions.module_name : '',
-                    event_source: "api",
+                    moduleName: req.routeOptions && req.routeOptions.moduleName ? req.routeOptions.moduleName : '',
+                    eventSource: "api",
                     action: req.method,
                     url: req.originalUrl,
                     data: JSON.stringify(eventData),
                 });
 
                 // Save the logs to the database
-                await newActivityLog.save();
+                await newActivityLogs.save();
             }
-
+            
             req.user = user;
             return next(); // User is authenticated, continue to the next middleware or route handler
         } catch (err) {

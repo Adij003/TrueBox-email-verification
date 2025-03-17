@@ -1,15 +1,15 @@
 const express = require('express');
 const app = express();
 require('dotenv').config();
-const dbConfig = require('./config/database');
+const dbConfig = require('./config/db-config');
 // const setupRedisSession = require('./config/sessionRedis');
-const setupMongoSession = require('./config/sessionMongo');
+const setupMongoSession = require('./config/session-mongo-config');
 // const setupMysqlSession = require('./config/sessionMysql');
-const corsMiddleware = require('./config/cors');
-const helmetMiddleware = require('./config/helmet');
-const cacheControl = require('./config/cacheControl');
+const corsMiddleware = require('./config/cors-config');
+const helmetMiddleware = require('./config/helmet-config');
+const cacheControl = require('./config/cache-control-config');
 const passport = require('passport');
-require('./config/passport');
+require('./config/passport-config');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
 const { Sequelize } = require('sequelize'); // Import Sequelize if you need to check for Sequelize-specific things
@@ -75,7 +75,7 @@ app.use(passport.session());
 /**
  *  Import load routes module
  */
-const loadRoutes = require('./config/routes');
+const loadRoutes = require('./config/routes-config');
 
 /**
  * Automatically load and bind routes

@@ -20,7 +20,7 @@ const BouncifyService = {
         { headers: formData.getHeaders() }
       );
 
-      return response.data;
+      return response.data; 
     } catch (error) {
       throw error.response?.data || error.message;
     }
@@ -29,10 +29,10 @@ const BouncifyService = {
   /**
    * Start bulk email verification
    */
-  startBulkVerification: async (job_id) => {
+  startBulkVerification: async (jobId) => {
     try {
       const response = await axios.patch(
-        `${BASE_URL}/bulk/${job_id}?apikey=${API_KEY}`,
+        `${BASE_URL}/bulk/${jobId}?apikey=${API_KEY}`,
         { action: "start" },
         { headers: { "Content-Type": "application/json" } }
       );
@@ -46,9 +46,9 @@ const BouncifyService = {
   /**
    * Check bulk verification status
    */
-  checkBulkStatus: async (job_id) => {
+  checkBulkStatus: async (jobId) => {
     try {
-      const response = await axios.get(`${BASE_URL}/bulk/${job_id}?apikey=${API_KEY}`);
+      const response = await axios.get(`${BASE_URL}/bulk/${jobId}?apikey=${API_KEY}`);
       return response.data;
     } catch (error) {
       throw error.response?.data || error.message;
@@ -58,10 +58,10 @@ const BouncifyService = {
   /**
    * Download bulk verification results
    */
-  downloadBulkResults: async (job_id) => {
+  downloadBulkResults: async (jobId) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/download?jobId=${job_id}&apikey=${API_KEY}`,
+        `${BASE_URL}/download?jobId=${jobId}&apikey=${API_KEY}`,
         { filterResult: ["deliverable", "undeliverable", "accept_all", "unknown"] },
         { responseType: "stream" }
       );

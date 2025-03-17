@@ -17,8 +17,7 @@ export default function CreditStatsCards() {
     dispatch(fetchCredits());
   }, [dispatch]);
 
-  // const { credits_consumed, total_credits, credits_remaining } = credits?.data 
-  const { credits_consumed, total_credits, credits_remaining } = credits?.data || {};
+  const { creditsConsumed, totalCredits, creditsRemaining } = credits?.data || {};
 
   function calculateStats(allottedCredits, consumedCredits) {
     const remainingCredits = allottedCredits - consumedCredits;
@@ -58,7 +57,7 @@ export default function CreditStatsCards() {
       /> */}
       <StatsCards
         cardtitle="Email Credits Consumed"
-        cardstats={credits_consumed}
+        cardstats={creditsConsumed}
         icon_name="Processed.svg"
         icon_color="#10CBF3"
         bg_gradient="#10CBF3"
@@ -66,7 +65,7 @@ export default function CreditStatsCards() {
       />
       <StatsCards
         cardtitle="Email Credits Remaining"
-        cardstats={credits_remaining}
+        cardstats={creditsRemaining}
         icon_name="Complete.svg"
         icon_color="#1D88FA"
         bg_gradient="#1D88FA"
@@ -74,7 +73,7 @@ export default function CreditStatsCards() {
       />
       <StatsCards
         cardtitle="Total Number of Credits Alloted"
-        cardstats={total_credits}
+        cardstats={totalCredits}
         icon_name="2card.png"
         icon_color="#28a645"
         bg_gradient="#28a645"

@@ -1,7 +1,7 @@
 const axios = require("axios");
 const FormData = require("form-data");
-const Logs = require("../../utils/Logs");
-const Response = require("../../utils/Response");
+const Logs = require("../../utils/logs-util");
+const Response = require("../../utils/response-util");
 const { Readable } = require("stream"); // Import Readable for buffer stream 
 const EmailList = require("../../models/EmailList");
 const Credit = require("../../models/Credit");
@@ -26,12 +26,12 @@ const BouncifyService = require("../../services/bouncify-service");
 
       const userCreditInfo = await Credit.findOne({ user_id: req.user.id });
 
-      const newBulkJob = new EmailList({
+      const newBulkJob = new EmailList({ 
         type: "bulk",
-        job_id,
+        jobId: job_id,
         user_id: req.user.id,
         emailListName,
-        previousCredits: userCreditInfo.credits_remaining,
+        previousCredits: userCreditInfo.creditsRemaining,
       });
       await newBulkJob.save();
 
@@ -47,16 +47,16 @@ const BouncifyService = require("../../services/bouncify-service");
 
 /**
 * Starts bulk email verification for a given job ID.
-* @param {Object} req - Express request object containing job_id in params.
+* @param {Object} req - Express request object containing jobId in params.
 * @param {Object} res - Express response object.
 * @returns {Object} JSON response indicating whether the verification started.
 */
   (exports.startBulkVerification = async (req, res) => {
     try {
-      if (!req.params.job_id) return res.status(400).json(Response.error("job_id is required"));
+      if (!req.params.jobId) return res.status(400).json(Response.error("jobId is required"));
 
-    const response = await BouncifyService.startBulkVerification(req.params.job_id);
-    await EmailList.findOneAndUpdate({ job_id: req.params.job_id }, { status: "in-progress" });
+    const response = await BouncifyService.startBulkVerification(req.params.jobId);
+    await EmailList.findOneAndUpdate({ jobId: req.params.jobId }, { status: "in-progress" });
 
     return res.status(200).json(Response.success("Email verification started", response));
     } catch (error) {
@@ -69,17 +69,17 @@ const BouncifyService = require("../../services/bouncify-service");
 
 /**
 * Checks the status of a bulk email verification job.
-* @param {Object} req - Express request object containing job_id in params.
+* @param {Object} req - Express request object containing jobId in params.
 * @param {Object} res - Express response object.
 * @returns {Object} JSON response with the job status and details.
 */
   (exports.checkBulkStatus = async (req, res) => {
     try {
-      if (!req.params.job_id) {
-        return res.status(400).json(Response.error("Job_id is required"));
+      if (!req.params.jobId) {
+        return res.status(400).json(Response.error("jobId is required"));
     }
 
-    const data = await BouncifyService.checkBulkStatus(req.params.job_id);
+    const data = await BouncifyService.checkBulkStatus(req.params.jobId);
 
     const updateFields = {
         status: data.status,
@@ -93,7 +93,7 @@ const BouncifyService = require("../../services/bouncify-service");
 
     if (data.status === "completed") {
         const newUserCredits = await BouncifyService.getCreditInfo();
-        const emailListRecord = await EmailList.findOne({ job_id: req.params.job_id });
+        const emailListRecord = await EmailList.findOne({ jobId: req.params.jobId });
 
         if (emailListRecord) {
             updateFields.creditsConsumed = emailListRecord.previousCredits - newUserCredits;
@@ -101,7 +101,7 @@ const BouncifyService = require("../../services/bouncify-service");
     }
 
     const updatedRecord = await EmailList.findOneAndUpdate(
-        { job_id: req.params.job_id },
+        { jobId: req.params.jobId },
         updateFields,
         { new: true }
     );
@@ -117,25 +117,21 @@ const BouncifyService = require("../../services/bouncify-service");
 
 /**
  * Downloads the results of a completed bulk email verification job.
- * @param {Object} req - Express request object containing job_id in params.
+ * @param {Object} req - Express request object containing jobId in params.
  * @param {Object} res - Express response object.
  * @returns {Object} CSV file as response stream if successful.
  */
   (exports.downloadBulkResults = async (req, res) => {
     try {
-      if (!req.params.job_id) return res.status(400).json(Response.error("Job_id is required"));
+      if (!req.params.jobId) return res.status(400).json(Response.error("jobId is required"));
 
-      const responseStream = await BouncifyService.downloadBulkResults(req.params.job_id);
+      const responseStream = await BouncifyService.downloadBulkResults(req.params.jobId);
 
-      res.setHeader("Content-Disposition", `attachment; filename=${req.params.job_id}.csv`);
+      res.setHeader("Content-Disposition", `attachment; filename=${req.params.jobId}.csv`);
       res.setHeader("Content-Type", "text/csv");
 
       responseStream.pipe(res);
     } catch (error) {
-      console.error(
-        "Error downloading results:",
-        error.response?.data || error.message
-      );
       Logs.error("Error in downloading data", error);
       return res
         .status(500)
@@ -164,11 +160,11 @@ const BouncifyService = require("../../services/bouncify-service");
 
     const data = await BouncifyService.verifySingleEmail(req.body.email);
     const newVerification = new EmailList({ user_id: req.user.id, type: "single", ...data, creditsConsumed: 1, status: 'completed' });
-    await newVerification.save();
+    await newVerification.save(); 
 
     const updatedCreditInfo = await Credit.findOneAndUpdate(
       { user_id: req.user.id },
-      { $inc: { credits_consumed: 1 }, $set: { credits_remaining: await BouncifyService.getCreditInfo() } },
+      { $inc: { creditsConsumed: 1 }, $set: { creditsRemaining: await BouncifyService.getCreditInfo() } },
       { new: true, upsert: true }
     );
 

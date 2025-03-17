@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTheme } from '@emotion/react';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 
@@ -25,6 +26,8 @@ const { items, style } = listItems;
 
 export default function TeamMembersPage() {
   const [selectedListItem, setSelectedListItem] = useState(0);
+  const {userInfo} = useSelector((state) => state.user);
+
 
   const handleListItemSelect = (index) => {
     setSelectedListItem(index);

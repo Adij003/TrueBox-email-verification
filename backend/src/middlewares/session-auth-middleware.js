@@ -2,7 +2,7 @@
  * Session Authentication Middleware
  */
 
-const Response = require('../utils/Response');
+const Response = require('../utils/response-util');
 const ActivityLog = require('../models/ActivityLog');
 
 module.exports = async (req, res, next) => {
@@ -22,8 +22,8 @@ module.exports = async (req, res, next) => {
 
         const newActivityLog = new ActivityLog({
             user_id: req.user.id,
-            module_name: req.routeOptions && req.routeOptions.module_name ? req.routeOptions.module_name : '',
-            event_source: "user",
+            moduleName: req.routeOptions && req.routeOptions.moduleName ? req.routeOptions.moduleName : '',
+            eventSource: "user",
             action: req.method,
             url: req.originalUrl,
             data: JSON.stringify(eventData),

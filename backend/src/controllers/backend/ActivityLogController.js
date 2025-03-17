@@ -1,7 +1,7 @@
 const axios = require("axios");
 const FormData = require("form-data");
-const Logs = require("../../utils/Logs");
-const Response = require("../../utils/Response");
+const Logs = require("../../utils/logs-util");
+const Response = require("../../utils/response-util");
 const ActivityLog = require("../../models/ActivityLog")
 
 exports.getActivityLogs = async (req, res) => {
@@ -11,7 +11,7 @@ exports.getActivityLogs = async (req, res) => {
 
         if (search) {
             filter.$or = [
-                { module_name: { $regex: search, $options: 'i' } },
+                { moduleName: { $regex: search, $options: 'i' } },
                 { action: { $regex: search, $options: 'i' } }
             ];
         }
