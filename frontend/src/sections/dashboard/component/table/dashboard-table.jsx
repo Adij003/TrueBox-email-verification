@@ -155,14 +155,6 @@ export function DashboardTable() {
     setCreditDialogOpen(false);
   };
 
-  const handleBuyCredits = () => {
-    // Handle buy credits action
-    setCreditDialogOpen(false);
-    // Optionally navigate to credits purchase page
-    // navigate('/credits/purchase');
-  };
-
-
 
   const handleFilterStatus = useCallback(
     (event, newValue) => {
@@ -171,6 +163,8 @@ export function DashboardTable() {
     },
     [filters, table]
   );
+
+ 
 
   const handleOpenPopover = (event, row) => {
     if (row.status !== 'processing') {
@@ -280,14 +274,13 @@ export function DashboardTable() {
                 }
                 color={
                   (tab.value === 'completed' && 'success') ||
-                  (tab.value === 'verifying' && 'info') ||
-                  (tab.value === 'ready' && 'warning') ||
+                  (tab.value === 'in-progress' && 'info') ||
                   (tab.value === 'pending' && 'info') ||
 
                   'default'
                 }
               >
-                {['completed', 'processing', 'verifying', 'ready', 'pending'].includes(tab.value)
+                {['completed', 'in-progress', 'pending'].includes(tab.value)
                   ? emailLists.filter((user) => user.status === tab.value).length
                   : emailLists.length}
               </Label>
@@ -313,17 +306,6 @@ export function DashboardTable() {
       )}
 
       <Box sx={{ position: 'relative' }}>
-        {/* <DashboardTableSelectedAction
-          dense={table.dense}
-          numSelected={table.selected.length}
-          rowCount={dataFiltered.length}
-          onSelectAllRows={(checked) =>
-            table.onSelectAllRows(
-              checked,
-              dataFiltered.map((row) => row.id)
-            )
-          }
-        /> */}
         <Scrollbar>
           <Table size={table.dense ? 'small' : 'medium'}>
             <TableHeadCustom

@@ -44,7 +44,7 @@ const EmailVerificationSchema = new mongoose.Schema({
       return this.type === "bulk";
     },
     sparse: true,
-  },
+  }, 
   status: {
     type: String,
     enum: ["pending", "in-progress", "completed"],

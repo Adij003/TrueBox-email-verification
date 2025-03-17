@@ -37,7 +37,7 @@ export function EmailListTableFiltersResult({ filters, totalResults, onResetPage
           label={filters.state.status}
           onDelete={handleRemoveStatus}
           sx={{ textTransform: 'capitalize' }}
-        />
+        /> 
       </FiltersBlock>
 
       <FiltersBlock

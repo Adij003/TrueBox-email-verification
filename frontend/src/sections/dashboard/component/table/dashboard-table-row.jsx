@@ -78,7 +78,7 @@ export function DashboardTableRow({
         dispatch(checkBulkStatus(row.jobId))
         break;
       case 'ready':
-        // setIsDrawerOpen(true);
+        dispatch(startBulkVerification(row.jobId));
         break;
       case 'in-progress':
         dispatch(checkBulkStatus(row.jobId))

@@ -17,6 +17,7 @@ export function DashboardTableFiltersResult({ filters, totalResults, onResetPage
   const handleRemoveKeyword = useCallback(() => {
     onResetPage();
     filters.setState({ name: '' });
+
   }, [filters, onResetPage]);
   
   const handleRemoveStatus = () => {
