@@ -181,8 +181,7 @@ export function CreditTable() {
     dispatch(fetchEmailLists({ 
       status: 'completed',
       skip: 5,
-      limit: table.rowsPerPage-1,
-
+      limit: table.rowsPerPage,
     }))
   }
 
@@ -191,14 +190,7 @@ export function CreditTable() {
       <CardHeader
         title={
           <Box display="inline-block">
-            {/* <Tooltip
-              arrow
-              placement="top"
-              disableInteractive
-              title="View all the email verification logs here."
-            > */}
             <Typography variant="h6">Email Verification Logs</Typography>
-            {/* </Tooltip> */}
           </Box>
         }
         sx={{ pb: 3 }}
@@ -245,13 +237,7 @@ export function CreditTable() {
                     selected={table.selected.includes(row.id)}
                   />
                 ))}
-              {isAppliedFilter && table.page === 0 && creditsAddingHistory?.map((row, index) => (
-                <CreditTableRow
-                  key={index}
-                  row={row}
-                  selected={table.selected.includes(row.id)}
-                />
-              ))}
+              
               {emailLists.length === 0 &&
                 <TableNoData
                   title="Not Data Found"

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const activitySchema = new mongoose.Schema({
-    user_id: { type: String, required: true },
+    userId: { type: String, required: true },
     moduleName: { type: String },
     eventSource: { type: String },
     action: { type: String, required: true },

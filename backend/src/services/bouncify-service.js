@@ -13,7 +13,7 @@ const BouncifyService = {
       const fileStream = require("stream").Readable.from(fileBuffer);
       const formData = new FormData();
       formData.append("local_file", fileStream, fileName);
-
+      
       const response = await axios.post(
         `${BASE_URL}/bulk?apikey=${API_KEY}`,
         formData,
@@ -61,7 +61,7 @@ const BouncifyService = {
   downloadBulkResults: async (jobId) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/download?jobId=${job_id}&apikey=${API_KEY}`,
+        `${BASE_URL}/download?jobId=${jobId}&apikey=${API_KEY}`,
         { filterResult: ["deliverable", "undeliverable", "accept_all", "unknown"] },
         { responseType: "stream" }
       );

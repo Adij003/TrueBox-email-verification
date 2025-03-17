@@ -12,11 +12,11 @@ module.exports = {
 */
   create: async (req, res) => {
     try {
-      if (!req.body.user_id) {
+      if (!req.body.userId) {
         throw "User id is required";
       }
 
-      const user = await User.signUp(req.body.user_id);
+      const user = await User.signUp(req.body.userId);
       res.send(Response.success("User created successfully", user));
     } catch (err) {
       Logs.error(err);
@@ -41,7 +41,7 @@ module.exports = {
     try {
       // Define your validation rules here
       const validationRules = [
-        param("user_id", "Invalid user ID").custom(Helper.isValidObjectId),
+        param("userId", "Invalid user ID").custom(Helper.isValidObjectId),
       ];
 
       // Run the validation rules
@@ -59,10 +59,10 @@ module.exports = {
           .json(Response.error("Fields are required.", errors.array()[0]));
       }
 
-      const userId = req.params.user_id;
+      const userId = req.params.userId;
 
       // const user = await User.findById(userId)
-      const user = await User.findOne({ user_id: userId });
+      const user = await User.findOne({ userId: userId });
 
       if (!user) {
         throw "User not found!";
@@ -86,7 +86,7 @@ module.exports = {
     try {
       // Define your validation rules here
       const validationRules = [
-        param("user_id", "Invalid user ID")
+        param("userId", "Invalid user ID")
           .notEmpty()
           .custom(Helper.isValidObjectId),
         body("username").optional().escape(),
@@ -116,7 +116,7 @@ module.exports = {
           .json(Response.error("Fields are required.", errors.array()[0]));
       }
 
-      const userId = req.params.user_id;
+      const userId = req.params.userId;
 
       const { username, email, password } = req.body;
 
@@ -191,9 +191,9 @@ module.exports = {
       }
 
       const { email, sharedOn, permissionType, folders = [] } = req.body;
-      const user_id = req.user.id;
+      const userId = req.user.id;
 
-      const user = await User.findOne({ user_id });
+      const user = await User.findOne({ userId });
 
       if (!user) {
         return res
@@ -223,7 +223,7 @@ module.exports = {
   getTeamMembers: async (req, res) => {
     try{
       const userId = req.user.id;
-      const user = await User.findOne({user_id: userId})
+      const user = await User.findOne({userId: userId})
       res.status(200).json(Response.success("User Details are: ", user))
     } catch(error){
       res.status(500).json(Response.error('Error fetching user info', error))
@@ -240,7 +240,7 @@ module.exports = {
   deleteOne: async (req, res) => {
     try {
       const validationRules = [
-        param("user_id", "Invalid user ID").custom(Helper.isValidObjectId),
+        param("userId", "Invalid user ID").custom(Helper.isValidObjectId),
       ];
       
       await Promise.all(
@@ -255,7 +255,7 @@ module.exports = {
           .json(Response.error("Fields are required.", errors.array()[0]));
       }
 
-      const userId = req.params.user_id;
+      const userId = req.params.userId;
 
       const deletedUser = await User.findByIdAndDelete(userId);
 

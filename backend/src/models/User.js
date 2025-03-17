@@ -3,7 +3,7 @@ const Cipher = require('../utils/cipher-util');
 const Helper = require('../utils/helper-util');
 
 const userSchema = new mongoose.Schema({
-    user_id: { type: String, required: true, unique: true },
+    userId: { type: String, required: true, unique: true },
     api: { type: mongoose.Schema.Types.Mixed, required: true },
     teamMembers: [
         {
@@ -34,7 +34,7 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.signUp = function(userId) {
     return new Promise(async (resolve, reject) => {
         try {
-            var [err, duser] = await Helper.to(this.findOne({ user_id: userId }));
+            var [err, duser] = await Helper.to(this.findOne({ userId: userId }));
 
             if (err) {
                 throw err;
@@ -46,7 +46,7 @@ userSchema.statics.signUp = function(userId) {
 
             // Create a new user instance
             const newUser = new this({
-                user_id: userId,
+                userId: userId,
                 api: {
                     apiKey: Cipher.createSecretKey(10),
                     secretKey: Cipher.createSecretKey(16),

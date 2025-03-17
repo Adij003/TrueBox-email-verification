@@ -50,7 +50,7 @@ const FOLDER_STRUCTURE = [
   'Organization 9',
 ];
 
-export function DashboardTableToolbar({ filters, onResetPage, numSelected, onApplyFilter }) {
+export function DashboardTableToolbar({ filters, numSelected, onApplyFilter }) {
 
   const isBelow600px = useMediaQuery('(max-width:600px)');
 
@@ -67,9 +67,10 @@ export function DashboardTableToolbar({ filters, onResetPage, numSelected, onApp
 
   // Handlers
   const handleFilterName = (event) => {
-    filters.setState({ name: event.target.value });
-    setSearch(event.target.value)
-    onApplyFilter({search})
+    const newSearchValue = event.target.value;
+    filters.setState({ name: newSearchValue });
+    setSearch(newSearchValue)
+    onApplyFilter({search: newSearchValue})
     }
 
   const handleActionsOpen = (event) => setAnchorEl(event.currentTarget);

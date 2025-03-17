@@ -17,11 +17,11 @@ const Credit = require("../../models/Credit");
         `https://api.bouncify.io/v1/info?apikey=${API_KEY}`
       );
 
-      let userCreditInfo = await Credit.findOne({ user_id: req.user.id });
+      let userCreditInfo = await Credit.findOne({ userId: req.user.id });
 
       if (!userCreditInfo) {
         userCreditInfo = new Credit({
-          user_id: req.user.id,
+          userId: req.user.id,
           totalCredits: 100, 
           creditsRemaining: responseCredits.data.credits_info.credits_remaining,
           creditsConsumed:

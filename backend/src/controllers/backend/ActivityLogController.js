@@ -13,7 +13,7 @@ const ActivityLog = require("../../models/ActivityLog")
 exports.getActivityLogs = async (req, res) => {
     try {
         const { search, page = 1, limit = 5 } = req.query;
-        let filter = { user_id: req.user.id };
+        let filter = { userId: req.user.id };
 
         if (search) {
             filter.$or = [

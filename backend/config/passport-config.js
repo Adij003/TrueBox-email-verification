@@ -48,7 +48,7 @@ passport.use(new BasicStrategy(
                 return done('Incorrect credentials.', false);
             }
 
-            var [err, response] = await Helper.to(Accounts.getUserById(user.user_id));
+            var [err, response] = await Helper.to(Accounts.getUserById(user.userId));
 
             if (err) {
                 throw err
@@ -76,13 +76,13 @@ passport.use(new BasicStrategy(
 passport.use('jwt', new JwtStrategy(JWT_STRATEGY_CONFIG, async (payload, done) => {
     try {
 
-        const user = await User.findOne({ user_id: payload.id });
+        const user = await User.findOne({ userId: payload.id });
 
         if (!user) {
             return done('Incorrect credentials.', false);
         }
 
-        var [err, response] = await Helper.to(Accounts.getUserById(user.user_id));
+        var [err, response] = await Helper.to(Accounts.getUserById(user.userId));
 
         if (err) {
             throw err

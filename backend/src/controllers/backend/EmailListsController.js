@@ -24,12 +24,12 @@ const BouncifyService = require("../../services/bouncify-service");
 
       const { job_id } = await BouncifyService.uploadBulkEmails(buffer, originalname);
 
-      const userCreditInfo = await Credit.findOne({ user_id: req.user.id });
+      const userCreditInfo = await Credit.findOne({ userId: req.user.id });
 
       const newBulkJob = new EmailList({ 
         type: "bulk",
         jobId: job_id,
-        user_id: req.user.id,
+        userId: req.user.id,
         emailListName,
         previousCredits: userCreditInfo.creditsRemaining,
       });
@@ -162,11 +162,11 @@ const BouncifyService = require("../../services/bouncify-service");
       }
 
       const data = await BouncifyService.verifySingleEmail(req.body.email);
-      const newVerification = new EmailList({ user_id: req.user.id, type: "single", ...data, creditsConsumed: 1, status: 'completed' });
+      const newVerification = new EmailList({ userId: req.user.id, type: "single", ...data, creditsConsumed: 1, status: 'completed' });
       await newVerification.save(); 
 
       const updatedCreditInfo = await Credit.findOneAndUpdate(
-        { user_id: req.user.id },
+        { userId: req.user.id },
         { $inc: { creditsConsumed: 1 }, $set: { creditsRemaining: await BouncifyService.getCreditInfo() } },
         { new: true, upsert: true }
       );
@@ -195,7 +195,7 @@ const BouncifyService = require("../../services/bouncify-service");
 exports.getAllEmailLists = async (req, res) => {
     try {
         const { type, status, search, page = 1, limit = 5 } = req.query;
-        let filter = { user_id: req.user.id };
+        let filter = { userId: req.user.id };
 
         // Validate type if provided
         if (type) {

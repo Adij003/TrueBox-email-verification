@@ -233,7 +233,7 @@ export function DashboardTable() {
         search: search.search
       }));
 
-    }, 1000); // 500ms delay
+    }, 500); 
   };
 
   return (
@@ -344,11 +344,6 @@ export function DashboardTable() {
 
             <TableBody>
               {
-              // dataFiltered
-              //   .slice(
-              //     table.page * table.rowsPerPage,
-              //     table.page * table.rowsPerPage + table.rowsPerPage
-              //   )
                 emailLists.map((row, index) => (
                   <DashboardTableRow
                     key={row._id}
@@ -363,24 +358,13 @@ export function DashboardTable() {
                   />
                 ))}
 
-              {/* <TableEmptyRows
-                height={table.dense ? 56 : 56 + 20}
-                emptyRows={emptyRows(table.page, table.rowsPerPage, emailLists.length)}
-              /> */}
-
-              {emailLists.length === 0 ? (
+              {emailLists.length === 0 &&
                 <TableNoData
                   title="Not Data Found"
                   description="No data found in the table"
                   notFound={notFound}
                 />
-              ) : (
-                <TableNoData
-                  title="Not Search Found"
-                  description={`No search found with keyword "${filters.state.name}"`}
-                  notFound={notFound}
-                />
-              )}
+             }
             </TableBody>
           </Table>
         </Scrollbar>
@@ -394,21 +378,12 @@ export function DashboardTable() {
       >
         <MenuList>
           {selectedRow && selectedRow.status !== 'processing' && (
-            <>
-              {/* <Tooltip title="Move to folder" arrow placement="left">
-                <MenuItem onClick={handleMoveToFolder}>
-                  <Iconify icon="fluent:folder-move-16-filled" />
-                  Move to folder 
-                </MenuItem>
-              </Tooltip>
-              <Divider style={{ borderStyle: 'dashed' }} /> */}
               <Tooltip title="Delete email list." arrow placement="left">
                 <MenuItem onClick={handleConfirmDelete} sx={{ color: 'error.main' }}>
                   <Iconify icon="solar:trash-bin-trash-bold" />
                   Delete
                 </MenuItem>
               </Tooltip>
-            </>
           )}
         </MenuList>
       </CustomPopover>
@@ -423,7 +398,6 @@ export function DashboardTable() {
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}
         title="Do you really want to delete the email list?"
-        // content="Note that when an email list is deleted it is moved to the trash folder."
         action={
           <Button variant="contained" color="error" onClick={handleDelete}>
             Delete

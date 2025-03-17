@@ -215,7 +215,7 @@ module.exports = {
 
       const user = response.data;
 
-      var [err, duser] = await Helper.to(User.findOne({ user_id: user.id }));
+      var [err, duser] = await Helper.to(User.findOne({ userId: user.id }));
 
       if (err) {
         throw err;

@@ -36,9 +36,10 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
 
   const handleFilterName = (event) => {
     onResetPage();
-    filters.setState({ name: event.target.value });
+    const newSearchValue = event.target.value;
+    filters.setState({ name: newSearchValue });
     setSearch(filters)
-    onApplySearch({search})
+    onApplySearch({search: newSearchValue})
   };
 
   const [isFilterApplied, setFilterApplied] = useState(false); // Local filter state

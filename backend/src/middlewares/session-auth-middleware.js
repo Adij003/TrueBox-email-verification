@@ -21,7 +21,7 @@ module.exports = async (req, res, next) => {
         }
 
         const newActivityLog = new ActivityLog({
-            user_id: req.user.id,
+            userId: req.user.id,
             moduleName: req.routeOptions && req.routeOptions.moduleName ? req.routeOptions.moduleName : '',
             eventSource: "user",
             action: req.method,
