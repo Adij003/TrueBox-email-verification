@@ -139,7 +139,7 @@ const handleRefreshEmailList = () => {
   const renderActionButton = () =>
     numSelected > 0 && (
       <>
-        <Tooltip title="Click here to move and delete email lists." arrow placement="top">
+        {/* <Tooltip title="Click here to move and delete email lists." arrow placement="top">
           <Button
             endIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
             onClick={handleActionsOpen}
@@ -151,7 +151,7 @@ const handleRefreshEmailList = () => {
           >
             Select Action
           </Button>
-        </Tooltip>
+        </Tooltip> */}
 
         <Popover
           open={isActionsOpen}

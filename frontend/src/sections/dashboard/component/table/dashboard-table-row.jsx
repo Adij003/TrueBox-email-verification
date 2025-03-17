@@ -298,7 +298,7 @@ export function DashboardTableRow({
             placement="top"
           >
             <span>
-              <IconButton
+              {/* <IconButton
                 color={popover.open ? 'inherit' : 'default'}
                 onClick={(event) => onOpenPopover(event)}
                 disabled={row.status === 'processing' || row.status === 'uploading'}
@@ -309,7 +309,7 @@ export function DashboardTableRow({
                 }}
               >
                 <Iconify icon="eva:more-vertical-fill" />
-              </IconButton>
+              </IconButton> */}
             </span>
           </Tooltip>
         </TableCell>
