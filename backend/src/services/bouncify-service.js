@@ -61,7 +61,7 @@ const BouncifyService = {
   downloadBulkResults: async (jobId) => {
     try {
       const response = await axios.post(
-        `${BASE_URL}/download?jobId=${jobId}&apikey=${API_KEY}`,
+        `${BASE_URL}/download?jobId=${job_id}&apikey=${API_KEY}`,
         { filterResult: ["deliverable", "undeliverable", "accept_all", "unknown"] },
         { responseType: "stream" }
       );
