@@ -32,18 +32,18 @@ export default function Page() {
       pageSubheading:
         'Manage the SMTP settings used for sending email notifications in the Pabbly Email Verification application.',
     },
-    {
-      value: 'activity-log',
-      path: '/admin/settings/activity-log',
-      icon: <Iconify icon="material-symbols:work-history" width={24} />,
-      label: 'Activity Log',
-      tooltip:
-        'Track and monitor all team members activities within the Pabbly Email Verification Admin Panel.',
-      pageTitle: 'Activity Log',
-      pageSubheading:
-        'Track and monitor all team members activities within the Pabbly Email Verification Admin Panel, including actions such as downloading verification reports, deleting email lists, adding integrations, and configuring email notifications. ',
-      link: 'https://forum.pabbly.com/threads/activity-log.26108/',
-    },
+    // {
+    //   value: 'activity-log',
+    //   path: '/admin/settings/activity-log',
+    //   icon: <Iconify icon="material-symbols:work-history" width={24} />,
+    //   label: 'Activity Log',
+    //   tooltip:
+    //     'Track and monitor all team members activities within the Pabbly Email Verification Admin Panel.',
+    //   pageTitle: 'Activity Log',
+    //   pageSubheading:
+    //     'Track and monitor all team members activities within the Pabbly Email Verification Admin Panel, including actions such as downloading verification reports, deleting email lists, adding integrations, and configuring email notifications. ',
+    //   link: 'https://forum.pabbly.com/threads/activity-log.26108/',
+    // },
 
     // ... more tabs
   ];

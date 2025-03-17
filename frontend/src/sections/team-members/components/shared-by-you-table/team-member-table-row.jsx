@@ -13,7 +13,6 @@ import {
   MenuList,
   MenuItem,
   TableCell,
-  IconButton,
   CircularProgress,
 } from '@mui/material';
 
@@ -43,7 +42,7 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
       folder: `Folder Name: ${rowData.folders_you_shared}`,
       sharedOn: `Folder Shared On: ${rowData.updatedAt} (UTC+05:30) Asia/Kolkata`,
       permission:
-        row.permission_type === 'write'
+        row.permissionType === 'write'
           ? 'Team members can upload email lists, start verification, and download verification reports. They cannot create new folders, delete folders, or remove email lists.'
           : 'Team members can only download verification reports.',
     };
@@ -184,19 +183,19 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
             }}
           >
             <Tooltip title={getTooltip('permission', row)} arrow placement="top" disableInteractive>
-              {row.permission_type}
+              {row.permissionType}
             </Tooltip>
           </Stack>
         </TableCell>
 
         {/* Options */}
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="Click to see options." arrow placement="top" disableInteractive>
             <IconButton onClick={handleOpenPopover}>
               <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
           </Tooltip>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
 
       {/* Popover */}

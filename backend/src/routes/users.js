@@ -9,7 +9,7 @@ router.get('/team', UsersController.getTeamMembers);
 router.get('/:user_id', UsersController.getOne);
 router.put('/:user_id', UsersController.updateOne);
 router.delete('/:user_id', UsersController.deleteOne);
-router.post('/member', validateTeamMember, UsersController.addTeamMember);
+router.post('/team', validateTeamMember, UsersController.addTeamMember);
 
 
 

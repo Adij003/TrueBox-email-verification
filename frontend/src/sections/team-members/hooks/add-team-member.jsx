@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
 import { useTheme } from '@emotion/react';
+import { useDispatch } from 'react-redux';
 import React, { useState, useEffect } from 'react';
 
 import {
@@ -18,21 +19,25 @@ import {
   CircularProgress,
 } from '@mui/material';
 
+import { addTeamMember, getTeamDetails } from 'src/redux/slice/userSlice';
+
 import LearnMoreLink from 'src/components/learn-more-link/learn-more-link';
 
 export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
   const theme = useTheme();
   const isWeb = useMediaQuery(theme.breakpoints.up('sm'));
-  const [selectedItems, setSelectedItems] = useState([]);
-  const [email, setEmail] = useState('');
+  const [selectedFolders, setSelectedFolders] = useState([]); // this is for folder
+  const [email, setEmail] = useState(''); // this is for email
   const [emailError, setEmailError] = useState(false);
   const [autocompleteError, setAutocompleteError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [categoryList, setCategoryList] = useState(null);
+  const [permissionType, setPermissionType] = useState(null); // this is for selecting write or read access
   const [categoryError, setCategoryError] = useState(false);
 
-  const folder = ['Read Access', 'Write Access'];
+  const dispatch = useDispatch(addTeamMember());
+
+  const folder = ['read', 'write'];
   const folders = [
     'Select All Folders',
     'Pabbly Connect',
@@ -51,16 +56,16 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
       const folderArray = currentMember.folders_you_shared
         ? currentMember.folders_you_shared.split(',').map((f) => f.trim())
         : [];
-      setSelectedItems(folderArray);
-      setCategoryList(currentMember.permission || null);
+      setSelectedFolders(folderArray);
+      setPermissionType(currentMember.permission || null);
     }
   }, [currentMember]);
 
   const handleClose = () => {
     if (!currentMember) {
       setEmail('');
-      setSelectedItems([]);
-      setCategoryList(null);
+      setSelectedFolders([]);
+      setPermissionType(null);
     }
     setEmailError(false);
     setAutocompleteError(false);
@@ -72,7 +77,6 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
     'hardik@pabbly.com',
     'kamal.kumar@pabbly.com',
     'anand.nayak@pabbly.com',
-    // ... other allowed emails
   ];
 
   const commonBoxStyle = { ml: '9px' };
@@ -98,7 +102,7 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
   };
 
   const handleChangeCategoryList = (event, newValue) => {
-    setCategoryList(newValue);
+    setPermissionType(newValue);
     setCategoryError(!newValue);
   };
 
@@ -107,24 +111,23 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
 
     // Check if "Select All Folders" is being added
     if (newValue.includes('Select All Folders')) {
-      setSelectedItems(folderOptions);
+      setSelectedFolders(folderOptions);
     }
     // Check if "Select All Folders" is being removed
     else if (
-      selectedItems.length === folderOptions.length &&
+      selectedFolders.length === folderOptions.length &&
       newValue.length < folderOptions.length
     ) {
-      setSelectedItems([]);
+      setSelectedFolders([]);
     }
     // Normal selection
     else {
-      setSelectedItems(newValue.filter((item) => item !== 'Select All Folders'));
+      setSelectedFolders(newValue.filter((item) => item !== 'Select All Folders'));
     }
   };
 
   const handleAdd = () => {
     let hasError = false;
-
     // Skip email validation when updating
     if (!currentMember) {
       if (!email || !isEmailValid(email)) {
@@ -144,16 +147,24 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
     }
 
     // Validate folder selection
-    if (selectedItems.length === 0) {
+    if (selectedFolders.length === 0) {
       setAutocompleteError(true);
       hasError = true;
     }
 
     // Validate permissions
-    if (!categoryList) {
+    if (!permissionType) {
       setCategoryError(true);
       hasError = true;
     }
+
+    const teamMemberData = {
+      email, 
+      folders: selectedFolders, 
+      permissionType
+    }
+    dispatch(addTeamMember(teamMemberData))
+    dispatch(getTeamDetails())
 
     if (hasError) return;
 
@@ -253,13 +264,13 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
                   )
               )
             }
-            value={selectedItems}
+            value={selectedFolders}
             onChange={handleFolderSelection}
           />
 
           <Autocomplete
             options={folder}
-            value={categoryList}
+            value={permissionType}
             onChange={handleChangeCategoryList}
             renderInput={(params) => (
               <TextField

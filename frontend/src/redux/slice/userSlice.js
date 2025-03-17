@@ -35,6 +35,20 @@ export const getTeamDetails = createAsyncThunk(
   }
 )
 
+export const addTeamMember = createAsyncThunk(
+  'auth/addTeamMember',
+  async(teamMemberData, {rejectWithValue}) => {
+    try{
+      const response = await axios.post(endpoints.auth.team, teamMemberData)
+      return response.data;
+    } catch(error){
+      return rejectWithValue(error.response?.data?.message || error.message)
+    }
+  }
+)
+
+
+
 const userSlice = createSlice({
   name: 'user',
   initialState,

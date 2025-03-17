@@ -43,7 +43,7 @@ export const appNavData = [
           { title: 'Credits Summary', path: paths.app.settings.credits },
           // { title: 'API', path: paths.app.settings.api },
           { title: 'Team Members', path: paths.app.settings.teamMembers },
-          { title: 'Activity Log', path: paths.app.settings.activityLog },
+          // { title: 'Activity Log', path: paths.app.settings.activityLog },
           { title: 'Time Zone', path: paths.app.settings.timezone },
         ],
       },

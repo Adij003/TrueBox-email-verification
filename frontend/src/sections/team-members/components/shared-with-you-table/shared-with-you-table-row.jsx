@@ -11,7 +11,6 @@ import {
   MenuList,
   MenuItem,
   TableCell,
-  IconButton,
   CircularProgress,
 } from '@mui/material';
 
@@ -229,13 +228,13 @@ export function SharedWithYouTeamMemberTableRow({ row, selected, onSelectRow, se
         </TableCell>
 
         {/* Options */}
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
+        {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
           <Tooltip title="Click to see options." arrow placement="top">
             <IconButton color={anchorEl ? 'inherit' : 'default'} onClick={handleOpenPopover}>
               <Iconify icon="eva:more-vertical-fill" />
             </IconButton>
           </Tooltip>
-        </TableCell>
+        </TableCell> */}
       </TableRow>
       <CustomPopover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClosePopover}>
         <MenuList>

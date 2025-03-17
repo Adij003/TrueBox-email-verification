@@ -8,16 +8,16 @@ const userSchema = new mongoose.Schema({
     teamMembers: [
         {
             email: { type: String, required: true },
-            shared_on: { type: Date, default: Date.now },
-            permission_type: { type: String, enum: ["read", "write"], required: true },
+            sharedOn: { type: Date, default: Date.now },
+            permissionType: { type: String, enum: ["read", "write"], required: true },
             folders: { type: [String], default: [] } 
         }
     ],
     sharedWithMe: [
         {
-            shared_by: { type: String, required: true },
-            shared_on: { type: Date, default: Date.now },
-            permission_type: { type: String, enum: ["read", "write"], required: true }
+            sharedBy: { type: String, required: true },
+            sharedOn: { type: Date, default: Date.now },
+            permissionType: { type: String, enum: ["read", "write"], required: true }
         }
     ],
     createdAt: {

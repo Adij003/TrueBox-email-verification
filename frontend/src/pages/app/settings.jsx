@@ -43,18 +43,18 @@ export default function Page() {
       link: 'https://forum.pabbly.com/threads/team-members.26323/',
     },
 
-    {
-      value: 'activity-log',
-      path: '/app/settings/activity-log',
-      icon: <Iconify icon="material-symbols:work-history" width={24} />,
-      label: 'Activity Log',
-      tooltip:
-        'Activity Log helps you monitor changes and keep track of all actions in your Pabbly Email Verification account.',
-      pageTitle: 'Activity Log',
-      pageSubheading:
-        'Keep track of all actions in your Pabbly Email Verification account, like verifying single emails, uploading and verifying email lists, downloading reports, deleting email lists, adding team members, and regenerating API keys. Activity Log helps you monitor changes and ensure everything runs smoothly. ',
-      link: 'https://forum.pabbly.com/threads/activity-log.26108/',
-    },
+    // {
+    //   value: 'activity-log',
+    //   path: '/app/settings/activity-log',
+    //   icon: <Iconify icon="material-symbols:work-history" width={24} />,
+    //   label: 'Activity Log',
+    //   tooltip:
+    //     'Activity Log helps you monitor changes and keep track of all actions in your Pabbly Email Verification account.',
+    //   pageTitle: 'Activity Log',
+    //   pageSubheading:
+    //     'Keep track of all actions in your Pabbly Email Verification account, like verifying single emails, uploading and verifying email lists, downloading reports, deleting email lists, adding team members, and regenerating API keys. Activity Log helps you monitor changes and ensure everything runs smoothly. ',
+    //   link: 'https://forum.pabbly.com/threads/activity-log.26108/',
+    // },
     {
       value: 'timzone',
       path: '/app/settings/timezone',

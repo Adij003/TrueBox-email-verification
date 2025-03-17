@@ -173,7 +173,7 @@ export function CreditTable() {
         limit: table.rowsPerPage,
         search: search?.search?.state?.name || ""  
       }));
-    }, 1500);
+    }, 1000);
   };
 
   const handleRefresh = () => {

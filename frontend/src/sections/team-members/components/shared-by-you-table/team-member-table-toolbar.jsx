@@ -205,7 +205,7 @@ export function SharedbyYouTeamMemberTableToolbar({
             arrow
             placement="top"
           >
-            <Button
+            {/* <Button
               sx={buttonStyle}
               variant={isFilterApplied ? 'contained' : ''}
               color="primary"
@@ -232,7 +232,7 @@ export function SharedbyYouTeamMemberTableToolbar({
               onClick={handleFilterButtonClick}
             >
               {isFilterApplied ? 'Filter Applied' : 'Filters'}
-            </Button>
+            </Button> */}
           </Tooltip>
         </Box>
       </Stack>

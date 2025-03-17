@@ -189,7 +189,7 @@ module.exports = {
         return res.status(400).json({ success: false, errors: errors.array() });
       }
 
-      const { email, shared_on, permission_type, folders = [] } = req.body;
+      const { email, sharedOn, permissionType, folders = [] } = req.body;
       const user_id = req.user.id;
 
       const user = await User.findOne({ user_id });
@@ -202,8 +202,8 @@ module.exports = {
 
       const newTeamMember = {
         email,
-        shared_on: shared_on || new Date(),
-        permission_type,
+        sharedOn: sharedOn || new Date(),
+        permissionType,
         folders,
       };
 

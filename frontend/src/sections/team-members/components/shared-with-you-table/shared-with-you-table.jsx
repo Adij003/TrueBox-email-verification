@@ -1,5 +1,6 @@
 import { toast } from 'sonner';
-import { useState, useCallback } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -18,6 +19,8 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { fIsAfter } from 'src/utils/format-time';
+
+import { getTeamDetails } from 'src/redux/slice/userSlice';
 
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
@@ -141,8 +144,17 @@ export default function SharedWithYouTeamMemberTable({
     setConfirmDelete(true);
   };
 
+  const {userInfo} = useSelector((state) => state.user)
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getTeamDetails())
+  }, [dispatch])
+
+  const { sharedWithMe = [] } = userInfo || {}
+
   // Modify these conditions at the top of your component
-  const nofoldersShared = tableData.length === 0; // When no tasks exist at all
+  const nofoldersShared = sharedWithMe.length === 0; // When no tasks exist at all
   const noSearchResults = dataFiltered.length === 0 && filters.state.email; // When search returns no results
 
   // const { DataStatus, DataError } = useSelector((state) => state.member);   /* Table CircularProgress loading */
