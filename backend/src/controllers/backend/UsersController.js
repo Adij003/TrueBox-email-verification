@@ -81,6 +81,7 @@ module.exports = {
 * @param {*} res
 * @returns User
 */
+
   updateOne: async (req, res) => {
     try {
       // Define your validation rules here

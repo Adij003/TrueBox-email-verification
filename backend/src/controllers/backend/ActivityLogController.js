@@ -4,6 +4,12 @@ const Logs = require("../../utils/logs-util");
 const Response = require("../../utils/response-util");
 const ActivityLog = require("../../models/ActivityLog")
 
+ /**
+   * This method is used for retriving user Activity log details.
+   * @param {*} req
+   * @param {*} res
+   * @returns Activity logs
+   */
 exports.getActivityLogs = async (req, res) => {
     try {
         const { search, page = 1, limit = 5 } = req.query;
