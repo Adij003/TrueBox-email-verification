@@ -86,8 +86,7 @@ export default function Page() {
   if (emailRegex.test(email)) {
     try {
       const resultAction = await dispatch(verifySingleEmail({ email })).unwrap();
-      console.log('already existing email: ', resultAction.data.data.message)
-      toast.success(`Verification Done: ${resultAction?.data?.newVerification?.message || `${resultAction?.data?.data?.message}`}`, {
+      toast.success(`Verification Done: ${resultAction?.data?.newVerification?.message || `${resultAction?.data?.data?.message}` || 'Email is valid'}`, {
         duration: Infinity,
         style: { marginTop: '15px' },
       });
