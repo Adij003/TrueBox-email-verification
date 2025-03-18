@@ -5,7 +5,7 @@ import { useMediaQuery } from '@mui/material';
 
 import { CONFIG } from 'src/config-global';
 
-import { CreditTable } from 'src/sections/dashboard copy/component/table/credit-table';
+import { CreditTable } from 'src/sections/credit-table/component/table/credit-table';
 
 import CreditStatsCards from '../dashboard/component/stats-cards/credit-stats-cards';
 

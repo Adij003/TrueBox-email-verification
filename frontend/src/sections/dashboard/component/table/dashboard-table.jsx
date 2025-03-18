@@ -44,8 +44,6 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { MoveToFolderPopover } from 'src/sections/dialog-boxes/move-to-folder-dailog';
-
 import { DashboardTableRow } from './dashboard-table-row';
 import { DashboardTableToolbar } from './dashboard-table-toolbar';
 import { DashboardTableFiltersResult } from './dashboard-table-filters-result';
@@ -378,13 +376,6 @@ export function DashboardTable() {
           )}
         </MenuList>
       </CustomPopover>
-      <MoveToFolderPopover
-        open={openMoveFolder}
-        onClose={() => {
-          setOpenMoveFolder(false);
-          setSelectedRow(null);
-        }}
-      />
       <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}

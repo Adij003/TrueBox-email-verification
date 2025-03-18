@@ -42,8 +42,6 @@ import {
   TablePaginationCustom,
 } from 'src/components/table';
 
-import { MoveToFolderPopover } from 'src/sections/dialog-boxes/move-to-folder-dailog';
-
 import { DashboardTrashTableRow } from './dashboard-trash-table-row';
 import { DashboardTrashTableToolbar } from './dashboard-trash-table-toolbar';
 import { DashboardTrashTableFiltersResult } from './dashboard-trash-table-filters-result';
@@ -417,15 +415,6 @@ export function DashboardTrashTable() {
           )}
         </MenuList>
       </CustomPopover>
-
-      <MoveToFolderPopover
-        open={openMoveFolder}
-        onClose={() => {
-          setOpenMoveFolder(false);
-          setSelectedRow(null);
-        }}
-      />
-
       <ConfirmDialog
         open={confirmDelete.value}
         onClose={confirmDelete.onFalse}

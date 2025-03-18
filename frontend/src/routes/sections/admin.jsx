@@ -12,9 +12,6 @@ import { AuthGuard } from 'src/auth/guard';
 const EmailLists = lazy(() => import('src/pages/admin/email-lists'));
 const Settings = lazy(() => import('src/pages/admin/settings'));
 
-// const Plans = lazy(() => import('src/pages/admin/plans'));
-const ApiAccounts = lazy(() => import('src/admin-sections/settings/api-accounts'));
-const SMTP = lazy(() => import('src/admin-sections/settings/smtp'));
 const Activity = lazy(() => import('src/admin-sections/settings/activity-log'));
 
 // ----------------------------------------------------------------------
@@ -37,17 +34,10 @@ export const adminRoutes = [
     ),
     children: [
       { element: <EmailLists />, index: true },
-      // { path: 'users', element: <Users /> },
-      // { path: 'email-lists', element: <EmailLists /> },
-      // { path: 'plans', element: <Plans /> },
-      { path: 'api-accounts', element: <ApiAccounts /> },
-
       {
         path: 'settings',
         element: <Settings />,
         children: [
-          { path: 'integrated-applications', element: <ApiAccounts /> },
-          { path: 'email-notifications', element: <SMTP /> },
           { path: 'activity-log', element: <Activity /> },
         ],
       },

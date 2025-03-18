@@ -24,9 +24,6 @@ import { fetchEmailLists } from 'src/redux/slice/emailSlice';
 // Components
 import { Iconify } from 'src/components/iconify';
 
-import { DeleteDialog } from 'src/sections/dialog-boxes/confirm-delete-dialog';
-import { MoveToFolderPopover } from 'src/sections/dialog-boxes/move-to-folder-dailog';
-
 // Constants
 const BUTTON_STYLES = (isBelow600px) => ({
   fontSize: '15px',
@@ -132,7 +129,7 @@ const handleRefreshEmailList = () => {
 
   const renderActionButton = () =>
     numSelected > 0 && (
-      <>
+      
         <Popover
           open={isActionsOpen}
           anchorEl={anchorEl}
@@ -153,27 +150,8 @@ const handleRefreshEmailList = () => {
               Delete
             </MenuItem>
           </Tooltip>
-        </Popover>
-
-        <MoveToFolderPopover
-          open={moveFolderOpen}
-          onClose={handleMoveFolderClose}
-          title="Move to Folder"
-          folder={FOLDER_STRUCTURE}
-        />
-
-        <DeleteDialog
-          title="Do you really want to delete the email list(s)?"
-          // content="Note that when an email list is deleted it is moved to the trash folder."
-          open={deleteOpen}
-          onClose={handleDeleteClose}
-          action={
-            <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-              Delete
-            </Button>
-          }
-        />      
-      </>
+        </Popover>     
+      
     );
 
   return (

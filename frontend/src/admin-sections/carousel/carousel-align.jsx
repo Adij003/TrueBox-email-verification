@@ -6,7 +6,6 @@ import { List, ListItem, Typography } from '@mui/material';
 
 import { Carousel,useCarousel , CarouselDotButtons} from 'src/components/carousel';
 
-// import { Carousel, useCarousel, CarouselDotButtons } from 'src/components/carousel';
 
 export function CarouselAutoplay() {
   const autoplay = Autoplay({ delay: 3000, stopOnInteraction: false });
@@ -255,7 +254,6 @@ export function CarouselAutoplay() {
       handleCarouselChange(prevIndex);
     };
 
-    // No need to explicitly call play() as autoplay is configured in useCarousel
   }, [carousel, currentCardIndex, chunks.length]);
 
   return (

@@ -9,7 +9,6 @@ import {
   Tab,
   Tabs,
   Alert,
-  Button,
   Divider,
   Tooltip,
   MenuList,
@@ -40,8 +39,6 @@ import {
   TableHeadCustom,
   TablePaginationCustom,
 } from 'src/components/table';
-
-import { DeleteDialog } from 'src/sections/dialog-boxes/confirm-delete-dialog';
 
 import { EmailListTableRow } from './email-lists-table-row';
 import UpdateCreditsDialog from '../dialog/credit-update-dialog';
@@ -540,17 +537,6 @@ export function EmailListTable() {
         onPageChange={table.onChangePage}
         onChangeDense={table.onChangeDense}
         onRowsPerPageChange={table.onChangeRowsPerPage}
-      />
-      <DeleteDialog
-        title="Do you really want to delete the email list(s)?"
-        content="Note that when an email list is deleted, it is permanently removed."
-        open={deleteOpen}
-        onClose={handleDeleteClose}
-        action={
-          <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-            Delete
-          </Button>
-        }
       />
       <Snackbar
         open={snackbarState.open}

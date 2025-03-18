@@ -16,9 +16,6 @@ import {
 
 import { Iconify } from 'src/components/iconify';
 
-import { DeleteDialog } from 'src/sections/dialog-boxes/confirm-delete-dialog';
-import { MoveToFolderPopover } from 'src/sections/dialog-boxes/move-to-folder-dailog';
-
 // Constants
 const BUTTON_STYLES = (isBelow600px) => ({
   fontSize: '15px',
@@ -163,24 +160,6 @@ export function DashboardTrashTableToolbar({
           </MenuItem>
           </Tooltip>
         </Popover>
-        <MoveToFolderPopover
-          open={moveFolderOpen}
-          onClose={handleMoveFolderClose}
-          title="Move to Folder"
-          folder={folder}
-        />
-        <DeleteDialog
-          title="Do you want to permanently delete the email list(s)?"
-          content="An email list once deleted cannot be restored in any case."
-          open={deleteOpen}
-          onClose={handleDeleteClose}
-         action={
-                     <Button variant="contained" color="error" onClick={handleConfirmDelete}>
-                     Delete
-                   </Button>
-                   }
-                 />
-               
       </>
     );
 
