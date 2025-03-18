@@ -123,11 +123,6 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
 
   return (
     <>
-      {/* <Stack
-        spacing={2}
-        alignItems="center"
-        direction={isBelow600px ? 'column' : 'row'}
-        sx={{ p: 2.5, width: '100%' }} */}
       <Stack
         spacing={2}
         alignItems="center"
@@ -204,9 +199,7 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
           <Tooltip title="Click here to refresh data." arrow placement="top">
           <Button
             sx={{
-              // ...buttonStyle,
               whiteSpace: 'nowrap',
-              // width: isBelow600px ? '188px' : '188px',
             }}
             size="large"
             color="primary"

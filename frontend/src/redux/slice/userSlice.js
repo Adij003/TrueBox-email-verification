@@ -47,8 +47,6 @@ export const addTeamMember = createAsyncThunk(
   }
 )
 
-
-
 const userSlice = createSlice({
   name: 'user',
   initialState,

@@ -4,7 +4,7 @@ import React, { useState, forwardRef, useImperativeHandle } from 'react';
 
 import { Box, Link, TextField } from '@mui/material';
 
-import { uploadBulkEmails } from 'src/redux/slice/emailVerificationSlice';
+import { uploadBulkEmails } from 'src/redux/slice/emailSlice';
 
 import FileUpload from 'src/components/upload/upload';
 
@@ -50,7 +50,6 @@ const UploadComponent = forwardRef(({ setAlertState, onUploadSuccess }, ref) => 
   };
 
   const handleFileSelect = (file) => {
-    console.log("Selected File:", file);
     setSelectedFile(file);
   };
 
@@ -108,9 +107,7 @@ const UploadComponent = forwardRef(({ setAlertState, onUploadSuccess }, ref) => 
           fileName="sample_csv.csv"
           fileErrorMessage="Upload Error: Please ensure you upload a valid CSV file. You can download a sample file here."
           setAlertState={setAlertState}
-          onSampleFileClick={() => {
-            // Handle sample file download here
-          }}
+          onSampleFileClick={() => {}}
           onFileUpload={handleFileSelect}
           selectedFile={selectedFile}
         />

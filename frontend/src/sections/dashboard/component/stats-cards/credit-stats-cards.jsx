@@ -7,9 +7,8 @@ import { fetchCredits } from 'src/redux/slice/creditSlice'
 
 import StatsCards from 'src/components/stats-card/stats-card';
 
-
 export default function CreditStatsCards() {
-  const { credits, isCreditsLoading, isCreditsSuccess, isCreditsError, creditsMessage } = useSelector((state) => state.credits); 
+  const { credits } = useSelector((state) => state.credits); 
 
   const dispatch = useDispatch();
 
@@ -47,14 +46,6 @@ export default function CreditStatsCards() {
         },
       }}
     >
-      {/* <StatsCards
-        cardtitle="Email Credits Allotted"
-        cardstats={stats.allotted}
-        icon_name="2card.png"
-        icon_color="#FFA92E"
-        bg_gradient="#FFA92E"
-        tooltipTittle="Number of emails credits allotted to your account."
-      /> */}
       <StatsCards
         cardtitle="Email Credits Consumed"
         cardstats={creditsConsumed}

@@ -16,8 +16,6 @@ import {
   Backdrop as MuiBackdrop,
 } from '@mui/material';
 
-import { startVerification } from 'src/redux/slice/upload-slice';
-
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { usePopover } from 'src/components/custom-popover';
@@ -58,16 +56,12 @@ export function DashboardTrashTableRow({
     console.log('Alert closed');
   };
 
-  const handleStartVerification = () => {
-    onStartVerification();
-    dispatch(startVerification());
-  };
 
   const handleAction = () => {
     switch (row.status) {
       case 'Unverified':
         onStartVerification();
-        dispatch(startVerification());
+        
         setIsDrawerOpen(true);
         break;
       case 'Verified':

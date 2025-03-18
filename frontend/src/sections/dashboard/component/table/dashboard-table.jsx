@@ -28,7 +28,7 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { useSetState } from 'src/hooks/use-set-state';
 
 import { varAlpha } from 'src/theme/styles';
-import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice'
+import { fetchEmailLists } from 'src/redux/slice/emailSlice'
 import { DASHBOARD_STATUS_OPTIONS } from 'src/_mock/_table/_apptable/_dashboard';
 
 import { Label } from 'src/components/label';
@@ -38,7 +38,6 @@ import { CustomPopover } from 'src/components/custom-popover';
 import { ConfirmDialog } from 'src/components/confirm-dialog';
 import {
   useTable,
-  rowInPage,
   TableNoData,
   getComparator,
   TableHeadCustom,
@@ -85,7 +84,6 @@ const TABLE_HEAD = [
   { id: '', width: 10 },
 ];
 
-
 function applyFilter({ inputData, comparator, filters }) {
   const { status, name } = filters;
 
@@ -112,14 +110,12 @@ function applyFilter({ inputData, comparator, filters }) {
   return stabilizedThis.map((el) => el[0]);
 }
 
- 
 export function DashboardTable() {
   const theme = useTheme();
-  const { emailLists, pagination } = useSelector((state) => state.emailVerification); 
-  const [tableData, setTableData] = useState([]);
-  const { currentPage, totalPages, totalItems, itemsPerPage} = pagination;
+  const { emailLists, pagination } = useSelector((state) => state.emailVerification);
+  const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
 
-  const table = useTable({ 
+  const table = useTable({
     defaultOrderBy: 'orderNumber',
     defaultRowsPerPage: itemsPerPage,
     defaultcurrentPage: currentPage,
@@ -133,7 +129,7 @@ export function DashboardTable() {
       type: "bulk",
       page: table.page + 1,
       limit: table.rowsPerPage
-    }));    
+    }));
   }, [dispatch, table.page, table.rowsPerPage]);
 
   const filters = useSetState({
@@ -141,7 +137,6 @@ export function DashboardTable() {
     status: 'all',
   });
 
-  const [processingRowId, setProcessingRowId] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -152,16 +147,30 @@ export function DashboardTable() {
     setCreditDialogOpen(false);
   };
 
-
   const handleFilterStatus = useCallback(
     (event, newValue) => {
       table.onResetPage();
+      
+      if (newValue === 'all') {
       filters.setState({ status: newValue });
-    },
-    [filters, table]
-  );
+        return dispatch(fetchEmailLists({
+          type: "bulk",
+          page: table.page + 1,
+          limit: table.rowsPerPage
+        }))
+      }
+      
+      filters.setState({ status: newValue });
+      return dispatch(fetchEmailLists({
+        type: "bulk",
+        page: table.page + 1,
+        limit: table.rowsPerPage,
+        status: newValue
+      }))
 
- 
+    },
+    [filters, table, dispatch]
+  );
 
   const handleOpenPopover = (event, row) => {
     if (row.status !== 'processing') {
@@ -197,8 +206,6 @@ export function DashboardTable() {
     filters: filters.state,
   });
 
-  const dataInPage = rowInPage(emailLists, table.page, table.rowsPerPage);
-
   const canReset =
     !!filters.state.name ||
     filters.state.status !== 'all' ||
@@ -207,24 +214,31 @@ export function DashboardTable() {
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
   const [openMoveFolder, setOpenMoveFolder] = useState(false);
 
-  // Add this handler in DashboardTrashTable component
-  const handleMoveToFolder = () => {
-    setOpenMoveFolder(true);
-    handleClosePopover();
-  };
-
-  let timeout;
   const handleFilterApply = (search) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
+    const tabVal = filters.state.status
+    console.log('tab value: ', tabVal)
+    if (tabVal === 'all' || tabVal === null) {
+      console.log('search by status all: ', search.search)
+       dispatch(fetchEmailLists({
+        type: "bulk",
+        page: table.page + 1,
+        limit: table.rowsPerPage,
+        search: search.search,
+      }));
+
+    } else{ 
+
       dispatch(fetchEmailLists({
         type: "bulk",
         page: table.page + 1,
         limit: table.rowsPerPage,
-        search: search.search
+        search: search.search,
+        status: tabVal
       }));
+      console.log('the email list after search is: ', emailLists)
+    }
 
-    }, 500); 
+
   };
 
   return (
@@ -233,10 +247,12 @@ export function DashboardTable() {
         title={
           <Box display="inline-block">
             <Tooltip title="Folder Name: Home" arrow placement="top">
-              <Typography variant="h6" sx={{overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: {xs:"200px", md:"500px"},}}>Home</Typography>
+              <Typography variant="h6" sx={{
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                maxWidth: { xs: "200px", md: "500px" },
+              }}>Home</Typography>
             </Tooltip>
           </Box>
         }
@@ -322,26 +338,24 @@ export function DashboardTable() {
             />
 
             <TableBody>
-            {emailLists
-    .filter((email) => filters.state.status === 'all' || email.status === filters.state.status)
-    .map((row, index) => (
-      <DashboardTableRow
-        key={row._id}
-        row={row}
-        selected={table.selected.includes(row.id)}
-        onSelectRow={() => table.onSelectRow(row.id)}
-        onOpenPopover={(event) => handleOpenPopover(event, row)}
-        dashboardTableIndex={table.page * table.rowsPerPage + index}
-      />
-    ))}
+              {emailLists.map((row, index) => (
+                <DashboardTableRow
+                  key={row._id}
+                  row={row}
+                  selected={table.selected.includes(row.id)}
+                  onSelectRow={() => table.onSelectRow(row.id)}
+                  onOpenPopover={(event) => handleOpenPopover(event, row)}
+                  dashboardTableIndex={table.page * table.rowsPerPage + index}
+                />
+              ))}
 
-  {emailLists.filter((email) => filters.state.status === 'all' || email.status === filters.state.status).length === 0 && (
-    <TableNoData
-      title="Not Data Found"
-      description="No data found in the table"
-      notFound={notFound}
-    />
-  )}
+              {emailLists.length === 0 && (
+                <TableNoData
+                  title="Not Data Found"
+                  description="No data found in the table"
+                  notFound={notFound}
+                />
+              )}
             </TableBody>
           </Table>
         </Scrollbar>
@@ -355,12 +369,12 @@ export function DashboardTable() {
       >
         <MenuList>
           {selectedRow && selectedRow.status !== 'processing' && (
-              <Tooltip title="Delete email list." arrow placement="left">
-                <MenuItem onClick={handleConfirmDelete} sx={{ color: 'error.main' }}>
-                  <Iconify icon="solar:trash-bin-trash-bold" />
-                  Delete
-                </MenuItem>
-              </Tooltip>
+            <Tooltip title="Delete email list." arrow placement="left">
+              <MenuItem onClick={handleConfirmDelete} sx={{ color: 'error.main' }}>
+                <Iconify icon="solar:trash-bin-trash-bold" />
+                Delete
+              </MenuItem>
+            </Tooltip>
           )}
         </MenuList>
       </CustomPopover>
@@ -401,13 +415,6 @@ export function DashboardTable() {
             You don&apos;t have enough credits to verify the email list. Please purchase more
             credits to start email verification.
           </Typography>
-
-          {/* <Box sx={{ bgcolor: 'background.neutral', p: 2, borderRadius: 1, mb: 2 }}>
-            <Typography variant="body2" color="text.secondary">
-              • Credits required: 250
-              <br />• Available credits: 0
-            </Typography>
-          </Box> */}
         </DialogContent>
 
         <DialogActions sx={{ pb: 3, gap: 1 }}>
@@ -416,7 +423,7 @@ export function DashboardTable() {
             href="https://www.pabbly.com/email-list-cleaning/#pricing"
             color="primary"
             variant="contained"
-            // startIcon={<Iconify icon="mdi:cart-outline" />}
+          // startIcon={<Iconify icon="mdi:cart-outline" />}
           >
             Upgrade Now
           </Button>
@@ -425,7 +432,7 @@ export function DashboardTable() {
           </Button>
         </DialogActions>
       </Dialog>
-    
+
       <TablePaginationCustom
         page={table.page}
         count={totalItems}

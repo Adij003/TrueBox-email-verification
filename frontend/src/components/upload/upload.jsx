@@ -4,7 +4,6 @@ import React, { useRef, useState, forwardRef, useImperativeHandle } from 'react'
 import { Box, Tooltip, IconButton, Typography } from '@mui/material';
 
 import { varAlpha } from 'src/theme/styles';
-import { startUpload, finishUpload, updateProgress } from 'src/redux/slice/upload-slice';
 
 import { Iconify } from '../iconify';
 
@@ -83,16 +82,13 @@ const FileUpload = forwardRef(
         setErrorMessage(null);
         setLocalSelectedFile(file);
 
-        dispatch(startUpload());
-
         let progress = 0;
 
         const uploadSimulation = setInterval(() => {
           progress += 5;
-          dispatch(updateProgress(progress));
           if (progress >= 100) {
             clearInterval(uploadSimulation);
-            dispatch(finishUpload());
+            
           }
         }, 500);
         onFileUpload(file);

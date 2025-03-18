@@ -19,7 +19,7 @@ import {
 
 import { toast } from 'sonner';
 
-import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailLists } from 'src/redux/slice/emailSlice';
 
 // Components
 import { Iconify } from 'src/components/iconify';
@@ -84,11 +84,6 @@ const handleRefreshEmailList = () => {
   }))
 }
 
-
-
-
-
-
   const handleMoveToFolder = () => {
     setMoveFolderOpen(true);
     handleActionsClose();
@@ -106,8 +101,6 @@ const handleRefreshEmailList = () => {
   const handleDeleteClose = () => {
     setDeleteOpen(false);
   };
-
-
 
   const handleConfirmDelete = () => {
     setDeleteOpen(false);
@@ -140,20 +133,6 @@ const handleRefreshEmailList = () => {
   const renderActionButton = () =>
     numSelected > 0 && (
       <>
-        {/* <Tooltip title="Click here to move and delete email lists." arrow placement="top">
-          <Button
-            endIcon={<Iconify icon="eva:arrow-ios-downward-fill" />}
-            onClick={handleActionsOpen}
-            color="primary"
-            sx={{
-              ...BUTTON_STYLES(isBelow600px),
-              width: isBelow600px ? '145px' : '155px',
-            }}
-          >
-            Select Action
-          </Button>
-        </Tooltip> */}
-
         <Popover
           open={isActionsOpen}
           anchorEl={anchorEl}
@@ -193,11 +172,9 @@ const handleRefreshEmailList = () => {
               Delete
             </Button>
           }
-        />
-      
+        />      
       </>
     );
-
 
   return (
     <Stack
@@ -222,7 +199,6 @@ const handleRefreshEmailList = () => {
           }}
         >
           {renderActionButton()}
-          {/* {renderFilterButton()} */}
         </Box>
         <Tooltip title="Click here to refresh data." arrow placement="top">
           <Button

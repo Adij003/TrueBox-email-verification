@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/app';
-import { verifySingleEmail } from 'src/redux/slice/emailVerificationSlice'
+import { verifySingleEmail } from 'src/redux/slice/emailSlice'
 import { listItems } from 'src/_mock/app-big-card/_dashboardBigCardListItems';
 
 import { Iconify } from 'src/components/iconify';

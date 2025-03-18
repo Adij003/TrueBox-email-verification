@@ -6,7 +6,6 @@ import { Box, Typography } from '@mui/material';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 
 import { varAlpha } from 'src/theme/styles';
-import { updateProgress, completeVerification } from 'src/redux/slice/upload-slice';
 
 // Import the necessary actions
 
@@ -19,10 +18,9 @@ export default function ProgressLinear() {
     if (isStartVerification) {
       const interval = setInterval(() => {
         if (progress < 100) {
-          dispatch(updateProgress(progress + 1)); // Increment progress by 1
+          console.log('uploading')
         } else {
           clearInterval(interval); // Stop the interval when progress reaches 100
-          dispatch(completeVerification()); // Mark verification as completed
         }
       }, 100); // Update progress every 100ms
 

@@ -1,6 +1,5 @@
-import { useTheme } from '@emotion/react';
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
@@ -13,12 +12,11 @@ import { useSetState } from 'src/hooks/use-set-state';
 import { fIsBetween } from 'src/utils/format-time';
 
 import { fetchCredits } from 'src/redux/slice/creditSlice';
-import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailLists } from 'src/redux/slice/emailSlice';
 
 import { Scrollbar } from 'src/components/scrollbar';
 import {
   useTable,
-  rowInPage,
   TableNoData,
   getComparator,
   TableHeadCustom,
@@ -57,55 +55,15 @@ const TABLE_HEAD = [
   },
 ];
 
-const dataOn = [
-  {
-    dateCreatedOn: 'Oct 23, 2024 17:45:32',
-    message: 'List 1',
-    status: 'Bulk Verification',
-    folder: 'Pabbly Connect',
-    credits: 'Consumed',
-    noOfCredits: 9,
-  },
-  {
-    dateCreatedOn: 'Oct 23, 2024 17:45:32',
-    message: 'List 2',
-    status: 'Bulk Verification',
-    credits: 'Consumed',
-    folder: 'Pabbly Hook',
-    noOfCredits: 7,
-  },
-  {
-    dateCreatedOn: 'Oct 23, 2024 17:45:32',
-    message: 'ankit.mandli1@pabbly.com',
-    status: 'Single Verification',
-    // folder:'Organisation 1',
-    credits: 'Consumed',
-    noOfCredits: 1,
-  },
-  {
-    dateCreatedOn: 'Oct 23, 2024 17:45:32',
-    message: 'Email Credits Allotted',
-    status: 'Email Credits Purchased',
-    credits: 'Alloted',
-    // folder:'Organisation 1',
-    noOfCredits: 100,
-  },
-];
-
 // ----------------------------------------------------------------------
 
 export function CreditTable() {
   const table = useTable({ defaultOrderBy: 'orderNumber' });
 
-  const [tableData, setTableData] = useState(dataOn);
-  const theme = useTheme();
+  const { emailLists, pagination, } = useSelector((state) => state.emailVerification);
 
-  const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification);
-
-  const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
-  const { credits } = useSelector((state) => state.credits)
-
-
+  const { totalItems } = pagination;
+  
   const filters = useSetState({
     name: '',
     status: 'all',
@@ -127,8 +85,6 @@ export function CreditTable() {
     dispatch(fetchCredits())
   }, [dispatch, table.page, table.rowsPerPage]);
 
-  const dataInPage = rowInPage(dataFiltered, table.page, table.rowsPerPage);
-
   const canReset =
     !!filters.state.name ||
     filters.state.status !== 'all' ||
@@ -136,13 +92,6 @@ export function CreditTable() {
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
 
-  const handleFilterStatus = useCallback(
-    (event, newValue) => {
-      table.onResetPage();
-      filters.setState({ status: newValue });
-    },
-    [filters, table]
-  );
   const handleFilterApply = (selectedFilter) => {
     if(selectedFilter.selectedstatus === 'all'){
       return dispatch(fetchEmailLists({
@@ -166,6 +115,7 @@ export function CreditTable() {
       dispatch(fetchEmailLists({
         page: table.page + 1,
         limit: table.rowsPerPage,
+        status: 'completed',
         search: search?.search|| ""  
       }));
     }, 600);

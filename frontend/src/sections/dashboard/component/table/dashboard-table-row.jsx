@@ -18,8 +18,7 @@ import {
   Backdrop as MuiBackdrop,
 } from '@mui/material';
 
-import { startVerification } from 'src/redux/slice/upload-slice';
-import { checkBulkStatus, downloadBulkResults, startBulkVerification } from 'src/redux/slice/emailVerificationSlice';
+import { checkBulkStatus, downloadBulkResults, startBulkVerification } from 'src/redux/slice/emailSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -58,11 +57,6 @@ export function DashboardTableRow({
 
   const handleAlertClose = () => {
     console.log('Alert closed');
-  };
-
-  const handleStartVerification = () => {
-    // onStartVerification();
-    dispatch(startVerification());
   };
 
   const handleAction = () => {
@@ -239,31 +233,6 @@ export function DashboardTableRow({
               </Typography>
             </Tooltip>
           </Stack>
-          {/* <Stack spacing={2} direction="row" alignItems="center">
-            {(row.status === 'processing' || row.status === 'Verified') && (
-              <Tooltip
-                arrow
-                placement="top"
-                disableInteractive
-                title="Number of email credits used for verification."
-              >
-                <Typography
-                  component="span"
-                  sx={{
-                    color: 'success.main',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap',
-                    maxWidth: '300px',
-                    display: 'inline-block',
-                    fontSize: '14px',
-                  }}
-                >
-                  {row.creditconsumed || `${currentFile.numberOfEmails} Credit Consumed`}
-                </Typography>
-              </Tooltip>
-            )}
-          </Stack> */}
         </TableCell>
         <TableCell width={300} align="right" sx={{ pr: 1 }}>
           <Stack direction="row" spacing={1} justifyContent="flex-end">
@@ -296,22 +265,7 @@ export function DashboardTableRow({
             }
             arrow
             placement="top"
-          >
-            <span>
-              {/* <IconButton
-                color={popover.open ? 'inherit' : 'default'}
-                onClick={(event) => onOpenPopover(event)}
-                disabled={row.status === 'processing' || row.status === 'uploading'}
-                sx={{
-                  '&.Mui-disabled': {
-                    opacity: 0.5,
-                  },
-                }}
-              >
-                <Iconify icon="eva:more-vertical-fill" />
-              </IconButton> */}
-            </span>
-          </Tooltip>
+          />
         </TableCell>
       </TableRow>
       <Drawer

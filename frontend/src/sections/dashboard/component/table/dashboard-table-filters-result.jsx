@@ -5,7 +5,7 @@ import Chip from '@mui/material/Chip';
 
 import { fDateRangeShortLabel } from 'src/utils/format-time';
 
-import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailLists } from 'src/redux/slice/emailSlice';
 
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 
@@ -17,16 +17,21 @@ export function DashboardTableFiltersResult({ filters, totalResults, onResetPage
   const handleRemoveKeyword = useCallback(() => {
     onResetPage();
     filters.setState({ name: '' });
+    filters.setState({ status: 'all' });
 
   }, [filters, onResetPage]);
   
   const handleRemoveStatus = () => {
+    onResetPage();
+    filters.setState({ status: 'all' });
     dispatch(fetchEmailLists({
       type: "bulk"
     }))
   }
 
   const handleRemoveDate = () => {
+    onResetPage();
+    filters.setState({ status: 'all' });
     dispatch(fetchEmailLists({
       type: "bulk"
     }))
@@ -34,6 +39,7 @@ export function DashboardTableFiltersResult({ filters, totalResults, onResetPage
 
   const handleReset = () => {
     handleRemoveKeyword()
+    filters.setState({ status: 'all' });
     dispatch(fetchEmailLists({
       type: "bulk"
     }))

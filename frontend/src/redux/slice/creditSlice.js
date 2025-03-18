@@ -19,35 +19,32 @@ export const fetchCredits = createAsyncThunk('credits/fetchCredits', async (_, t
   }
 });
 
+const handlePending = (state) => {
+  state.isCreditsLoading = true;
+  state.isCreditsError = false;
+}
 
+const handleFulfilled = (state, action) => {
+  state.isCreditsLoading = false;
+  state.isCreditsSuccess = true;
+  state.credits = action.payload;
+};
+
+const handleRejected = (state, action) => {
+  state.isCreditsLoading = false;
+  state.isCreditsError = true;
+  state.creditsMessage = action.payload;
+};
 
 const creditSlice = createSlice({
   name: 'credit',
   initialState,
-  reducers: {
-    resetCreditsState: (state) => {
-      state.isCreditsLoading = false;
-      state.isCreditsSuccess = false;
-      state.isCreditsError = false;
-      state.creditsMessage = '';
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(fetchCredits.pending, (state) => {
-      state.isCreditsLoading = true;
-      state.isCreditsError = false;
-    })
-    .addCase(fetchCredits.fulfilled, (state, action) => {
-      state.isCreditsLoading = false;
-      state.isCreditsSuccess = true;
-      state.credits = action.payload;
-    })
-    .addCase(fetchCredits.rejected, (state, action) => {
-      state.isCreditsLoading = false;
-      state.isCreditsError = true;
-      state.creditsMessage = action.payload;
-    })
+    .addCase(fetchCredits.pending, handlePending)
+    .addCase(fetchCredits.fulfilled, handleFulfilled)
+    .addCase(fetchCredits.rejected, handleRejected);
   }
 });
 

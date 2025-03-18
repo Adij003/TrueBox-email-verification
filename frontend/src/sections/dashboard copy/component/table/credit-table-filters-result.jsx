@@ -5,7 +5,7 @@ import Chip from '@mui/material/Chip';
 
 import { fDateRangeShortLabel } from 'src/utils/format-time';
 
-import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
+import { fetchEmailLists } from 'src/redux/slice/emailSlice';
 
 import { chipProps, FiltersBlock, FiltersResult } from 'src/components/filters-result';
 

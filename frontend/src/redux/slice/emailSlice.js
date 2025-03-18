@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import axiosInstance, { endpoints } from 'src/utils/axios'; 
 
-
 const initialState = {
   emailVerification: null,
   isLoading: false,
@@ -56,7 +55,7 @@ const initialState = {
   },
 };
 
-
+// Thunk to upload bulk email lists
 export const uploadBulkEmails = createAsyncThunk(
   "emails/uploadBulkEmails",
   async ({ file, emailListName }, { rejectWithValue }) => {
@@ -82,7 +81,7 @@ export const uploadBulkEmails = createAsyncThunk(
   }
 );
 
-
+// Thunk to start bulk email verification
 export const startBulkVerification = createAsyncThunk('emails/startBulkVerification', async (jobId, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.patch(endpoints.emailList.startBulkVerification(jobId));
@@ -92,6 +91,7 @@ export const startBulkVerification = createAsyncThunk('emails/startBulkVerificat
   }
 });
 
+// Thunk to check the status of bulk email verification
 export const checkBulkStatus = createAsyncThunk('emails/checkBulkStatus', async (jobId, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.get(endpoints.emailList.checkBulkStatus(jobId));
@@ -101,6 +101,7 @@ export const checkBulkStatus = createAsyncThunk('emails/checkBulkStatus', async 
   }
 });
 
+// Thunk to download bulk email verification results
 export const downloadBulkResults = createAsyncThunk(
   'emails/downloadBulkResults',
   async (jobId, { rejectWithValue }) => {
@@ -133,6 +134,7 @@ export const downloadBulkResults = createAsyncThunk(
   }
 );
 
+// Thunk to verify a single email
 export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', async (emailData, { rejectWithValue }) => {
   try {
     const response = await axiosInstance.post(endpoints.emailList.verifySingleEmail, emailData);
@@ -143,6 +145,8 @@ export const verifySingleEmail = createAsyncThunk('emails/verifySingleEmail', as
   }
 });
 
+
+// Thunk to fetch email lists
 export const fetchEmailLists = createAsyncThunk(
   "emails/fetchEmailLists",
   async ({ type, status, page, limit, search }, { rejectWithValue }) => {
@@ -163,99 +167,136 @@ export const fetchEmailLists = createAsyncThunk(
   }
 );
 
+const handlePending = (state, action) => {
+  switch (action.type) {
+    case 'emails/uploadBulkEmails':
+      state.isLoading = true
+      break;
+    case 'emails/startBulkVerification':
+      state.isLoading = true;
+      break;
+    case 'emails/checkBulkStatus':
+      state.isLoading = true;
+      break;
+    case 'emails/downloadBulkResults':
+      state.isLoading = true;
+      break;
+    case 'emails/verifySingleEmail':
+      state.isLoading = true;
+      break;
+    case 'emails/fetchEmailLists':
+      state.isLoading = true;
+      break;
+    default:
+      break; 
+  }
+}
 
+const handleFulfilled = (state, action) => {
+  state.isLoading = false;
+  state.isSuccess = true;
+
+  switch (action.type) {
+    case uploadBulkEmails.fulfilled.type: // this resolves to emails/uploadBulkEmail/fulfilled
+      state.bulk.jobId = action.payload.jobId;
+      break;
+
+    case startBulkVerification.fulfilled.type: // and this resolves to emails/startBulkVerification/fulfilled
+      state.bulk.status = 'in-progress';
+      break;
+
+    case checkBulkStatus.fulfilled.type:
+      state.bulk = { ...state.bulk, ...action.payload };
+      break;
+
+    case verifySingleEmail.fulfilled.type:
+      state.verificationType = 'single';
+      state.single = action.payload;
+      break;
+
+    case fetchEmailLists.fulfilled.type:
+      state.emailLists = action.payload.emailLists || [];
+      state.pagination = action.payload.pagination || {
+        currentPage: 1,
+        totalPages: 1,
+        totalItems: 0,
+        itemsPerPage: 5,
+      };
+      break;
+
+    default:
+      break;
+  }
+};
+
+const handleRejected = (state, action) => {
+  switch (action.type) {
+    case 'emails/uploadBulkEmails':
+      state.isLoading = false
+      state.isError = true;
+      state.message = action.payload;
+      break;
+    case 'emails/startBulkVerification':
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      break;
+    case 'emails/checkBulkStatus':
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      break;
+    case 'emails/downloadBulkResults':
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      break;
+    case 'emails/verifySingleEmail':
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload;
+      break;
+    case 'emails/fetchEmailLists':
+      state.isLoading = false;
+      state.isError = true;
+      state.message = action.payload || "Failed to fetch email lists";
+      break;
+    default:
+      break; 
+  }
+}
+
+// Redux slice for email verification
 const emailVerificationSlice = createSlice({
   name: 'emailVerification',
   initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
-    .addCase(uploadBulkEmails.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(uploadBulkEmails.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.bulk.jobId = action.payload.jobId;
-    })
-    .addCase(uploadBulkEmails.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload;
-    })
+    .addCase(uploadBulkEmails.pending, handlePending)
+    .addCase(uploadBulkEmails.fulfilled, handleFulfilled)
+    .addCase(uploadBulkEmails.rejected, handleRejected)
 
 
-    .addCase(startBulkVerification.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(startBulkVerification.fulfilled, (state) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.bulk.status = 'in-progress';
-    })
-    .addCase(startBulkVerification.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload;
-    })
+    .addCase(startBulkVerification.pending, handlePending)
+    .addCase(startBulkVerification.fulfilled, handleFulfilled)
+    .addCase(startBulkVerification.rejected, handleRejected)
 
-    .addCase(checkBulkStatus.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(checkBulkStatus.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.bulk = { ...state.bulk, ...action.payload };
-    })
-    .addCase(checkBulkStatus.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload;
-    })
+    .addCase(checkBulkStatus.pending, handlePending)
+    .addCase(checkBulkStatus.fulfilled, handleFulfilled)
+    .addCase(checkBulkStatus.rejected, handleRejected)
 
-    .addCase(downloadBulkResults.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(downloadBulkResults.fulfilled, (state) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-    })
-    .addCase(downloadBulkResults.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload;
-    })
+    .addCase(downloadBulkResults.pending, handlePending)
+    .addCase(downloadBulkResults.fulfilled, handleFulfilled)
+    .addCase(downloadBulkResults.rejected, handleRejected)
 
-    .addCase(verifySingleEmail.pending, (state) => {
-      state.isLoading = true;
-    })
-    .addCase(verifySingleEmail.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.verificationType = 'single';
-      state.single = action.payload;
-    })
-    .addCase(verifySingleEmail.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload;
-    })
+    .addCase(verifySingleEmail.pending, handlePending)
+    .addCase(verifySingleEmail.fulfilled, handleFulfilled)
+    .addCase(verifySingleEmail.rejected, handleRejected)
 
-    .addCase(fetchEmailLists.pending, (state) => {
-      state.isLoading = true;
-      state.isError = false;
-      state.message = "";
-    })
-    .addCase(fetchEmailLists.fulfilled, (state, action) => {
-      state.isLoading = false;
-      state.isSuccess = true;
-      state.emailLists = action.payload.emailLists || []; // Ensuriong that it's an array
-      state.pagination = action.payload.pagination || { currentPage: 1, totalPages: 1, totalItems: 0, itemsPerPage: 5 };
-    })
-    .addCase(fetchEmailLists.rejected, (state, action) => {
-      state.isLoading = false;
-      state.isError = true;
-      state.message = action.payload || "Failed to fetch email lists";
-    });
+    .addCase(fetchEmailLists.pending, handlePending )
+    .addCase(fetchEmailLists.fulfilled, handleFulfilled)
+    .addCase(fetchEmailLists.rejected, handleRejected);
   }
 });
 
