@@ -22,7 +22,6 @@ import { checkBulkStatus, downloadBulkResults, startBulkVerification } from 'src
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-import { usePopover } from 'src/components/custom-popover';
 
 import { DashboardChart } from '../chart/dashboard-chart';
 
@@ -36,19 +35,11 @@ export function DashboardTableRow({
   row,
   selected,
   dashboardTableIndex,
-  onOpenPopover,
-  onViewReport,
-  isProcessing,
-  isCompleted,
 }) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [alertState, setAlertState] = useState(null);
-
   const csvfilesname = [{ name: row.emailListName, numberOfEmails: row.numberOfEmails }];
-  const timezone = '(UTC+05:30) Asia/Kolkata';
   const currentFile = csvfilesname[dashboardTableIndex % csvfilesname.length];
   const navigate = useNavigate();
-  const popover = usePopover();
   const dispatch = useDispatch();
 
   const showAlert = (type, title, message) => {
@@ -63,6 +54,9 @@ export function DashboardTableRow({
     switch (row.status) {
       case 'pending':
       dispatch(startBulkVerification(row.jobId));
+      setTimeout(() => {
+        dispatch(checkBulkStatus(row.jobId));
+      }, 1000);
         break;
       case 'completed':
         dispatch(downloadBulkResults(row.jobId));
@@ -72,11 +66,14 @@ export function DashboardTableRow({
         dispatch(checkBulkStatus(row.jobId))
         break;
       case 'ready':
-        dispatch(startBulkVerification(row.jobId));
+        // dispatch(startBulkVerification(row.jobId));
+        dispatch(checkBulkStatus(row.jobId))
+
         break;
       case 'in-progress':
         dispatch(checkBulkStatus(row.jobId))
         break;
+        
       default:
         break;
     }
@@ -85,13 +82,13 @@ export function DashboardTableRow({
   // Status color mapping
   const getStatusColor = (status) => {
     switch (status) {
-      case 'Verified':
+      case 'completed':
         return 'success';
-      case 'processing':
+      case 'ready':
         return 'info';
-      case 'uploading':
+      case 'pending':
         return 'warning';
-      case 'Unverified':
+      case 'in-process':
         return 'error';
       default:
         return 'default';
