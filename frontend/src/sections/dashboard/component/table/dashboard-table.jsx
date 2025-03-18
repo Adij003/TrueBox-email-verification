@@ -115,7 +115,7 @@ function applyFilter({ inputData, comparator, filters }) {
  
 export function DashboardTable() {
   const theme = useTheme();
-  const { emailLists, pagination, isLoading, isError } = useSelector((state) => state.emailVerification); 
+  const { emailLists, pagination } = useSelector((state) => state.emailVerification); 
   const [tableData, setTableData] = useState([]);
   const { currentPage, totalPages, totalItems, itemsPerPage} = pagination;
 
@@ -146,9 +146,6 @@ export function DashboardTable() {
   const [selectedRow, setSelectedRow] = useState(null);
 
   const confirmDelete = useBoolean();
-  const isStartVerification = useSelector((state) => state.fileUpload.isStartVerification);
-  const isVerificationCompleted = useSelector((state) => state.fileUpload.isVerificationCompleted);
-
   const [creditDialogOpen, setCreditDialogOpen] = useState(false);
 
   const handleDialogClose = () => {
@@ -325,28 +322,26 @@ export function DashboardTable() {
             />
 
             <TableBody>
-              {
-                emailLists.map((row, index) => (
-                  <DashboardTableRow
-                    key={row._id}
-                    row={row}
-                    selected={table.selected.includes(row.id)}
-                    onSelectRow={() => table.onSelectRow(row.id)}
-                    onOpenPopover={(event) => handleOpenPopover(event, row)}
-                    dashboardTableIndex={table.page * table.rowsPerPage + index}
-                    // onStartVerification={() => handleStartVerification(row.id)}
-                    isProcessing={processingRowId === row.id && isStartVerification}
-                    isCompleted={processingRowId === row.id && isVerificationCompleted}
-                  />
-                ))}
+            {emailLists
+    .filter((email) => filters.state.status === 'all' || email.status === filters.state.status)
+    .map((row, index) => (
+      <DashboardTableRow
+        key={row._id}
+        row={row}
+        selected={table.selected.includes(row.id)}
+        onSelectRow={() => table.onSelectRow(row.id)}
+        onOpenPopover={(event) => handleOpenPopover(event, row)}
+        dashboardTableIndex={table.page * table.rowsPerPage + index}
+      />
+    ))}
 
-              {emailLists.length === 0 &&
-                <TableNoData
-                  title="Not Data Found"
-                  description="No data found in the table"
-                  notFound={notFound}
-                />
-             }
+  {emailLists.filter((email) => filters.state.status === 'all' || email.status === filters.state.status).length === 0 && (
+    <TableNoData
+      title="Not Data Found"
+      description="No data found in the table"
+      notFound={notFound}
+    />
+  )}
             </TableBody>
           </Table>
         </Scrollbar>

@@ -104,8 +104,6 @@ export function CreditTable() {
 
   const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
   const { credits } = useSelector((state) => state.credits)
-  const { creditsAddingHistory } = credits?.data || {};
-  const [isAppliedFilter, setIsAppliedFilter] = useState(true)
 
 
   const filters = useSetState({
@@ -123,7 +121,7 @@ export function CreditTable() {
   useEffect(() => {
     dispatch(fetchEmailLists({
       page: table.page + 1,
-      limit: table.rowsPerPage-1,
+      limit: table.rowsPerPage,
       status: 'completed'
     }));
     dispatch(fetchCredits())
@@ -147,14 +145,12 @@ export function CreditTable() {
   );
   const handleFilterApply = (selectedFilter) => {
     if(selectedFilter.selectedstatus === 'all'){
-    setIsAppliedFilter(true)
       return dispatch(fetchEmailLists({
         page: table.page + 1,
         limit: table.rowsPerPage,
         status: 'completed'
       }))
     }
-    setIsAppliedFilter(false)
     return dispatch(fetchEmailLists({
       type: selectedFilter.selectedstatus,
       page: table.page + 1,
@@ -165,19 +161,17 @@ export function CreditTable() {
   
   let timeout;
   const handleSearch = (search) => {
-    setIsAppliedFilter(false);
     clearTimeout(timeout);
     timeout = setTimeout(() => {
       dispatch(fetchEmailLists({
         page: table.page + 1,
         limit: table.rowsPerPage,
-        search: search?.search?.state?.name || ""  
+        search: search?.search|| ""  
       }));
-    }, 1000);
+    }, 600);
   };
 
   const handleRefresh = () => {
-    setIsAppliedFilter(true)
     dispatch(fetchEmailLists({ 
       status: 'completed',
       skip: 5,
