@@ -7,8 +7,6 @@ import { listItemsActivityLog } from 'src/_mock/admin-big-card/_activitylogBigCa
 
 import BigCard from 'src/components/app-big-card/big-card';
 
-import { ActivityLogTable } from '../activity-log/components/table/activity-log-table';
-
 // ----------------------------------------------------------------------
 
 const metadata = { title: `Activity Log | ${CONFIG.site.name}` };
@@ -36,7 +34,6 @@ export default function Page() {
             learnMoreLink="https://forum.pabbly.com/threads/activity-log.26108/"
           />
         </Grid>
-        <ActivityLogTable />
       </Box>
     </>
   );
