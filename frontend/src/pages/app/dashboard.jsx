@@ -35,7 +35,6 @@ import { DashboardTable } from 'src/sections/dashboard/component/table/dashboard
 // import { FolderSection } from 'src/sections/dashboard/component/folder/dashboardfolder';
 import CreditStatsCards from 'src/sections/dashboard/component/stats-cards/credit-stats-cards';
 import VerifySingleEmail from 'src/sections/dashboard/component/verify-single-email/verify-single-email';
-import { DashboardTrashTable } from 'src/sections/dashboard/component/dashboard-trash-table/dashboard-trash-table';
 
 const metadata = { title: `Dashboard | Pabbly Email Verification` };
 const { items, style } = listItems;
@@ -211,11 +210,8 @@ export default function Page() {
               }
             />
             <Box sx={{ mt: 3 }}>
-              {activeTable === 'trash' ? (
-                <DashboardTrashTable  />
-              ) : (
+            
                 <DashboardTable  selectedFolder={selectedFolder} />
-              )}
             </Box>
      
       </DashboardContent>

@@ -17,8 +17,9 @@ const Settings = lazy(() => import('src/pages/app/settings'));
 const CreditsPage = lazy(() => import('src/sections/settings-page/credits'));
 const TimeZone = lazy(() => import('src/sections/settings-page/time-zone'));
 const Api = lazy(() => import('src/sections/settings-page/api'));
+// const TeamMembers = lazy(() => import('src/sections/settings-page/team-members'));
 const TeamMembers = lazy(() => import('src/sections/settings-page/team-members'));
-const ActivityLog = lazy(() => import('src/sections/settings-page/activity-log'));
+
 
 // ----------------------------------------------------------------------
 
@@ -48,7 +49,6 @@ export const appRoutes = [
           { path: 'timezone', element: <TimeZone /> },
           { path: 'api', element: <Api /> },
           { path: 'team-members', element: <TeamMembers /> },
-          { path: 'activity-log', element: <ActivityLog /> },
         ],
       },
     ],

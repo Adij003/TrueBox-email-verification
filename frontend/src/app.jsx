@@ -18,10 +18,6 @@ import { AuthProvider } from 'src/auth/context/jwt';
 import store from './redux/store';
 import { Snackbar } from './components/snackbar';
 
-
-
-
-
 // ----------------------------------------------------------------------
 
 export default function App() {
