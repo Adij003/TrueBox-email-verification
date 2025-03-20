@@ -297,6 +297,7 @@ export function DashboardTable() {
 
       <DashboardTableToolbar
         filters={filters}
+        rowsPerPage={table.rowsPerPage}
         onResetPage={table.onResetPage}
         numSelected={table.selected.length}
         onApplyFilter={handleFilterApply}

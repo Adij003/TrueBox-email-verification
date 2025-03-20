@@ -47,7 +47,7 @@ const FOLDER_STRUCTURE = [
   'Organization 9',
 ];
 
-export function DashboardTableToolbar({ filters, numSelected, onApplyFilter }) {
+export function DashboardTableToolbar({ filters, numSelected, onApplyFilter, rowsPerPage }) {
 
   const isBelow600px = useMediaQuery('(max-width:600px)');
 
@@ -76,20 +76,10 @@ export function DashboardTableToolbar({ filters, numSelected, onApplyFilter }) {
   const dispatch = useDispatch();
 
 const handleRefreshEmailList = () => {
-  console.log('hello form the dashboard-table-toolbar: ',filters.state.status)
-  const tabVal = filters.state.status
-
-  if( filters.state.status === 'all'){
-
-    dispatch(fetchEmailLists({ type: "bulk",
-      skip: 5
+  filters.setState({ status: '' })
+      dispatch(fetchEmailLists({ type: "bulk",
+      limit: rowsPerPage
     }))
-  } else {
-    dispatch(fetchEmailLists({ type: "bulk",
-      skip: 5,
-      status: tabVal
-    }))
-  }
 }
 
   const handleMoveToFolder = () => {
