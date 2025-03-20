@@ -111,7 +111,7 @@ function applyFilter({ inputData, comparator, filters }) {
 export function DashboardTable() {
   const theme = useTheme();
   const { emailLists, pagination } = useSelector((state) => state.emailVerification);
-  const { currentPage, totalPages, totalItems, itemsPerPage } = pagination;
+  const { currentPage,  totalItems, itemsPerPage } = pagination;
 
   const table = useTable({
     defaultOrderBy: 'orderNumber',

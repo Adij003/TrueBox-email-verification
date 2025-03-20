@@ -1,14 +1,10 @@
 import { useState } from 'react';
 import { useTheme } from '@emotion/react';
-import { useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
 import { Helmet } from 'react-helmet-async';
 
 import { Box, Button, Tooltip, useMediaQuery } from '@mui/material';
 
 import { CONFIG } from 'src/config-global';
-// import { listItems } from 'src/_mock/big-card/_dashboardBigCardListItems';
-
 import { listItems } from 'src/_mock/app-big-card/_teamMembersBigCardListItems';
 
 import { Iconify } from 'src/components/iconify';
@@ -25,24 +21,12 @@ const metadata = { title: `Team Members | ${CONFIG.site.name}` };
 const { items, style } = listItems;
 
 export default function TeamMembersPage() {
-  const [selectedListItem, setSelectedListItem] = useState(0);
-  const {userInfo} = useSelector((state) => state.user);
-
-
-  const handleListItemSelect = (index) => {
-    setSelectedListItem(index);
-  };
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const navigate = useNavigate();
-
+  
   // Custom handler to open dialog
   const [isTeamMemberDialogOpen, setDialogOpen] = useState(false);
-
-  const handleConfigureTeamMember = () => {
-    setDialogOpen(true);
-  };
 
   return (
     <>

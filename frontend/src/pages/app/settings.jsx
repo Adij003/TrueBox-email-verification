@@ -21,17 +21,6 @@ export default function Page() {
       pageSubheading: 'View a summary of your email verification credits. ',
       link: 'https://forum.pabbly.com/threads/credits-summary.26312/',
     },
-    // {
-    //   value: 'api',
-    //   path: '/app/settings/api',
-    //   icon: <Iconify icon="pajamas:api" width={24} />,
-    //   label: 'API',
-    //   tooltip: 'Get API key and secret key to perform email verifications directly.',
-    //   pageTitle: 'API',
-    //   pageSubheading:
-    //     'Generate your API Key and Secret Key to perform email verifications directly through the Pabbly Email Verification API. ',
-    //   link: 'https://forum.pabbly.com/threads/api.26313/',
-    // },
     {
       value: 'team-members',
       path: '/app/settings/team-members',
@@ -43,18 +32,6 @@ export default function Page() {
       link: 'https://forum.pabbly.com/threads/team-members.26323/',
     },
 
-    // {
-    //   value: 'activity-log',
-    //   path: '/app/settings/activity-log',
-    //   icon: <Iconify icon="material-symbols:work-history" width={24} />,
-    //   label: 'Activity Log',
-    //   tooltip:
-    //     'Activity Log helps you monitor changes and keep track of all actions in your Pabbly Email Verification account.',
-    //   pageTitle: 'Activity Log',
-    //   pageSubheading:
-    //     'Keep track of all actions in your Pabbly Email Verification account, like verifying single emails, uploading and verifying email lists, downloading reports, deleting email lists, adding team members, and regenerating API keys. Activity Log helps you monitor changes and ensure everything runs smoothly. ',
-    //   link: 'https://forum.pabbly.com/threads/activity-log.26108/',
-    // },
     {
       value: 'timzone',
       path: '/app/settings/timezone',

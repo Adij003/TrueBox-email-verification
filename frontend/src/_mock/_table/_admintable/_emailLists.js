@@ -16,15 +16,5 @@ export const EMAIL_LISTS_STATUS_OPTIONS = [
     label: 'Unverified',
     tooltip: 'View all email lists that are unverified.',
   },
-  
-  // {
-  //   value: 'canceled',
-  //   label: 'Canceled',
-  //   tooltip: 'View all email lists whose verification was canceled by the Pabbly customer.',
-  // },
-  // {
-  //   value: 'canceled from admin panel',
-  //   label: 'Canceled From Admin Panel',
-  //   tooltip: 'View all email lists whose verification was canceled by the admin.',
-  // },
+
 ];

@@ -16,7 +16,6 @@ import {
   MenuItem,
   Typography,
   DialogTitle,
-  useMediaQuery,
   DialogContent,
   DialogActions,
 } from '@mui/material';
@@ -27,12 +26,10 @@ import { listItems } from 'src/_mock/app-big-card/_dashboardBigCardListItems';
 
 import { Iconify } from 'src/components/iconify';
 import BigCard from 'src/components/app-big-card/big-card';
-// import StatsCards from 'src/components/stats-card/stats-card';
 import PageHeader from 'src/components/page-header/page-header';
 
 import UploadComponent from 'src/sections/dashboard/component/upload/upload-file';
 import { DashboardTable } from 'src/sections/dashboard/component/table/dashboard-table';
-// import { FolderSection } from 'src/sections/dashboard/component/folder/dashboardfolder';
 import CreditStatsCards from 'src/sections/dashboard/component/stats-cards/credit-stats-cards';
 import VerifySingleEmail from 'src/sections/dashboard/component/verify-single-email/verify-single-email';
 
@@ -42,9 +39,6 @@ const { items, style } = listItems;
 export default function Page() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [email, setEmail] = useState('');
-  const [activeTable, setActiveTable] = useState('dashboard');
-  const [selectedFolder, setSelectedFolder] = useState('Home');
-  const [isFromSingleEmail, setIsFromSingleEmail] = useState(false);
   const uploadRef = useRef(null);
 
   const handleUploadClick = () => {
@@ -55,7 +49,7 @@ export default function Page() {
 
   const dispatch = useDispatch();
 
-  const [alertState, setAlertState] = useState({
+  const [setAlertState] = useState({
     open: false,
     severity: 'success',
     title: '',
@@ -66,21 +60,10 @@ export default function Page() {
   const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
 
-  const handleTrashClick = () => {
-    setActiveTable('trash');
-  };
-
-  const handleHomeClick = () => {
-    setActiveTable('dashboard');
-    setSelectedFolder('Home');
-  };
-
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleVerify = async () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  setIsFromSingleEmail(true);
 
   if (emailRegex.test(email)) {
     try {
@@ -114,9 +97,7 @@ export default function Page() {
       ...prev,
       [type]: true,
     }));
-    if (type !== 'singleEmail') {
-      setIsFromSingleEmail(false);
-    }
+   
     handlePopoverClose();
   };
 
@@ -211,7 +192,7 @@ export default function Page() {
             />
             <Box sx={{ mt: 3 }}>
             
-                <DashboardTable  selectedFolder={selectedFolder} />
+                <DashboardTable />
             </Box>
      
       </DashboardContent>

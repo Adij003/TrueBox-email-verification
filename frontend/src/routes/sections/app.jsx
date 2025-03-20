@@ -11,13 +11,11 @@ import { AuthGuard } from 'src/auth/guard';
 // ----------------------------------------------------------------------
 
 const DashboardPage = lazy(() => import('src/pages/app/dashboard'));
-const ReportsPage = lazy(() => import('src/pages/app/reports'));
 const GetHelpPage = lazy(() => import('src/pages/app/get-help'));
 const Settings = lazy(() => import('src/pages/app/settings'));
 const CreditsPage = lazy(() => import('src/sections/settings-page/credits'));
 const TimeZone = lazy(() => import('src/sections/settings-page/time-zone'));
 const Api = lazy(() => import('src/sections/settings-page/api'));
-// const TeamMembers = lazy(() => import('src/sections/settings-page/team-members'));
 const TeamMembers = lazy(() => import('src/sections/settings-page/team-members'));
 
 
@@ -37,8 +35,6 @@ export const appRoutes = [
     element: CONFIG.auth.skip ? <>{layoutContent}</> : <AuthGuard>{layoutContent}</AuthGuard>,
     children: [
       { element: <DashboardPage />, index: true },
-      { path: 'reports', element: <ReportsPage /> },
-      // { path: 'credits', element: <CreditsPage /> },
       { path: 'gethelp', element: <GetHelpPage /> },
       {
         path: 'settings',
