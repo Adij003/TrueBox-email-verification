@@ -17,7 +17,7 @@ export function FiltersResult({ totalResults, onReset, sx, children }) {
       <Box sx={{ mb: 1.5, typography: 'body2' }}>
         <strong>{totalResults}</strong>
         <Box component="span" sx={{ color: 'text.secondary', ml: 0.25 }}>
-          {' '}results found
+          {' '}results found 
         </Box>
       </Box>
 

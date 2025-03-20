@@ -14,7 +14,6 @@ export default function CustomTabs({
   dashboardContentProps = {},
   pageHeaderProps = {},
   tabsProps = {},
-  link,
 }) {
   const navigate = useNavigate();
   const location = useLocation();

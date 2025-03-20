@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useTheme } from '@emotion/react';
 import { Helmet } from 'react-helmet-async';
 
@@ -7,8 +6,6 @@ import { Box, Tooltip, useMediaQuery } from '@mui/material';
 import { CONFIG } from 'src/config-global';
 import { DashboardContent } from 'src/layouts/app';
 import { listItemsLists } from 'src/_mock/admin-big-card/_dashboardBigCardListItems';
-import { EmailListTable } from 'src/admin-sections/email-lists/components/table/email-lists-table';
-import UpdateCreditsDialog from 'src/admin-sections/email-lists/components/dialog/credit-update-dialog';
 
 import StatsCards from 'src/components/stats-card/stats-card';
 import PageHeader from 'src/components/page-header/page-header';
@@ -24,29 +21,6 @@ const { items, style } = listItemsLists;
 export default function Page() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [updateCreditsDialogOpen, setUpdateCreditsDialogOpen] = useState(false);
-  const [selectedCreditRow, setSelectedCreditRow] = useState(null);
-
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState(null);
-  const [dialogMode, setDialogMode] = useState('add');
-
-  // Modified handler for opening dialog
-  const handleOpenDialog = (plan = null) => {
-    setSelectedPlan(plan);
-    setDialogMode(plan ? 'edit' : 'add');
-    setIsDialogOpen(true);
-  };
-  const handleUpdateCreditsClick = (row) => {
-    setSelectedCreditRow(row);
-    setUpdateCreditsDialogOpen(true);
-  };
-
-  const handleCloseDialog = () => {
-    setIsDialogOpen(false);
-    setSelectedPlan(null);
-    setDialogMode('add');
-  };
 
   return (
     <>
@@ -152,12 +126,6 @@ export default function Page() {
           </Box>
         </Box>
 
-        <EmailListTable />
-        <UpdateCreditsDialog
-          open={updateCreditsDialogOpen}
-          onClose={() => setUpdateCreditsDialogOpen(false)}
-          rowData={selectedCreditRow}
-        />
       </DashboardContent>
     </>
   );

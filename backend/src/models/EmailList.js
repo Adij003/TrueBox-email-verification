@@ -25,7 +25,7 @@ const EmailVerificationSchema = new mongoose.Schema({
     required: function () {
       return this.type === "single";
     },
-  },
+  }, 
   message: { type: String },
   user: { type: String },
   domain: { type: String },
@@ -47,7 +47,7 @@ const EmailVerificationSchema = new mongoose.Schema({
   }, 
   status: {
     type: String,
-    enum: ["pending", "in-progress", "completed"],
+    enum: ["pending", "in_progress", "completed"],
     default: "pending",
   },
   emailListName: { type: String },

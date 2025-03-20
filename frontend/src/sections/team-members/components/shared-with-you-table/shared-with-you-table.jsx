@@ -1,10 +1,8 @@
-import { toast } from 'sonner';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import {
   Table,
@@ -12,7 +10,6 @@ import {
   Divider,
   TableBody,
   CardHeader,
-  CircularProgress,
 } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -24,7 +21,6 @@ import { getTeamDetails } from 'src/redux/slice/userSlice';
 
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/confirm-dialog';
 import {
   useTable,
   emptyRows,
@@ -325,34 +321,6 @@ export default function SharedWithYouTeamMemberTable({
         />
       </Card>
 
-      {/* Delete Confirm Dialog */}
-      <ConfirmDialog
-        open={confirmDelete}
-        onClose={handleCloseConfirmDelete}
-        title="Do you wish to remove selected access?"
-        content="You won't be able to revert this!"
-        action={
-          <Button
-            variant="contained"
-            disabled={isLoading}
-            color="error"
-            onClick={() => {
-              // Add your revoke tasks logic here
-              handleCloseConfirmDelete(); // Close the dialog after revoking tasks
-            
-              toast.success(`Successfully removed the selected access.`, {
-                style: {
-                  marginTop: '15px',
-                },
-              });// Show success snackbar
-            }}
-          >
-            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Remove Access'}
-          </Button>
-        }
-      />
-
-      {/* Delete Success Snackbar */}
 
     </>
   );

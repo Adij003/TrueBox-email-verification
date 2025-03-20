@@ -1,10 +1,8 @@
-import { toast } from 'sonner';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
 import { useTheme } from '@mui/material/styles';
 import {
   Table,
@@ -12,8 +10,6 @@ import {
   Divider,
   TableBody,
   CardHeader,
-  useMediaQuery,
-  CircularProgress,
 } from '@mui/material';
 
 import { useBoolean } from 'src/hooks/use-boolean';
@@ -25,7 +21,6 @@ import { getTeamDetails } from 'src/redux/slice/userSlice';
 
 import { Label } from 'src/components/label';
 import { Scrollbar } from 'src/components/scrollbar';
-import { ConfirmDialog } from 'src/components/confirm-dialog';
 import {
   useTable,
   rowInPage,
@@ -81,7 +76,6 @@ export default function SharedbyYouTeamMemberTable({
   ...other
 }) {
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const table = useTable({ defaultOrderBy: 'orderNumber' });
   const confirm = useBoolean();
   const [tableData, setTableData] = useState(_teammember);
@@ -115,24 +109,7 @@ export default function SharedbyYouTeamMemberTable({
     [dataInPage.length, table, tableData]
   );
 
-  const handleConfirmDelete = () => {
-    confirm.onFalse(); // Close the dialog after confirming
-    handleDeleteRow(confirm.rowToDelete);
-  };
-
-  /* Delete Success Snackbar */
-
-  const [confirmDelete, setConfirmDelete] = useState(false);
-
-  const [confirmDialogProps, setConfirmDialogProps] = useState({});
-
-  const handleCloseConfirmDelete = () => {
-    setConfirmDelete(false);
-  };
-
   const handleOpenConfirmDialog = (action) => {
-    setConfirmDialogProps(action); // Sets the props but never uses them
-    setConfirmDelete(true);
   };
 
   // Modify these conditions at the top of your component
@@ -140,7 +117,6 @@ export default function SharedbyYouTeamMemberTable({
   const noSearchResults = dataFiltered.length === 0 && filters.state.email; // When search returns no results
 
   // LoadingButton
-  const [isLoading, setIsLoading] = useState(false);
   const {userInfo} = useSelector((state) => state.user)
 
   const dispatch = useDispatch();
@@ -277,35 +253,6 @@ export default function SharedbyYouTeamMemberTable({
           onRowsPerPageChange={table.onChangeRowsPerPage}
         />
       </Card>
-
-      {/* Delete Confirm Dialog */}
-      <ConfirmDialog
-        open={confirmDelete}
-        onClose={handleCloseConfirmDelete}
-        title="Do you wish to remove selected access?"
-        content="You won't be able to revert this!"
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            disabled={isLoading}
-            onClick={() => {
-              confirmDialogProps.onConfirm?.(); // Call the stored callback
-              handleCloseConfirmDelete();
-              // setSuccessSnackbarOpen(true);
-              toast.success(`Successfully removed the selected access.`, {
-                style: {
-                  marginTop: '15px',
-                },
-              });
-            }}
-          >
-            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Remove Access'}
-          </Button>
-        }
-      />
-
-      {/* Delete Success Snackbar */}
     </>
   );
 }

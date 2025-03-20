@@ -1,11 +1,9 @@
 import dayjs from 'dayjs';
-import { toast } from 'sonner';
 import React, { useState } from 'react';
 
 import {
   Box,
   Stack,
-  Button,
   Tooltip,
   Divider,
   TableRow,
@@ -13,29 +11,22 @@ import {
   MenuList,
   MenuItem,
   TableCell,
-  CircularProgress,
 } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
 import { CustomPopover } from 'src/components/custom-popover';
-import { ConfirmDialog } from 'src/components/confirm-dialog';
 
 import { TeamMemberDialog } from '../../hooks/add-team-member';
 
 export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, serialNumber }) {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [confirmDelete, setConfirmDelete] = useState(false);
 
-  const [isLoading, setIsLoading] = useState(false);
   const [openTeamMemberDialog, setOpenTeamMemberDialog] = useState(false);
 
-  const handleOpenPopover = (event) => setAnchorEl(event.currentTarget);
   const handleClosePopover = () => setAnchorEl(null);
   const handleOpenConfirmDelete = () => {
-    setConfirmDelete(true);
     handleClosePopover();
   };
-  const handleCloseConfirmDelete = () => setConfirmDelete(false);
 
   const getTooltip = (type, rowData) => {
     const tooltips = {
@@ -232,34 +223,6 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
         onClose={handleCloseTeamMemberDialog}
         currentMember={row} // Pass the current row data to the dialog
       />
-
-      {/* Confirm Dialog */}
-      <ConfirmDialog
-        open={confirmDelete}
-        onClose={handleCloseConfirmDelete}
-        disabled={isLoading}
-        title=" Do you really want to remove folder(s) access?"
-        content="You will no longer have access to the shared folder(s)."
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              handleCloseConfirmDelete();
-
-              toast.success(`Access Removed Successfully!`, {
-                style: {
-                  marginTop: '15px',
-                },
-              });
-            }}
-          >
-            {isLoading ? <CircularProgress size={24} /> : 'Remove Access'}
-          </Button>
-        }
-      />
-
-      {/* Success Snackbar */}
     </>
   );
 }

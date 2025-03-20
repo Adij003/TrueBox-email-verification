@@ -1,4 +1,3 @@
-import { toast } from 'sonner';
 import React, { useState } from 'react';
 
 import {
@@ -11,13 +10,11 @@ import {
   MenuList,
   MenuItem,
   TableCell,
-  CircularProgress,
 } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
 import { AnimateLogo1 } from 'src/components/animate';
 import { CustomPopover } from 'src/components/custom-popover';
-import { ConfirmDialog } from 'src/components/confirm-dialog';
 
 export function SharedWithYouTeamMemberTableRow({ row, selected, onSelectRow, serialNumber }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -68,8 +65,6 @@ export function SharedWithYouTeamMemberTableRow({ row, selected, onSelectRow, se
   };
 
   // LoadingButton
-  const [isLoading, setIsLoading] = useState(false);
-
   const [isAnimating, setIsAnimating] = useState(false);
 
   return (
@@ -227,14 +222,6 @@ export function SharedWithYouTeamMemberTableRow({ row, selected, onSelectRow, se
           </Stack>
         </TableCell>
 
-        {/* Options */}
-        {/* <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip title="Click to see options." arrow placement="top">
-            <IconButton color={anchorEl ? 'inherit' : 'default'} onClick={handleOpenPopover}>
-              <Iconify icon="eva:more-vertical-fill" />
-            </IconButton>
-          </Tooltip>
-        </TableCell> */}
       </TableRow>
       <CustomPopover open={Boolean(anchorEl)} anchorEl={anchorEl} onClose={handleClosePopover}>
         <MenuList>
@@ -246,32 +233,6 @@ export function SharedWithYouTeamMemberTableRow({ row, selected, onSelectRow, se
           </Tooltip>
         </MenuList>
       </CustomPopover>
-      <ConfirmDialog
-        open={confirmDelete}
-        onClose={handleCloseConfirmDelete}
-        disabled={isLoading}
-        title=" Do you really want to remove folder(s) access?"
-        content="You will no longer have access to the shared folder(s)."
-        action={
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              // Add your revoke tasks logic here
-              handleCloseConfirmDelete(); // Close the dialog after revoking tasks
-
-              toast.success(`Access Removed Successfully!`, {
-                style: {
-                  marginTop: '15px',
-                },
-              }); // Show success snackbar
-            }}
-          >
-            {isLoading ? <CircularProgress size={24} color="inherit" /> : 'Remove Access'}
-          </Button>
-        }
-      />
-      {/* Delete Success Snackbar */}
     </>
   );
 }

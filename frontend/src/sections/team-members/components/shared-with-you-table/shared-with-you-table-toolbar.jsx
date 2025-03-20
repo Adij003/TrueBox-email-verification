@@ -21,7 +21,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 
 import { Iconify } from 'src/components/iconify';
 import { usePopover } from 'src/components/custom-popover';
-import { ConfirmDialog } from 'src/components/confirm-dialog';
 
 export function SharedWithYouTeamMemberTableToolbar({
   filters,
@@ -232,17 +231,6 @@ export function SharedWithYouTeamMemberTableToolbar({
         </MenuList>
       </Popover>
 
-      <ConfirmDialog
-        open={confirmDelete.value}
-        onClose={confirmDelete.onFalse}
-        title="Do you really want to remove folder(s) access?"
-        content="You will no longer have access to the shared folder(s)."
-        action={
-          <Button variant="contained" color="error">
-            Remove Access
-          </Button>
-        }
-      />
 
       <Popover
         open={Boolean(filterAnchorEl)}

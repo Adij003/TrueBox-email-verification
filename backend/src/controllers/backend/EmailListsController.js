@@ -1,11 +1,11 @@
-const axios = require("axios");
-const FormData = require("form-data");
 const Logs = require("../../utils/logs-util");
 const Response = require("../../utils/response-util");
-const { Readable } = require("stream"); // Import Readable for buffer stream 
 const EmailList = require("../../models/EmailList");
 const Credit = require("../../models/Credit");
 const BouncifyService = require("../../services/bouncify-service");
+const Stat = require("../../models/Stat");
+const mongoose = require("mongoose");
+
 
 /**
  * Uploads a bulk email list for verification.
@@ -56,7 +56,7 @@ const BouncifyService = require("../../services/bouncify-service");
       if (!req.params.jobId) return res.status(400).json(Response.error("jobId is required"));
 
     const response = await BouncifyService.startBulkVerification(req.params.jobId);
-    await EmailList.findOneAndUpdate({ jobId: req.params.jobId }, { status: "in-progress" });
+    await EmailList.findOneAndUpdate({ jobId: req.params.jobId }, { status: "in_progress" });
 
     return res.status(200).json(Response.success("Email verification started", response));
     } catch (error) {
@@ -208,10 +208,10 @@ exports.getAllEmailLists = async (req, res) => {
         }
 
         if (status) {
-            if (!["completed", "pending", "in-progress"].includes(status)) {
+            if (!["completed", "pending", "in_progress"].includes(status)) {
                 return res
                     .status(400)
-                    .json(Response.error("Invalid status. Use 'completed', 'pending', or 'in-progress'"));
+                    .json(Response.error("Invalid status. Use 'completed', 'pending', or 'in_progress'"));
             }
             filter.status = status;
         }
@@ -235,6 +235,29 @@ exports.getAllEmailLists = async (req, res) => {
         ]);
         const totalPages = Math.ceil(totalCount / itemsPerPage);
 
+        const emailListStats = await EmailList.aggregate([
+          { 
+            $match: { 
+              userId: new mongoose.Types.ObjectId(req.user.id),     // Match only email lists for the current user
+              type: "bulk"            // Only include email lists with type 'bulk'
+            }
+          },
+          {
+            $group: {
+              _id: "$status",         // Group by email list status (e.g., pending, in_progress, completed)
+              count: { $sum: 1 }      // Count email lists in each status group
+            }
+          }
+        ]);
+
+        const formattedStats = emailListStats.reduce((acc, stat) => {
+          acc[stat._id] = stat.count; // Map each status to its task count
+          return acc;
+      }, {});
+  
+
+      console.log('Stats of email list: ', formattedStats)
+
         return res.status(200).json(
             Response.success("Email lists fetched successfully", {
                 emailLists,
@@ -244,6 +267,7 @@ exports.getAllEmailLists = async (req, res) => {
                     totalItems: totalCount,
                     itemsPerPage,
                 },
+                formattedStats
             })
         );
     } catch (error) {

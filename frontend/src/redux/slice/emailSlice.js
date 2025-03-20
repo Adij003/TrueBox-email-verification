@@ -16,6 +16,11 @@ const initialState = {
     totalItems: 0,
     itemsPerPage: 5,
   },
+  formattedStats: {
+    pending: 0,
+    completed: 0,
+    in_progress: 0
+  },
   single: {
     email: '',
     result: '',
@@ -202,7 +207,7 @@ const handleFulfilled = (state, action) => {
       break;
 
     case startBulkVerification.fulfilled.type: // and this resolves to emails/startBulkVerification/fulfilled
-      state.bulk.status = 'in-progress';
+      state.bulk.status = 'in_progress';
       break;
 
     case checkBulkStatus.fulfilled.type:
@@ -221,6 +226,11 @@ const handleFulfilled = (state, action) => {
         totalPages: 1,
         totalItems: 0,
         itemsPerPage: 5,
+      };
+      state.formattedStats = {
+        pending: action.payload.formattedStats?.pending || 0,
+        completed: action.payload.formattedStats?.completed || 0,
+        in_progress: action.payload.formattedStats?.in_progress || 0, 
       };
       break;
 

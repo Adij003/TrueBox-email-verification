@@ -16,7 +16,6 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { Iconify } from 'src/components/iconify';
 import { varHover } from 'src/components/animate';
 import { Scrollbar } from 'src/components/scrollbar';
-// import { CustomTabs } from 'src/components/custom-tabs';
 
 import { NotificationItem } from './notification-item';
 

@@ -35,7 +35,6 @@ import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
 import { Scrollbar } from 'src/components/scrollbar';
 import { CustomPopover } from 'src/components/custom-popover';
-import { ConfirmDialog } from 'src/components/confirm-dialog';
 import {
   useTable,
   TableNoData,
@@ -110,9 +109,8 @@ function applyFilter({ inputData, comparator, filters }) {
 
 export function DashboardTable() {
   const theme = useTheme();
-  const { emailLists, pagination } = useSelector((state) => state.emailVerification);
+  const { emailLists, pagination, formattedStats } = useSelector((state) => state.emailVerification);
   const { currentPage,  totalItems, itemsPerPage } = pagination;
-
   const table = useTable({
     defaultOrderBy: 'orderNumber',
     defaultRowsPerPage: itemsPerPage,
@@ -134,7 +132,6 @@ export function DashboardTable() {
     name: '',
     status: 'all',
   });
-
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
 
@@ -214,9 +211,8 @@ export function DashboardTable() {
 
   const handleFilterApply = (search) => {
     const tabVal = filters.state.status
-    console.log('tab value: ', tabVal)
     if (tabVal === 'all' || tabVal === null) {
-      console.log('search by status all: ', search.search)
+      
        dispatch(fetchEmailLists({
         type: "bulk",
         page: table.page + 1,
@@ -233,7 +229,6 @@ export function DashboardTable() {
         search: search.search,
         status: tabVal
       }));
-      console.log('the email list after search is: ', emailLists)
     }
 
 
@@ -285,14 +280,14 @@ export function DashboardTable() {
                 }
                 color={
                   (tab.value === 'completed' && 'success') ||
-                  (tab.value === 'in-progress' && 'info') ||
+                  (tab.value === 'in_progress' && 'info') ||
                   (tab.value === 'pending' && 'info') ||
 
                   'default'
                 }
               >
-                {['completed', 'in-progress', 'pending'].includes(tab.value)
-                  ? emailLists.filter((user) => user.status === tab.value).length
+                {['completed', 'in_progress', 'pending'].includes(tab.value)
+                  ? formattedStats[tab.value] || 0  
                   : emailLists.length}
               </Label>
             }
@@ -310,7 +305,7 @@ export function DashboardTable() {
       {canReset && (
         <DashboardTableFiltersResult
           filters={filters}
-          totalResults={dataFiltered.length}
+          totalResults={totalItems}
           onResetPage={table.onResetPage}
           sx={{ p: 2.5, pt: 0 }}
         />
@@ -376,16 +371,6 @@ export function DashboardTable() {
           )}
         </MenuList>
       </CustomPopover>
-      <ConfirmDialog
-        open={confirmDelete.value}
-        onClose={confirmDelete.onFalse}
-        title="Do you really want to delete the email list?"
-        action={
-          <Button variant="contained" color="error" onClick={handleDelete}>
-            Delete
-          </Button>
-        }
-      />
 
       <Dialog open={creditDialogOpen} onClose={handleDialogClose} maxWidth="xs" fullWidth>
         <DialogTitle

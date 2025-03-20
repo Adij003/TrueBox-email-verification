@@ -22,7 +22,6 @@ import { listItems } from 'src/_mock/app-big-card/api';
 
 import { Iconify } from 'src/components/iconify';
 import BigCard from 'src/components/app-big-card/big-card';
-import { ConfirmDialog } from 'src/components/confirm-dialog';
 
 // ----------------------------------------------------------------------
 
@@ -233,18 +232,6 @@ export default function API() {
           </Button>
         </CardContent>
       </Card>
-
-      <ConfirmDialog
-        open={dialogOpen}
-        onClose={handleDialogClose}
-        title="Generate API Keys"
-        content="Generating new API keys will invalidate your current API keys. Do you want to continue?"
-        action={
-          <Button variant="contained" color="primary" onClick={handleGenerateToken}>
-            Generate API Keys
-          </Button>
-        }
-      />
 
       {/* Alerts and Snackbars */}
     </>

@@ -5,8 +5,6 @@ import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
 
-import { CarouselAutoplay } from 'src/sections/carousel/carousel-align';
-
 export function Section({
   sx,
   method,
@@ -82,7 +80,6 @@ export function Section({
           </Typography>
         )}
       </Box>
-      <CarouselAutoplay />
 
       <Box gap={5} display="flex">
         <Tooltip

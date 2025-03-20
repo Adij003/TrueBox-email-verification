@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -15,20 +14,12 @@ import {
   Checkbox,
   IconButton,
   Typography,
-  Backdrop as MuiBackdrop,
 } from '@mui/material';
 
 import { checkBulkStatus, downloadBulkResults, startBulkVerification } from 'src/redux/slice/emailSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
-
-import { DashboardChart } from '../chart/dashboard-chart';
-
-// Custom backdrop for transparent background
-const CustomBackdrop = (props) => (
-  <MuiBackdrop {...props} sx={{ backgroundColor: 'transparent' }} />
-);
 
 export function DashboardTableRow({
   onSelectRow,
@@ -39,16 +30,7 @@ export function DashboardTableRow({
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const csvfilesname = [{ name: row.emailListName, numberOfEmails: row.numberOfEmails }];
   const currentFile = csvfilesname[dashboardTableIndex % csvfilesname.length];
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-
-  const showAlert = (type, title, message) => {
-    console.log(`Alert Type: ${type}, Title: ${title}, Message: ${message}`);
-  };
-
-  const handleAlertClose = () => {
-    console.log('Alert closed');
-  };
 
   const handleAction = () => {
     switch (row.status) {
@@ -70,7 +52,7 @@ export function DashboardTableRow({
         dispatch(checkBulkStatus(row.jobId))
 
         break;
-      case 'in-progress':
+      case 'in_progress':
         dispatch(checkBulkStatus(row.jobId))
         break;
         
@@ -106,7 +88,7 @@ export function DashboardTableRow({
         return 'Start Verification';
       case 'pending':
         return 'Start Verification';
-      case 'in-progress':
+      case 'in_progress':
        return 'Check Status';
       default:
         return '';
@@ -179,7 +161,6 @@ export function DashboardTableRow({
                 }}
               >
                 {currentFile.name} 
-                {/* ({currentFile.numberOfEmails}) */}
               </Typography>
             </Tooltip>
           </Stack>
@@ -208,12 +189,6 @@ export function DashboardTableRow({
         </TableCell>
         <TableCell width={400}>
           <Stack spacing={2} direction="row" alignItems="center">
-            {/* <Tooltip
-              title={<>Number of email addresses in the uploaded email list: ({currentFile.numberOfEmails})</>}
-              arrow
-              placement="top"
-              disableInteractive
-            > */}
             <Tooltip title='Number of credits consumed' arrow placement='top' disableInteractive>
               <Typography
                 component="span"
@@ -304,20 +279,6 @@ export function DashboardTableRow({
             <Iconify icon="mingcute:close-line" />
           </IconButton>
         </Box>
-
-        <DashboardChart
-          showAlert={showAlert}
-          handleAlertClose={handleAlertClose}
-          title={currentFile.name}
-          chart={{
-            series: [
-              { label: 'Deliverable Emails', value: 12244 },
-              { label: 'Undeliverable Emails', value: 53345 },
-              { label: 'Accept-all Emails', value: 44313 },
-              { label: 'Unknown Emails', value: 78343 },
-            ],
-          }}
-        />
       </Drawer>
     </>
   );

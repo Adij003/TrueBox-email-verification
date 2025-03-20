@@ -76,18 +76,25 @@ export function DashboardTableToolbar({ filters, numSelected, onApplyFilter }) {
   const dispatch = useDispatch();
 
 const handleRefreshEmailList = () => {
-  dispatch(fetchEmailLists({ type: "bulk",
-    skip: 5
-  }))
+  console.log('hello form the dashboard-table-toolbar: ',filters.state.status)
+  const tabVal = filters.state.status
+
+  if( filters.state.status === 'all'){
+
+    dispatch(fetchEmailLists({ type: "bulk",
+      skip: 5
+    }))
+  } else {
+    dispatch(fetchEmailLists({ type: "bulk",
+      skip: 5,
+      status: tabVal
+    }))
+  }
 }
 
   const handleMoveToFolder = () => {
     setMoveFolderOpen(true);
     handleActionsClose();
-  };
-
-  const handleMoveFolderClose = () => {
-    setMoveFolderOpen(false);
   };
 
   const handleDelete = () => {
