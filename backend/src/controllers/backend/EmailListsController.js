@@ -253,11 +253,7 @@ exports.getAllEmailLists = async (req, res) => {
         const formattedStats = emailListStats.reduce((acc, stat) => {
           acc[stat._id] = stat.count; // Map each status to its task count
           return acc;
-      }, {});
-  
-
-      console.log('Stats of email list: ', formattedStats)
-
+        }, {});
         return res.status(200).json(
             Response.success("Email lists fetched successfully", {
                 emailLists,

@@ -27,6 +27,7 @@ export function DashboardTableRow({
   selected,
   dashboardTableIndex,
 }) {
+  
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const csvfilesname = [{ name: row.emailListName, numberOfEmails: row.numberOfEmails }];
   const currentFile = csvfilesname[dashboardTableIndex % csvfilesname.length];
@@ -227,17 +228,6 @@ export function DashboardTableRow({
              
             </Tooltip>
           </Stack>
-        </TableCell>
-        <TableCell align="right" sx={{ px: 1, whiteSpace: 'nowrap' }}>
-          <Tooltip
-            title={
-              row.status === 'processing' || row.status === 'uploading'
-                ? 'Actions unavailable during verification'
-                : 'Click for more options.'
-            }
-            arrow
-            placement="top"
-          />
         </TableCell>
       </TableRow>
       <Drawer

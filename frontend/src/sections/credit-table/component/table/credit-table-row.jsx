@@ -131,7 +131,7 @@ export function CreditTableRow({ row, selected }) {
           >
             {(row.type === 'single') ? (
               <Tooltip arrow placement="top" disableInteractive title="Email address">
-                <span>{row.result}</span>{' '}
+                <span>{row.result}</span>
               </Tooltip>
             ) : (
               <Tooltip
@@ -140,10 +140,7 @@ export function CreditTableRow({ row, selected }) {
                 disableInteractive
                 title="Email List"
               >
-                
-                <span>{row.amountAdded ? '' : `Emails verified: ${row.verified}`}</span>{' '}
-
-
+                <span>{row.amountAdded ? '' : `Emails verified: ${row.verified}`}</span>
               </Tooltip>
             )}
           </Box>

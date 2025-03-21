@@ -185,55 +185,6 @@ export function SharedbyYouTeamMemberTableToolbar({
             </Button>
           </Tooltip>
         </Box>
-
-        <Box
-          sx={{
-            display: 'flex',
-            gap: 2,
-            flexDirection: 'row',
-            width: isBelow600px ? '100%' : 'auto',
-            justifyContent: 'flex-end',
-          }}
-        >
-          <Tooltip
-            title={
-              isFilterApplied
-                ? "Click the 'X' to clear all applied filters."
-                : 'Filter results to focus on specific team members or folders.'
-            }
-            arrow
-            placement="top"
-          >
-            {/* <Button
-              sx={buttonStyle}
-              variant={isFilterApplied ? 'contained' : ''}
-              color="primary"
-              startIcon={!isFilterApplied && <Iconify icon="mdi:filter" />}
-              endIcon={
-                isFilterApplied && (
-                  <Box
-                    component="span"
-                    onClick={handleFilterIconClick}
-                    sx={{
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Iconify
-                      icon="uil:times"
-                      style={{ width: 22, height: 22, cursor: 'pointer' }}
-                    />
-                  </Box>
-                )
-              }
-              onClick={handleFilterButtonClick}
-            >
-              {isFilterApplied ? 'Filter Applied' : 'Filters'}
-            </Button> */}
-          </Tooltip>
-        </Box>
       </Stack>
 
       {/* Popovers and Dialogs */}

@@ -82,7 +82,7 @@ const handleRefreshEmailList = () => {
         limit: rowsPerPage
       }))
       toast.success(`Page Refreshed`, {
- 
+      duration: 1000,
         style: {
           marginTop: '15px',
           width: '13rem',
@@ -96,7 +96,7 @@ const handleRefreshEmailList = () => {
         status: tabValue
       }))
       toast.success(`Page Refreshed`, {
- 
+      duration: 1000,
         style: {
           marginTop: '15px',
           width: '13rem',
@@ -125,7 +125,6 @@ const handleRefreshEmailList = () => {
     setDeleteOpen(false);
 
     toast.success(`Email list(s) deleted successfully.`, {
- 
       style: {
         marginTop: '15px',
       },

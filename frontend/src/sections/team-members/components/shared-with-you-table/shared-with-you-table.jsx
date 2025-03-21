@@ -176,7 +176,9 @@ export default function SharedWithYouTeamMemberTable({
                   arrow
                   placement="top"
                 >
-                  Folders Shared With You
+                  <span>
+                    Folders Shared With You
+                    </span> 
                 </Tooltip>
               </Box>
             </Box>

@@ -126,7 +126,6 @@ export default function SharedbyYouTeamMemberTable({
 
 
   const { teamMembers = [] } = userInfo || {};
-
   return (
     <>
       {/* Table */}
@@ -145,7 +144,7 @@ export default function SharedbyYouTeamMemberTable({
                   arrow
                   placement="top"
                 >
-                  Team Members
+                   <span>Team Members</span>
                 </Tooltip>
               </Box>
             </Box>
@@ -217,7 +216,7 @@ export default function SharedbyYouTeamMemberTable({
                   {teamMembers
                     .map((row, index) => (
                       <SharedbyYouTeamMemberTableRow
-                        key={row.id}
+                        key={row._id}
                         row={row}
                         selected={table.selected.includes(row.id)}
                         onSelectRow={() => table.onSelectRow(row.id)}
@@ -229,11 +228,6 @@ export default function SharedbyYouTeamMemberTable({
                         serialNumber={table.page * table.rowsPerPage + index + 1}
                       />
                     ))}
-
-                  {/* <TableEmptyRows
-                    height={table.dense ? 56 : 56 + 20}
-                    emptyRows={emptyRows(table.page, table.rowsPerPage, dataFiltered.length)}
-                  /> */}
 
                   <TableNoData />
                 </TableBody>
