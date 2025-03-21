@@ -76,10 +76,35 @@ export function DashboardTableToolbar({ filters, numSelected, onApplyFilter, row
   const dispatch = useDispatch();
 
 const handleRefreshEmailList = () => {
-  filters.setState({ status: '' })
+  const tabValue = filters.state.status;
+    if( tabValue === 'all'){
       dispatch(fetchEmailLists({ type: "bulk",
-      limit: rowsPerPage
-    }))
+        limit: rowsPerPage
+      }))
+      toast.success(`Page Refreshed`, {
+ 
+        style: {
+          marginTop: '15px',
+          width: '13rem',
+          marginLeft: '14rem'
+        },
+      });
+    } else {
+      dispatch(fetchEmailLists({
+        type: "bulk",
+        limit: rowsPerPage,
+        status: tabValue
+      }))
+      toast.success(`Page Refreshed`, {
+ 
+        style: {
+          marginTop: '15px',
+          width: '13rem',
+          marginLeft: '14rem'
+        },
+      });
+    }
+      
 }
 
   const handleMoveToFolder = () => {
