@@ -42,15 +42,16 @@ export function DashboardTableRow({
 
   const handlePending = (jobId) => {
     dispatch(startBulkVerification(jobId));
-    filters.setState({ name: '' });
-    filters.setState({ status: 'all' });
+
       setTimeout(() => {
     dispatch(checkBulkStatus(jobId));
     dispatch(fetchEmailLists(
       { type: "bulk",
-        limit: 5
+        limit: 5,
+        status: "pending"
       }
-    ))
+    )
+  )
     dispatch(fetchCredits())
   }, 1500); 
   if(isSuccess) {
@@ -71,12 +72,12 @@ export function DashboardTableRow({
   
   const handleVerifying = (jobId) => {
     dispatch(checkBulkStatus(jobId));
-    filters.setState({ name: '' });
-    filters.setState({ status: 'all' });
+
 
       dispatch(fetchEmailLists(
         { type: "bulk",
-          limit: 5
+          limit: 5,
+          status: "verifying"
         }
       ))
       dispatch(fetchCredits())
@@ -85,16 +86,18 @@ export function DashboardTableRow({
   
   const handleReady = (jobId) => {
     dispatch(checkBulkStatus(jobId));
-    filters.setState({ name: '' });
-    filters.setState({ status: 'all' });
+
     setTimeout(() => {
       dispatch(checkBulkStatus(jobId));
       dispatch(fetchEmailLists(
         { type: "bulk",
-          limit: 5
+          limit: 5,
+          status: "ready"
         }
       ))
+
     }, 1000); 
+    
     dispatch(fetchCredits())
 
   };
