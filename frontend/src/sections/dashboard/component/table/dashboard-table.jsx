@@ -1,5 +1,3 @@
-// components/DashboardTable/index.jsx
-import { toast } from 'sonner';
 import { useTheme } from '@emotion/react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, useCallback } from 'react';
@@ -109,7 +107,7 @@ function applyFilter({ inputData, comparator, filters }) {
 
 export function DashboardTable() {
   const theme = useTheme();
-  const { emailLists, pagination, formattedStats } = useSelector((state) => state.emailVerification);
+  const { emailLists, pagination, statusCount } = useSelector((state) => state.emailVerification);
   const { currentPage,  totalItems, itemsPerPage } = pagination;
   const table = useTable({
     defaultOrderBy: 'orderNumber',
@@ -182,16 +180,6 @@ export function DashboardTable() {
   const handleConfirmDelete = () => {
     confirmDelete.onTrue();
     handleClosePopover();
-  };
-
-  const handleDelete = () => {
-    confirmDelete.onFalse();
-
-    toast.success(`Email list deleted successfully.`, {
-      style: {
-        marginTop: '15px',
-      },
-    });
   };
 
   // Computed values
@@ -282,12 +270,15 @@ export function DashboardTable() {
                   (tab.value === 'completed' && 'success') ||
                   (tab.value === 'in_progress' && 'info') ||
                   (tab.value === 'pending' && 'info') ||
+                  (tab.value === 'verifying' && 'error') ||
+                  (tab.value === 'ready' && 'info') ||
+
 
                   'default'
                 }
               >
-                {['completed', 'in_progress', 'pending'].includes(tab.value)
-                  ? formattedStats[tab.value] || 0  
+                {['all', 'completed', 'pending', 'verifying', 'ready'].includes(tab.value)
+                  ? statusCount[tab.value] || 0  
                   : emailLists.length}
               </Label>
             }
@@ -334,6 +325,7 @@ export function DashboardTable() {
             <TableBody>
               {emailLists.map((row, index) => (
                 <DashboardTableRow
+                filters={filters}
                   key={row._id}
                   row={row}
                   selected={table.selected.includes(row.id)}

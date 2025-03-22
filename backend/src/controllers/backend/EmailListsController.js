@@ -56,7 +56,7 @@ const mongoose = require("mongoose");
       if (!req.params.jobId) return res.status(400).json(Response.error("jobId is required"));
 
     const response = await BouncifyService.startBulkVerification(req.params.jobId);
-    await EmailList.findOneAndUpdate({ jobId: req.params.jobId }, { status: "in_progress" });
+    await EmailList.findOneAndUpdate({ jobId: req.params.jobId }, { status: "verifying" });
 
     return res.status(200).json(Response.success("Email verification started", response));
     } catch (error) {
@@ -208,7 +208,7 @@ exports.getAllEmailLists = async (req, res) => {
         }
 
         if (status) {
-            if (!["completed", "pending", "in_progress"].includes(status)) {
+            if (!["completed", "pending", "in_progress", "ready", "verifying"].includes(status)) {
                 return res
                     .status(400)
                     .json(Response.error("Invalid status. Use 'completed', 'pending', or 'in_progress'"));
@@ -244,16 +244,27 @@ exports.getAllEmailLists = async (req, res) => {
           },
           {
             $group: {
-              _id: "$status",         // Group by email list status (e.g., pending, in_progress, completed)
-              count: { $sum: 1 }      // Count email lists in each status group
+              _id: "$status",        
+              count: { $sum: 1 }     
+            }
+          },
+          {
+            $group: {
+              _id: null, // No grouping here, we just want to aggregate the total count
+              statuses: { $push: { status: "$_id", count: "$count" } }, // Push each status and count into an array
+              all: { $sum: "$count" } // Calculate total count of all emails
             }
           }
         ]);
 
-        const formattedStats = emailListStats.reduce((acc, stat) => {
-          acc[stat._id] = stat.count; // Map each status to its task count
+        const formattedStats = emailListStats.length > 0 ? emailListStats[0] : { statuses: [], all: 0 };
+
+        // Now, format the stats as desired
+        const statusCount = formattedStats.statuses.reduce((acc, stat) => {
+          acc[stat.status] = stat.count; // Map each status to its count
           return acc;
         }, {});
+         statusCount.all = formattedStats.all;
         return res.status(200).json(
             Response.success("Email lists fetched successfully", {
                 emailLists,
@@ -263,7 +274,7 @@ exports.getAllEmailLists = async (req, res) => {
                     totalItems: totalCount,
                     itemsPerPage,
                 },
-                formattedStats
+                statusCount
             })
         );
     } catch (error) {

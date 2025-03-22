@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
+import { toast } from 'sonner';
 import { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
@@ -16,7 +17,8 @@ import {
   Typography,
 } from '@mui/material';
 
-import { checkBulkStatus, downloadBulkResults, startBulkVerification } from 'src/redux/slice/emailSlice';
+import { fetchCredits } from 'src/redux/slice/creditSlice';
+import { checkBulkStatus, fetchEmailLists, downloadBulkResults,  startBulkVerification } from 'src/redux/slice/emailSlice';
 
 import { Label } from 'src/components/label';
 import { Iconify } from 'src/components/iconify';
@@ -26,6 +28,8 @@ export function DashboardTableRow({
   row,
   selected,
   dashboardTableIndex,
+  filters
+
 }) {
   
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -33,30 +37,108 @@ export function DashboardTableRow({
   const currentFile = csvfilesname[dashboardTableIndex % csvfilesname.length];
   const dispatch = useDispatch();
 
+  const { isLoading, isSuccess} = useSelector((state) => state.emailVerification);
+  
+
+  const handlePending = (jobId) => {
+    dispatch(startBulkVerification(jobId));
+    filters.setState({ name: '' });
+    filters.setState({ status: 'all' });
+      setTimeout(() => {
+    dispatch(checkBulkStatus(jobId));
+    dispatch(fetchEmailLists(
+      { type: "bulk",
+        limit: 5
+      }
+    ))
+    dispatch(fetchCredits())
+  }, 1500); 
+  if(isSuccess) {
+  toast.success(`Bulk verification started, status will refresh automatically in 2 seconds`, {
+    duration: 1000,
+      style: {
+        marginTop: '15px',
+        width: '22rem',
+        marginLeft: '2rem'
+      },
+    });
+  }
+  };
+  
+  const handleCompleted = (jobId) => {
+    dispatch(downloadBulkResults(jobId));
+  };
+  
+  const handleVerifying = (jobId) => {
+    dispatch(checkBulkStatus(jobId));
+    filters.setState({ name: '' });
+    filters.setState({ status: 'all' });
+
+      dispatch(fetchEmailLists(
+        { type: "bulk",
+          limit: 5
+        }
+      ))
+      dispatch(fetchCredits())
+
+  };
+  
+  const handleReady = (jobId) => {
+    dispatch(checkBulkStatus(jobId));
+    filters.setState({ name: '' });
+    filters.setState({ status: 'all' });
+    setTimeout(() => {
+      dispatch(checkBulkStatus(jobId));
+      dispatch(fetchEmailLists(
+        { type: "bulk",
+          limit: 5
+        }
+      ))
+    }, 1000); 
+    dispatch(fetchCredits())
+
+  };
+  
+  const handleInProgress = (jobId) => {
+    dispatch(checkBulkStatus(jobId));
+    if(isSuccess) {
+      toast.success(`Checking..`, {
+        duration: 1000,
+          style: {
+            marginTop: '15px',
+            width: '13rem',
+            marginLeft: '14rem'
+          },
+        });
+      }
+    setTimeout(() => {
+      dispatch(checkBulkStatus(jobId));
+      dispatch(fetchEmailLists(
+        { type: "bulk",
+          limit: 5
+        }
+      ))
+    }, 1000); 
+    dispatch(fetchCredits())
+  };
+  
   const handleAction = () => {
     switch (row.status) {
       case 'pending':
-      dispatch(startBulkVerification(row.jobId));
-      setTimeout(() => {
-        dispatch(checkBulkStatus(row.jobId));
-      }, 1000);
+        handlePending(row.jobId);
         break;
       case 'completed':
-        dispatch(downloadBulkResults(row.jobId));
-        // setIsDrawerOpen(true);
+        handleCompleted(row.jobId);
         break;
       case 'verifying':
-        dispatch(checkBulkStatus(row.jobId))
+        handleVerifying(row.jobId);
         break;
       case 'ready':
-        // dispatch(startBulkVerification(row.jobId));
-        dispatch(checkBulkStatus(row.jobId))
-
+        handleReady(row.jobId);
         break;
       case 'in_progress':
-        dispatch(checkBulkStatus(row.jobId))
+        handleInProgress(row.jobId);
         break;
-        
       default:
         break;
     }
@@ -86,7 +168,7 @@ export function DashboardTableRow({
       case 'verifying':
         return 'Check Status';
       case 'ready':
-        return 'Start Verification';
+        return 'Check Status';
       case 'pending':
         return 'Start Verification';
       case 'in_progress':
@@ -202,7 +284,39 @@ export function DashboardTableRow({
                   maxWidth: '300px',
                 }}
               >
-                {row.creditsConsumed}  
+               Credits Consumed: {row.verified}  
+              </Typography>
+              
+            </Tooltip>
+          </Stack>
+          <Stack spacing={2} direction="row" alignItems="center">
+            <Tooltip
+              title={
+                <>
+                  Contains {row.total} emails
+                </>
+              }
+              arrow
+              placement="top"
+              disableInteractive
+            >
+              <Typography
+                component="span"
+                fontSize={14}
+                sx={{
+                  color: 'text.disabled',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  maxWidth: '300px',
+                  display: 'inline-block',
+                }}
+              >
+              {
+                row.total
+                  ? `Contains ${row.total} emails`
+                  : "Click on Start Verification to get email count"
+              }
               </Typography>
             </Tooltip>
           </Stack>

@@ -16,10 +16,12 @@ const initialState = {
     totalItems: 0,
     itemsPerPage: 5,
   },
-  formattedStats: {
+  statusCount: {
     pending: 0,
     completed: 0,
-    in_progress: 0
+    verifying: 0,
+    all: 0,
+    ready: 0
   },
   single: {
     email: '',
@@ -227,10 +229,14 @@ const handleFulfilled = (state, action) => {
         totalItems: 0,
         itemsPerPage: 5,
       };
-      state.formattedStats = {
-        pending: action.payload.formattedStats?.pending || 0,
-        completed: action.payload.formattedStats?.completed || 0,
-        in_progress: action.payload.formattedStats?.in_progress || 0, 
+      state.statusCount = {
+        pending: action.payload.statusCount?.pending || 0,
+        completed: action.payload.statusCount?.completed || 0,
+        verifying: action.payload.statusCount?.verifying || 0, 
+        ready: action.payload.statusCount?.ready || 0, 
+        all: action.payload.statusCount?.all || 0, 
+
+        
       };
       break;
 

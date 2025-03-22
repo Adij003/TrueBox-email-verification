@@ -21,8 +21,8 @@ import {
 } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/app';
-import { verifySingleEmail } from 'src/redux/slice/emailSlice'
 import { listItems } from 'src/_mock/app-big-card/_dashboardBigCardListItems';
+import { fetchEmailLists, verifySingleEmail } from 'src/redux/slice/emailSlice'
 
 import { Iconify } from 'src/components/iconify';
 import BigCard from 'src/components/app-big-card/big-card';
@@ -110,6 +110,10 @@ export default function Page() {
 
     const handleUploadSuccess = () => {
     toast.success("Bulk email upload successful!");
+    dispatch(fetchEmailLists({
+      type: "bulk"
+    }))
+    
     handleDialogClose('bulkEmail');
   };
 
