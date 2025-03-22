@@ -41,6 +41,8 @@ export function DashboardTableRow({
   
 
   const handlePending = (jobId) => {
+    dispatch(checkBulkStatus(jobId));
+
     dispatch(startBulkVerification(jobId));
 
       setTimeout(() => {
@@ -48,15 +50,14 @@ export function DashboardTableRow({
     dispatch(fetchEmailLists(
       { type: "bulk",
         limit: 5,
-        status: "pending"
       }
     )
   )
     dispatch(fetchCredits())
-  }, 1500); 
+  }, 2000); 
   if(isSuccess) {
   toast.success(`Bulk verification started, status will refresh automatically in 2 seconds`, {
-    duration: 1000,
+    duration: 2000,
       style: {
         marginTop: '15px',
         width: '22rem',
@@ -73,7 +74,16 @@ export function DashboardTableRow({
   const handleVerifying = (jobId) => {
     dispatch(checkBulkStatus(jobId));
 
-
+    if(isSuccess) {
+      toast.success(`Checking..`, {
+        duration: 1000,
+          style: {
+            marginTop: '15px',
+            width: '13rem',
+            marginLeft: '14rem'
+          },
+        });
+      }
       dispatch(fetchEmailLists(
         { type: "bulk",
           limit: 5,
@@ -86,6 +96,16 @@ export function DashboardTableRow({
   
   const handleReady = (jobId) => {
     dispatch(checkBulkStatus(jobId));
+    if(isSuccess) {
+      toast.success(`Checking..`, {
+        duration: 1000,
+          style: {
+            marginTop: '15px',
+            width: '13rem',
+            marginLeft: '14rem'
+          },
+        });
+      }
 
     setTimeout(() => {
       dispatch(checkBulkStatus(jobId));

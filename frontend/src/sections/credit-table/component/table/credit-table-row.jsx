@@ -164,7 +164,7 @@ export function CreditTableRow({ row, selected }) {
               display: 'inline-block',
             }}
           >
-            {row.amountAdded ? row.amountAdded : `-${row.creditsConsumed}`}
+            {row.type === 'bulk' ? `-${row.verified}` : '-1'}
           </Box>
         </Tooltip>
       </TableCell>

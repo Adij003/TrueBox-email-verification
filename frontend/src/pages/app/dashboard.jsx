@@ -37,7 +37,7 @@ const metadata = { title: `Dashboard | Pabbly Email Verification` };
 const { items, style } = listItems;
 
 export default function Page() {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null); 
   const [email, setEmail] = useState('');
   const uploadRef = useRef(null);
 

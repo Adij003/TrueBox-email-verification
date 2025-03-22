@@ -4,7 +4,7 @@ import React, { useState, forwardRef, useImperativeHandle } from 'react';
 
 import { Box, Link, TextField } from '@mui/material';
 
-import { uploadBulkEmails } from 'src/redux/slice/emailSlice';
+import { fetchEmailLists, uploadBulkEmails } from 'src/redux/slice/emailSlice';
 
 import FileUpload from 'src/components/upload/upload';
 
@@ -33,6 +33,14 @@ const UploadComponent = forwardRef(({ setAlertState, onUploadSuccess }, ref) => 
     try {
       const result = await dispatch(uploadBulkEmails({ file: selectedFile, emailListName })).unwrap();
       onUploadSuccess();
+      setTimeout(() => {
+        dispatch(fetchEmailLists(
+          { type: "bulk",
+            limit: 5,
+          }
+        )
+      )
+      }, 2000); 
     } catch (error) {
       toast.error(`Upload failed: ${error}`);
     }

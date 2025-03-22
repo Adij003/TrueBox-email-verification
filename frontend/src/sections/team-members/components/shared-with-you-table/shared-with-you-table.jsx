@@ -188,7 +188,7 @@ export default function SharedWithYouTeamMemberTable({
           sx={{
             p: 3,
           }}
-        />
+        /> 
         <Divider />
 
         <SharedWithYouTeamMemberTableToolbar
