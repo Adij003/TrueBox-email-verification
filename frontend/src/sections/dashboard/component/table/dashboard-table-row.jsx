@@ -28,8 +28,6 @@ export function DashboardTableRow({
   row,
   selected,
   dashboardTableIndex,
-  filters
-
 }) {
   
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -37,7 +35,7 @@ export function DashboardTableRow({
   const currentFile = csvfilesname[dashboardTableIndex % csvfilesname.length];
   const dispatch = useDispatch();
 
-  const { isLoading, isSuccess} = useSelector((state) => state.emailVerification);
+  const { isSuccess} = useSelector((state) => state.emailVerification);
   
 
   const handlePending = (jobId) => {
@@ -226,11 +224,11 @@ export function DashboardTableRow({
           >
             <Tooltip
               title={
-                row.status === 'processing'
+                row.status === 'verifying'
                   ? ' Email list is currently under the verification process.'
-                  : row.status === 'uploading'
-                    ? 'Email list is currently being uploading.'
-                    : row.status === 'Verified'
+                  : row.status === 'pending'
+                    ? 'Email list is uploaded but verification not started'
+                    : row.status === 'completed'
                       ? 'Verification for the email list is done.'
                       : ' Email list has been uploaded but verification has not yet started.'
               }
@@ -348,9 +346,9 @@ export function DashboardTableRow({
           <Stack direction="row" spacing={1} justifyContent="flex-end">
             <Tooltip
               title={
-                row.status === 'processing'
+                row.status === 'verifying'
                   ? 'Verification in progress. Please wait.'
-                  : row.status === 'Verified'
+                  : row.status === 'completed'
                     ? 'Click to download report.'
                     : 'Click to start verification.'
               }

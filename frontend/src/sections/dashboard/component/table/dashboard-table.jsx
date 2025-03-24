@@ -195,21 +195,17 @@ export function DashboardTable() {
     (!!filters.state.startDate && !!filters.state.endDate);
 
   const notFound = (!dataFiltered.length && canReset) || !dataFiltered.length;
-  const [openMoveFolder, setOpenMoveFolder] = useState(false);
-
+  
   const handleFilterApply = (search) => {
     const tabVal = filters.state.status
-    if (tabVal === 'all' || tabVal === null) {
-      
+    if (tabVal === 'all' || tabVal === null) {      
        dispatch(fetchEmailLists({
         type: "bulk",
         page: table.page + 1,
         limit: table.rowsPerPage,
         search: search.search,
       }));
-
     } else{ 
-
       dispatch(fetchEmailLists({
         type: "bulk",
         page: table.page + 1,
@@ -218,8 +214,6 @@ export function DashboardTable() {
         status: tabVal
       }));
     }
-
-
   };
 
   return (

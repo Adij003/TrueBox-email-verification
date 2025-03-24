@@ -1,7 +1,6 @@
 import { toast } from 'sonner';
 import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useTheme } from '@emotion/react';
 import { Helmet } from 'react-helmet-async';
 
 import {
@@ -59,8 +58,6 @@ export default function Page() {
 
   const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
-
-  const theme = useTheme();
 
   const handleVerify = async () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

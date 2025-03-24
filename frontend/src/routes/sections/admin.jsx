@@ -12,8 +12,6 @@ import { AuthGuard } from 'src/auth/guard';
 const EmailLists = lazy(() => import('src/pages/admin/email-lists'));
 const Settings = lazy(() => import('src/pages/admin/settings'));
 
-// const Activity = lazy(() => import('src/admin-sections/settings/activity-log'));
-
 // ----------------------------------------------------------------------
 
 const adminLayoutContent = (
@@ -38,7 +36,6 @@ export const adminRoutes = [
         path: 'settings',
         element: <Settings />,
         children: [
-          // { path: 'activity-log', element: <Activity /> },
         ],
       },
     ],

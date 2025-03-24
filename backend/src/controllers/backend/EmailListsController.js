@@ -3,9 +3,7 @@ const Response = require("../../utils/response-util");
 const EmailList = require("../../models/EmailList");
 const Credit = require("../../models/Credit");
 const BouncifyService = require("../../services/bouncify-service");
-const Stat = require("../../models/Stat");
 const mongoose = require("mongoose");
-
 
 /**
  * Uploads a bulk email list for verification.
@@ -258,8 +256,6 @@ exports.getAllEmailLists = async (req, res) => {
         ]);
 
         const formattedStats = emailListStats.length > 0 ? emailListStats[0] : { statuses: [], all: 0 };
-
-        // Now, format the stats as desired
         const statusCount = formattedStats.statuses.reduce((acc, stat) => {
           acc[stat.status] = stat.count; // Map each status to its count
           return acc;

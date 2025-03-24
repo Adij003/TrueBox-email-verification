@@ -10,10 +10,9 @@ import { Label } from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
-export function CreditTableRow({ row, selected }) {
-  const timezone = ', (UTC+05:30) Asia/Kolkata';
+export function CreditTableRow({ row }) {
 
-  const getStatusTooltip = (status, dateTime) => {
+  const getStatusTooltip = (status) => {
     switch (status) {
       case 'Single Verification':
         return `Single email address was checked for verification.`;
@@ -68,7 +67,7 @@ export function CreditTableRow({ row, selected }) {
             arrow
             placement="top"
             disableInteractive
-            title={`Action occurred at: ${row.createdAt}`}
+            title={`Created at  ${dayjs(row.createdAt).format("YYYY-MM-DD")}`}
           >
             <Box
               component="span"
@@ -138,7 +137,7 @@ export function CreditTableRow({ row, selected }) {
                 arrow
                 placement="top"
                 disableInteractive
-                title="Email List"
+                title="Emails verified in this list"
               >
                 <span>{row.amountAdded ? '' : `Emails verified: ${row.verified}`}</span>
               </Tooltip>

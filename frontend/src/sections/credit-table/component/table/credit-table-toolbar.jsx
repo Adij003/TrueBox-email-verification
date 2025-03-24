@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useTheme } from '@emotion/react';
 
 import {
@@ -19,7 +18,6 @@ import {
 } from '@mui/material';
 
 import { Iconify } from 'src/components/iconify';
-// import { fetchEmailLists } from 'src/redux/slice/emailVerificationSlice';
 
 export function CreditTableToolbar({ filters, onResetPage, publish, onChangePublish, onApplyFilter, onApplySearch, onRefresh }) {
   const theme = useTheme();
@@ -30,7 +28,7 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
 
   const status = ['single', 'bulk', 'all'];
 
-  const [search, setSearch] = useState("")
+  const [setSearch] = useState("")
 
   const handlePopoverClose = () => setAnchorEl(null);
 
@@ -47,8 +45,6 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
   const [selectedstatus, setselectedstatus] = useState(null);
 
   const [selectedFolder, setSelectedFolder] = useState(null);
-
-
 
   const handleFilterIconClick = (e) => {
     e.stopPropagation();
@@ -78,6 +74,8 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
   };
 
   const handleApplyFilter = () => {
+    const newStatus = selectedstatus;
+    filters.state.status = newStatus;
     if(onApplyFilter){
       onApplyFilter({selectedstatus})
       handleFilterClose()
@@ -101,21 +99,6 @@ export function CreditTableToolbar({ filters, onResetPage, publish, onChangePubl
       backgroundColor: isFilterApplied ? theme.palette.primary.main : '#ECF6FE',
     },
   };
-
-  const folder = [
-    'Home (0)',
-    'Magnet Brains (2)',
-    'Pabbly Hook (5)',
-    'Pabbly Connect (10)',
-    'Pabbly Subcription Billing (0)',
-    'Pabbly Admin (50)',
-    'Pabbly Chatflow (2)',
-    'Pabbly Form Builder (0)',
-    'Pabbly Email Marketing (2)',
-    'Pabbly Plus (4)',
-  ];
-
-  const dispatch = useDispatch();
 
   const handleRefreshEmailList = () => {
     onRefresh()

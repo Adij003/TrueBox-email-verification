@@ -15,6 +15,7 @@ export function CreditTableFiltersResult({ filters, totalResults, onResetPage, s
   const handleRemoveKeyword = useCallback(() => {
     onResetPage();
     filters.setState({ name: '' });
+    filters.setState({ status: 'all' });
   }, [filters, onResetPage]);
 
   const handleRemoveStatus = useCallback(() => {
