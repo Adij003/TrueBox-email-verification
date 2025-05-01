@@ -77,13 +77,24 @@ export function CreditTable() {
   });
 
   useEffect(() => {
-    dispatch(fetchEmailLists({
-      page: table.page + 1,
-      limit: table.rowsPerPage,
-      status: 'completed'
-    }));
+    const newStatus = filters.state.status
+    if(newStatus === 'all' || ''){
+      dispatch(fetchEmailLists({
+        page: table.page + 1,
+        limit: table.rowsPerPage,
+        status: 'completed'
+      }));
+    } else {
+      dispatch(fetchEmailLists({
+        page: table.page + 1,
+        limit: table.rowsPerPage,
+        status: 'completed',
+        type: newStatus
+      }));
+    }
+ 
     dispatch(fetchCredits())
-  }, [dispatch, table.page, table.rowsPerPage]);
+  }, [dispatch, table.page, table.rowsPerPage, filters.state.status]);
 
   const canReset =
     !!filters.state.name ||
@@ -178,7 +189,6 @@ export function CreditTable() {
                   <CreditTableRow
                     key={index}
                     row={row}
-                    selected={table.selected.includes(row.id)}
                   />
                 ))}
               
@@ -206,7 +216,7 @@ export function CreditTable() {
   );
 }
 
-function applyFilter({ inputData, comparator, filters, dateError }) {
+function applyFilter({ inputData, filters, dateError }) {
   const { status, name, startDate, endDate } = filters;
 
   let filteredData = inputData;

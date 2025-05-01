@@ -1,7 +1,6 @@
 import { toast } from 'sonner';
 import { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { useTheme } from '@emotion/react';
 import { Helmet } from 'react-helmet-async';
 
 import {
@@ -21,8 +20,8 @@ import {
 } from '@mui/material';
 
 import { DashboardContent } from 'src/layouts/app';
-import { verifySingleEmail } from 'src/redux/slice/emailSlice'
 import { listItems } from 'src/_mock/app-big-card/_dashboardBigCardListItems';
+import { fetchEmailLists, verifySingleEmail } from 'src/redux/slice/emailSlice'
 
 import { Iconify } from 'src/components/iconify';
 import BigCard from 'src/components/app-big-card/big-card';
@@ -37,7 +36,7 @@ const metadata = { title: `Dashboard | Pabbly Email Verification` };
 const { items, style } = listItems;
 
 export default function Page() {
-  const [anchorEl, setAnchorEl] = useState(null);
+  const [anchorEl, setAnchorEl] = useState(null); 
   const [email, setEmail] = useState('');
   const uploadRef = useRef(null);
 
@@ -59,8 +58,6 @@ export default function Page() {
 
   const handlePopoverOpen = (event) => setAnchorEl(event.currentTarget);
   const handlePopoverClose = () => setAnchorEl(null);
-
-  const theme = useTheme();
 
   const handleVerify = async () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -110,6 +107,10 @@ export default function Page() {
 
     const handleUploadSuccess = () => {
     toast.success("Bulk email upload successful!");
+    dispatch(fetchEmailLists({
+      type: "bulk"
+    }))
+    
     handleDialogClose('bulkEmail');
   };
 

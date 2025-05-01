@@ -176,7 +176,9 @@ export default function SharedWithYouTeamMemberTable({
                   arrow
                   placement="top"
                 >
-                  Folders Shared With You
+                  <span>
+                    Folders Shared With You
+                    </span> 
                 </Tooltip>
               </Box>
             </Box>
@@ -186,7 +188,7 @@ export default function SharedWithYouTeamMemberTable({
           sx={{
             p: 3,
           }}
-        />
+        /> 
         <Divider />
 
         <SharedWithYouTeamMemberTableToolbar

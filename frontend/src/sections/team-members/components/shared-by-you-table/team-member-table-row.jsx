@@ -77,26 +77,12 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
             }}
           >
             <Tooltip title={getTooltip('sharedOn', row)} arrow placement="top" disableInteractive>
+            <span>
             {dayjs(row.shared_on).format('MMM DD, YY HH:mm:ss')}
+            </span>
             </Tooltip>
           </Stack>
         </TableCell>
-
-        {/* Email */}
-        {/* <TableCell width={400}>
-          <Box
-            sx={{
-              width: '200px',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
-            }}
-          >
-            <Tooltip title={`Email: ${row.email}`} arrow placement="top" disableInteractive>
-              {row.email}
-            </Tooltip>
-          </Box>
-        </TableCell> */}
         <TableCell>
           <Stack spacing={2} direction="row" alignItems="center">
             <Stack
@@ -117,8 +103,10 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
                 }}
               >
                 <Tooltip title={`Email: ${row.email}`} placement="top" arrow>
+                  <span>
                   {row.email}
-                </Tooltip>
+                  </span>
+                  </Tooltip>
               </Box>
               <Box
                 component="span"
@@ -136,13 +124,8 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
                   textOverflow: 'ellipsis',
                   whiteSpace: 'nowrap',
                 }}
-              >
-                <Tooltip title={getTooltip('folder', row)} placement="bottom" arrow>
-                  {row.folders.map((folder, index) => (
-                    <span key={index}>{folder}{index !== row.folders.length - 1 ? ', ' : ''}</span>
-                  ))} 
-                </Tooltip>
-              </Box>
+              />
+              
             </Stack>
           </Stack>
         </TableCell>
@@ -174,7 +157,9 @@ export function SharedbyYouTeamMemberTableRow({ row, selected, onSelectRow, seri
             }}
           >
             <Tooltip title={getTooltip('permission', row)} arrow placement="top" disableInteractive>
+              <span>
               {row.permissionType}
+              </span>
             </Tooltip>
           </Stack>
         </TableCell>

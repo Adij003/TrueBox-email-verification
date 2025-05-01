@@ -10,10 +10,9 @@ import { Label } from 'src/components/label';
 
 // ----------------------------------------------------------------------
 
-export function CreditTableRow({ row, selected }) {
-  const timezone = ', (UTC+05:30) Asia/Kolkata';
+export function CreditTableRow({ row }) {
 
-  const getStatusTooltip = (status, dateTime) => {
+  const getStatusTooltip = (status) => {
     switch (status) {
       case 'Single Verification':
         return `Single email address was checked for verification.`;
@@ -68,7 +67,7 @@ export function CreditTableRow({ row, selected }) {
             arrow
             placement="top"
             disableInteractive
-            title={`Action occurred at: ${row.createdAt}`}
+            title={`Created at  ${dayjs(row.createdAt).format("YYYY-MM-DD")}`}
           >
             <Box
               component="span"
@@ -131,19 +130,16 @@ export function CreditTableRow({ row, selected }) {
           >
             {(row.type === 'single') ? (
               <Tooltip arrow placement="top" disableInteractive title="Email address">
-                <span>{row.result}</span>{' '}
+                <span>{row.result}</span>
               </Tooltip>
             ) : (
               <Tooltip
                 arrow
                 placement="top"
                 disableInteractive
-                title="Email List"
+                title="Emails verified in this list"
               >
-                
-                <span>{row.amountAdded ? '' : `Emails verified: ${row.verified}`}</span>{' '}
-
-
+                <span>{row.amountAdded ? '' : `Emails verified: ${row.verified}`}</span>
               </Tooltip>
             )}
           </Box>
@@ -167,7 +163,7 @@ export function CreditTableRow({ row, selected }) {
               display: 'inline-block',
             }}
           >
-            {row.amountAdded ? row.amountAdded : `-${row.creditsConsumed}`}
+            {row.type === 'bulk' ? `-${row.verified}` : '-1'}
           </Box>
         </Tooltip>
       </TableCell>

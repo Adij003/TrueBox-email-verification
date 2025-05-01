@@ -54,7 +54,6 @@ export const paths = {
       api: `${ROOTS.app}/settings/api`,
       timezone: `${ROOTS.app}/settings/timezone`,
       teamMembers: `${ROOTS.app}/settings/team-members`,
-      activityLog: `${ROOTS.app}/settings/activity-log`,
     },
   },
   // admin
@@ -64,7 +63,6 @@ export const paths = {
       root: `${ROOTS.admin}/settings`,
       integratedApps: `${ROOTS.admin}/settings/integrated-applications`,
       emailNoti: `${ROOTS.admin}/settings/email-notifications`,
-      activitylog: `${ROOTS.admin}/settings/activity-log`,
     },
   
   },

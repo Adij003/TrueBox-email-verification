@@ -32,21 +32,6 @@ const BUTTON_STYLES = (isBelow600px) => ({
   padding: isBelow600px ? '0px 10px 0px 10px' : '16px',
 });
 
-// Folder structure data
-const FOLDER_STRUCTURE = [
-  'None',
-  'Home',
-  'Organization 1',
-  'Organization 2',
-  'Organization 3',
-  'Organization 4',
-  'Organization 5',
-  'Organization 6',
-  'Organization 7',
-  'Organization 8',
-  'Organization 9',
-];
-
 export function DashboardTableToolbar({ filters, numSelected, onApplyFilter, rowsPerPage }) {
 
   const isBelow600px = useMediaQuery('(max-width:600px)');
@@ -54,9 +39,9 @@ export function DashboardTableToolbar({ filters, numSelected, onApplyFilter, row
   // States
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const [moveFolderOpen, setMoveFolderOpen] = useState(false);
-  const [deleteOpen, setDeleteOpen] = useState(false);
-  const [search, setSearch] = useState("")
+  const [ setMoveFolderOpen] = useState(false);
+  const [ setDeleteOpen] = useState(false);
+  const [ setSearch] = useState("")
 
 
   // Computed values
@@ -70,7 +55,6 @@ export function DashboardTableToolbar({ filters, numSelected, onApplyFilter, row
     onApplyFilter({search: newSearchValue})
     }
 
-  const handleActionsOpen = (event) => setAnchorEl(event.currentTarget);
   const handleActionsClose = () => setAnchorEl(null);
 
   const dispatch = useDispatch();
@@ -82,7 +66,7 @@ const handleRefreshEmailList = () => {
         limit: rowsPerPage
       }))
       toast.success(`Page Refreshed`, {
- 
+      duration: 1000,
         style: {
           marginTop: '15px',
           width: '13rem',
@@ -96,7 +80,7 @@ const handleRefreshEmailList = () => {
         status: tabValue
       }))
       toast.success(`Page Refreshed`, {
- 
+      duration: 1000,
         style: {
           marginTop: '15px',
           width: '13rem',
@@ -115,21 +99,6 @@ const handleRefreshEmailList = () => {
   const handleDelete = () => {
     setDeleteOpen(true);
     handleActionsClose();
-  };
-
-  const handleDeleteClose = () => {
-    setDeleteOpen(false);
-  };
-
-  const handleConfirmDelete = () => {
-    setDeleteOpen(false);
-
-    toast.success(`Email list(s) deleted successfully.`, {
- 
-      style: {
-        marginTop: '15px',
-      },
-    });
   };
 
   // Render functions
