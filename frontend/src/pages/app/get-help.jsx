@@ -9,17 +9,14 @@ import { useBoolean } from 'src/hooks/use-boolean';
 import { DashboardContent } from 'src/layouts/app';
 import { listItems } from 'src/_mock/app-big-card/_getHelpBigCardListItems';
 
-import { Iconify } from 'src/components/iconify';
 import BigCard from 'src/components/app-big-card/big-card';
 import PageHeader from 'src/components/page-header/page-header';
-
-import { VideoPlayList } from 'src/sections/get-help/video-playlist';
 
 const { items, style } = listItems;
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Get Help | Pabbly Email Verification` };
+const metadata = { title: `Get Help | TrueBox Email Verification` };
 
 export default function GetHelp({ sx, icon, title, total, color = 'warning', ...other }) {
   const theme = useTheme();
@@ -43,7 +40,7 @@ export default function GetHelp({ sx, icon, title, total, color = 'warning', ...
           }}
         >
           <PageHeader
-            title="Help & Tutorials"
+            title="Help!!"
             Subheading="Tell us about your problem, and we’ll find you a solution."
             link_added="https://forum.pabbly.com/threads/help-tutorials.26324/"
           />
@@ -64,7 +61,7 @@ export default function GetHelp({ sx, icon, title, total, color = 'warning', ...
               placement="top"
               disableInteractive
             >
-              <Button
+              {/* <Button
                 startIcon={
                   <Iconify
                     icon="heroicons:plus-circle-16-solid"
@@ -80,7 +77,7 @@ export default function GetHelp({ sx, icon, title, total, color = 'warning', ...
                 target="_blank"
               >
                 Ask Question
-              </Button>
+              </Button> */}
             </Tooltip>
           }
         />
@@ -90,31 +87,31 @@ export default function GetHelp({ sx, icon, title, total, color = 'warning', ...
             display: 'flex',
             flexDirection: isMobile ? 'column' : 'row',
             alignItems: isMobile ? 'flex-start' : 'center',
-            justifyContent: 'space-between',
+            // justifyContent: 'space-between',
             mt: 3,
           }}
         >
-          <Typography variant="h4">Tutorials</Typography>
+          <Typography variant="h4" sx={{marginLeft: 2}}>Contact Us</Typography>
           <Tooltip
-            title="Click here to access over 10000+ detailed tutorials on our YouTube channel."
+            title="Click here to directly mail TechBox support."
             arrow
             placement="top"
           >
             <Button
-              onClick={dialog.onTrue}
-              sx={{ mt: isMobile ? 2 : 0 }}
+              component="a"
+              href="mailto:jainadi1717@gmail.com?subject=Require assistance in TrueBox Email Verification"
+              sx={{ mt: isMobile ? 2 : 0, marginLeft: 2}}
               size="large"
               variant="outlined"
               color="primary"
-              href="https://youtube.com/@pabbly?si=TUdac5e7gpDi3fXX"
               target="_blank"
               rel="noopener noreferrer"
             >
-              View All Videos
+              Mail us
             </Button>
+
           </Tooltip>
         </Box>
-        <VideoPlayList />
 
         {/* Table */}
       </DashboardContent>

@@ -1,6 +1,12 @@
-import { Box, Card, Link, Tooltip, Typography } from '@mui/material';
+import { Box, Card, Tooltip, Typography } from '@mui/material';
 
-import VideoModal from '../app-video-modal/video-modal';
+// import { CONFIG } from 'src/config-global';
+
+// import VideoModal from '../app-video-modal/video-modal';
+
+// const imageSrc='./assets/images/emailImg.jpg'
+
+import imageSrc from '../../assets/images/emailImg.jpg'
 
 export default function AppBigCard({
   getHelp,
@@ -14,9 +20,6 @@ export default function AppBigCard({
   thumbnailName,
   bigcardtitle,
   bigcardsubtitle,
-  showNote = true,
-  bigcardNote,
-  keyword,
   learnMoreLink = '#', // Added default prop for learn more link
 }) {
   return (
@@ -52,18 +55,7 @@ export default function AppBigCard({
                 <li key={index}>
                   <Typography variant="body2" fontWeight={500} color="#637381">
                     {item}{' '}
-                    {index === items.length - 1 && (
-                      <Link
-                        href={learnMoreLink}
-                        style={{ color: '#078DEE', cursor: 'pointer' }}
-                        underline="always"
-                        // Use href for external links
-                        target="_blank" // Opens in a new tab
-                        rel="noopener noreferrer"
-                      >
-                       Learn more
-                      </Link>
-                    )}
+                   
                   </Typography>
                 </li>
               ))}
@@ -72,13 +64,16 @@ export default function AppBigCard({
             {action}
           </Box>
         </Box>
-        <Box >
-          <VideoModal
-            getHelp={getHelp}
-            isVideo={isVideo}
-            videoLink={videoLink}
-            thumbnailName={thumbnailName}
-          />
+        <Box  sx={{
+    display: {
+      xs: 'none', // hidden on extra-small
+      sm: 'none', // hidden on small
+      md: 'none', // hidden on medium
+      lg: 'block', // visible on large and above
+    },
+  }}>
+        <img style={{ height: 200, marginRight: 50 }} src={imageSrc} alt="Email verification process" />
+
         </Box>
       </Box>
     </Card>

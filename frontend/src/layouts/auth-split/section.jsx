@@ -1,9 +1,12 @@
 import Box from '@mui/material/Box';
-import { Tooltip } from '@mui/material';
+// import { Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 
 import { CONFIG } from 'src/config-global';
+
+import logo from '../../assets/images/truebox_logo.png'
+
 
 export function Section({
   sx,
@@ -11,13 +14,12 @@ export function Section({
   layoutQuery,
   method1,
   method2,
-  title = 'No Restrictions on Features!',
-  subtitle = 'Scale & Grow Your Business with Pabbly.',
+  title = 'TrueBox',
+  subtitle = 'Scale & Grow Your Business with TrueBox Email Verification.',
   ...other
 }) {
   const theme = useTheme();
 
-  const logo = `${CONFIG.site.basePath}/logo/Pabbly SVG.svg`;
   const AicpaImage = `${CONFIG.site.basePath}/assets/icons/platforms/image 11.svg`;
   const IsoImage = `${CONFIG.site.basePath}/assets/icons/platforms/image 10.svg`;
 
@@ -58,7 +60,7 @@ export function Section({
 
       <Box
         width="150px"
-        height="42.65px"
+        height="72.65px"
         component="img"
         alt="Left"
         src={logo}
@@ -66,6 +68,7 @@ export function Section({
           position: 'absolute', // Make the SVG position absolute within the Box
           top: '16px', // Adjust the Y-axis (vertical) position
           left: '24px',
+          borderRadius: '20px'
         }}
       />
 
@@ -80,7 +83,7 @@ export function Section({
           </Typography>
         )}
       </Box>
-
+{/* 
       <Box gap={5} display="flex">
         <Tooltip
           title={
@@ -105,7 +108,7 @@ export function Section({
         >
           <Box component="img" alt="Left" src={IsoImage} sx={{ width: 80, height: 80 }} />
         </Tooltip>
-      </Box>
+      </Box> */}
     </Box>
   );
 }

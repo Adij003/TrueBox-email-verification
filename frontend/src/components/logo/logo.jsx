@@ -6,14 +6,13 @@ import { useTheme } from '@mui/material/styles';
 
 import { RouterLink } from 'src/routes/components';
 
-import { CONFIG } from 'src/config-global';
-
 import { logoClasses } from './classes';
+import brand from '../../assets/images/brand.png'
 
 // ----------------------------------------------------------------------
 
 export const Logo = forwardRef(
-  ({ width = 40, height = 40, disableLink = false, className, href = '/', sx, ...other }, ref) => {
+  ({ width = 40, height = 30, disableLink = false, className, href = '/', sx, ...other }, ref) => {
     const theme = useTheme();
 
     const gradientId = useId();
@@ -33,9 +32,13 @@ export const Logo = forwardRef(
       <Box
         alt="logo"
         component="img"
-        src={`${CONFIG.site.basePath}/assets/icons/navbar/pabbly_icon.svg`}
+        src={brand}
         width={width}
         height={height}
+        sx={{
+          borderRadius: '10%',
+          overflow: 'hidden'
+        }}
       />
     );
 

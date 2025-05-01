@@ -9,7 +9,7 @@ import { JwtSignUpView } from 'src/sections/auth/jwt';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Sign up | Pabbly Email Verification ` };
+const metadata = { title: `Sign up | TrueBox Email Verification ` };
 
 export default function Page() {
 
@@ -69,7 +69,8 @@ export default function Page() {
             textAlign: { xs: 'center', md: 'left' }, // Center text for mobile/tablet, left-align for laptop
           }}
         >
-          Already have a Pabbly Account?
+        Already have an Account with us? 
+
         </Typography>
         <Button
           variant="outlined"

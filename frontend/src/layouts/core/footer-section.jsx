@@ -39,7 +39,7 @@ export function FooterSection({
           textAlign: 'center',
         }}
       >
-        Pabbly © {currentYear}. All Rights Reserved.
+        TrueBox © {currentYear}. All Rights Reserved.
       </Container>
 
       {slots?.bottomArea}

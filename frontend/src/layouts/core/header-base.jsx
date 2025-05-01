@@ -1,23 +1,21 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import {  useLocation } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
-import { Tooltip } from '@mui/material';
 import Button from '@mui/material/Button';
 import { styled, useTheme } from '@mui/material/styles';
 
 import { paths } from 'src/routes/paths';
 
-import { CONFIG } from 'src/config-global';
 import { varAlpha } from 'src/theme/styles';
 
 import { Logo } from 'src/components/logo';
-import UserPabblyAppsMenu from 'src/components/all-apps-drawer/user-all-apps-drawer';
 import AdminPabblyAppsMenu from 'src/components/all-apps-drawer/admin-all-apps-drawer';
 
 import Searchbar from '../components/searchbar';
 import { HeaderSection } from './header-section';
 import { MenuButton } from '../components/menu-button';
+import logo from '../../assets/images/truebox_logo.png' 
 import { AccountDrawer } from '../components/account-drawer';
 
 const StyledDivider = styled('span')(({ theme }) => ({
@@ -103,7 +101,8 @@ export function HeaderBase({
               <Logo data-slot="logo" />
             ) : (
               <>
-                <Link to="/app">
+              <img style={{ height: 60 }} src={logo} alt="" />
+                {/* <Link to="/app">
                   <Box
                     alt="logo"
                     component="img"
@@ -114,7 +113,7 @@ export function HeaderBase({
                       zIndex: theme.zIndex.drawer + 1,
                     }}
                   />
-                </Link>
+                </Link> */}
                 <Logo
                   width={30}
                   sx={{
@@ -143,25 +142,9 @@ export function HeaderBase({
             >
               {/* {isReportPage &&  */}
               {isAppRoute && <Searchbar data-slot="searchbar" data={data?.nav} />}
-
-              {/* } */}
-              {isAppRoute && (
-                <Tooltip title="Click here to purchase credits." arrow placement="bottom">
-                  <Button
-                    variant="contained"
-                    size="medium"
-                    color="error"
-                    href="https://www.pabbly.com/email-list-cleaning/#pricing"
-                    target="_blank"
-                  >
-                    Upgrade
-                  </Button>
-                </Tooltip>
-              )}
-              {isAppRoute && <UserPabblyAppsMenu />}
               {isAdminRoute && <AdminPabblyAppsMenu />}
               {account && <AccountDrawer data-slot="account" data={data?.account} />}
-
+              
               {purchase && (
                 <Button
                   data-slot="purchase"

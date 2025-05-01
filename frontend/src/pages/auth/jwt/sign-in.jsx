@@ -9,7 +9,7 @@ import { JwtSignInView } from 'src/sections/auth/jwt';
 
 // ----------------------------------------------------------------------
 
-const metadata = { title: `Sign in | Pabbly Email Verification ` };
+const metadata = { title: `Sign in | TrueBox` };
 
 export default function Page() {
   const router = useRouter();

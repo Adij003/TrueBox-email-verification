@@ -18,15 +18,10 @@ import { ResultItem } from './result-item';
 
 // ----------------------------------------------------------------------
 const data = [
-  { title: 'Folder Name: Magnet Brains', numberOfEmailList: 2 },
-  { title: 'Folder Name: Pabbly Hook', numberOfEmailList: 5 },
-  { title: 'Folder Name: Pabbly Connect', numberOfEmailList: 10 },
-  { title: 'Folder Name: Pabbly Subcription Billing', numberOfEmailList: 0 },
-  { title: 'Folder Name: Pabbly Admin', numberOfEmailList: 50 },
-  { title: 'Folder Name: Pabbly Chatflow', numberOfEmailList: 2 },
-  { title: 'Folder Name: Pabbly Form Builder', numberOfEmailList: 0 },
-  { title: 'Folder Name: Pabbly Email Marketing', numberOfEmailList: 2 },
-  { title: 'Folder Name: Pabbly Plus', numberOfEmailList: 4 },
+  { title: 'Folder Name: Home', numberOfEmailList: 2 },
+  { title: 'Folder Name: Personal', numberOfEmailList: 5 },
+  { title: 'Folder Name: Single Email', numberOfEmailList: 10 },
+  { title: 'Folder Name: Bulk Folder', numberOfEmailList: 0 },
 ];
 export default function Searchbar({ sx, ...other }) {
   const theme = useTheme();
@@ -93,7 +88,7 @@ export default function Searchbar({ sx, ...other }) {
         }}
         {...other}
       >
-        <Box display="flex" alignItems="center">
+        <Box display="flex" alignItems="center"  >
           <IconButton disableRipple>
             <SvgIcon sx={{ width: 20, height: 20 }}>
               <path
@@ -103,31 +98,12 @@ export default function Searchbar({ sx, ...other }) {
             </SvgIcon>
           </IconButton>
         </Box>
-        <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-          <Typography fontWeight={500} fontSize={14}  py={1}>
+        <Box sx={{ display: { xs: 'none', sm: 'block'} }}>
+          <Typography fontWeight={500} fontSize={14}  py={1} mr={1}>
             Search Folder
           </Typography>
         </Box>
 
-        <Typography
-          fontWeight={600}
-          sx={{
-            overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                  maxWidth: '300px',
-            p: 0.5,
-            borderRadius: 1,
-            ml: 1,
-            fontSize: 12,
-            color: 'grey.800',
-            bgcolor: 'common.white',
-            boxShadow: theme.customShadows.z1,
-            display: { xs: 'none', md: 'inline-flex' },
-          }}
-        >
-          Magnet Brains
-        </Typography>
       </Box>
     </Tooltip>
   );
@@ -199,6 +175,9 @@ export default function Searchbar({ sx, ...other }) {
         ) : (
           <Scrollbar sx={{ px: 3, pb: 3, pt: 0, height: 400 }}>{renderItems()}</Scrollbar>
         )}
+        <Typography sx={{ textAlign: 'center', mb: 2 }}>
+        This is a sample dialog box. The Folder feature is coming soon!
+        </Typography>
       </Dialog>
     </>
   );

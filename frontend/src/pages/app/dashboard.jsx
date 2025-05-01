@@ -131,8 +131,8 @@ export default function Page() {
         >
           <PageHeader
             title="Dashboard"
-            Subheading="Verify and manage all your email lists in one place with the Pabbly Email Verification Dashboard. "
-            link_added="https://forum.pabbly.com/threads/dashboard.26311/"
+            Subheading="Verify and manage all your email lists in one place with the TrueBox Email Verification Dashboard. "
+            
           />
           <Tooltip
             title="Click to verify single or bulk email addresses."
@@ -149,7 +149,7 @@ export default function Page() {
               variant="contained"
               size="large"
             >
-              Verify Email
+              Verify Email(s)
             </Button>
           </Tooltip>
         </Box>

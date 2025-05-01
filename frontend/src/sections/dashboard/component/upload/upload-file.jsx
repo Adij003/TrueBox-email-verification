@@ -2,7 +2,7 @@ import { toast } from 'sonner';
 import { useDispatch } from 'react-redux';
 import React, { useState, forwardRef, useImperativeHandle } from 'react';
 
-import { Box, Link, TextField } from '@mui/material';
+import { Box, TextField } from '@mui/material';
 
 import { uploadBulkEmails } from 'src/redux/slice/emailSlice';
 
@@ -82,13 +82,7 @@ const UploadComponent = forwardRef(({ setAlertState, onUploadSuccess }, ref) => 
               ) : (
                 <>
                   Enter the name of the email list here.{' '}
-                  <Link
-                    href="https://forum.pabbly.com/threads/verify-email.26310/"
-                    underline="always"
-                    target="_blank"
-                  >
-                    Learn more
-                  </Link>
+
                 </>
               )}
             </span>

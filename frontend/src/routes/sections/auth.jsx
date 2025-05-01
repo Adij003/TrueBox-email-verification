@@ -27,7 +27,7 @@ const authJwt = {
       path: 'sign-in',
       element: (
         <GuestGuard>
-          <AuthSplitLayout section={{ title: 'No Restrictions on Features!' }}>
+          <AuthSplitLayout section={{ title: 'Welcome to TrueBox!' }}>
             <Jwt.SignInPage />
           </AuthSplitLayout>
         </GuestGuard>
@@ -47,7 +47,7 @@ const authJwt = {
       path: 'forgot-password',
       element: (
         <GuestGuard>
-          <AuthSplitLayout section={{ title: 'No Restrictions on Features!' }}>
+          <AuthSplitLayout section={{ title: 'Reset your Password' }}>
             <Jwt.ForgotPasswordPage/>
           </AuthSplitLayout>
         </GuestGuard>
@@ -57,7 +57,7 @@ const authJwt = {
       path: 'confirm',
       element: (
         <GuestGuard>
-           <AuthSplitLayout section={{ title: 'No Restrictions on Features!' }}>
+           <AuthSplitLayout section={{ title: 'Explore All The Features!' }}>
             <Jwt.ChangePaswordPage/>
           </AuthSplitLayout>
         </GuestGuard>

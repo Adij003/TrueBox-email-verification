@@ -56,7 +56,7 @@ export default function TeamMembersPage() {
               <div>
                 <StatsCards
                   cardtitle="Unique Team Members Added"
-                  cardstats="20"
+                  cardstats="2"
                   icon_name="unique.png"
                   icon_color="#1A76FF"
                   bg_gradient="#1A76FF"
@@ -67,7 +67,7 @@ export default function TeamMembersPage() {
               <div>
                 <StatsCards
                   cardtitle="Folders Shared by You"
-                  cardstats="10"
+                  cardstats="1"
                   icon_name="byyou.png"
                   icon_color="#009C53"
                   bg_gradient="#009C53"
@@ -79,7 +79,7 @@ export default function TeamMembersPage() {
               <div>
                 <StatsCards
                   cardtitle="Folders Shared With You"
-                  cardstats="1,000"
+                  cardstats="0"
                   icon_name="sharedwithyou.png"
                   icon_color="#009CBB"
                   bg_gradient="#009CBB"

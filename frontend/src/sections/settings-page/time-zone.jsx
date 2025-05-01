@@ -156,14 +156,7 @@ export default function Page() {
               </Select>
               <FormHelperText>
                 Select the time zone that matches your current location.{' '}
-                <a
-                  href="https://forum.pabbly.com/threads/how-to-set-your-time-zone-in-pabbly-hook.25576/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ color: theme.palette.primary.main, textDecoration: 'underline' }}
-                >
-                  Learn more
-                </a>
+             
               </FormHelperText>
             </FormControl>
             <Box>

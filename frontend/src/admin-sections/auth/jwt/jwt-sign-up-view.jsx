@@ -454,7 +454,7 @@ export function JwtSignUpView() {
         alignItems="center" // Centers content vertically
       >
         <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-        Already have a Pabbly Account? 
+        Already have an Account with us? 
         </Typography>
         <Link
           component={RouterLink}

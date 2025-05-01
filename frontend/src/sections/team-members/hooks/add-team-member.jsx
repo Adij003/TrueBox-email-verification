@@ -21,8 +21,6 @@ import {
 
 import { addTeamMember, getTeamDetails } from 'src/redux/slice/userSlice';
 
-import LearnMoreLink from 'src/components/learn-more-link/learn-more-link';
-
 export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
   const theme = useTheme();
   const isWeb = useMediaQuery(theme.breakpoints.up('sm'));
@@ -40,7 +38,6 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
   const folder = ['read', 'write'];
   const folders = [
     'Select All Folders',
-    'Pabbly Connect',
     'Main Folder',
     'Folder 1',
     'Folder 2',
@@ -75,8 +72,9 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
 
   const ALLOWED_EMAILS = [
     'hardik@pabbly.com',
-    'kamal.kumar@pabbly.com',
-    'anand.nayak@pabbly.com',
+    'kamal@gmail.com',
+    'anand@gmail.com',
+    'adi@gmail.com'
   ];
 
   const commonBoxStyle = { ml: '9px' };
@@ -137,7 +135,7 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
 
       // Check if email is in allowed list (only for new members)
       if (!ALLOWED_EMAILS.includes(email)) {
-        toast.error(`This email is not registered with Pabbly!`, {
+        toast.error(`This email is not registered!`, {
           style: {
             marginTop: '15px',
           },
@@ -220,8 +218,8 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
                 )
               ) : (
                 <span>
-                  Ensure that the email address is already registered with Pabbly.{' '}
-                  <LearnMoreLink link="https://forum.pabbly.com/threads/how-do-add-team-members-in-pabbly-email-verification-account.26333/" />
+                  Ensure that the email address is already registered {' '}
+                 
                 </span>
               )
             }
@@ -243,7 +241,6 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
                     <span>
                       Select folders to be shared. Use &quot;Select All Folders&quot; to select all
                       at once.{' '}
-                      <LearnMoreLink link="https://forum.pabbly.com/threads/how-do-add-team-members-in-pabbly-email-verification-account.26333/" />
                     </span>
                   )
                 }
@@ -283,7 +280,7 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
                   ) : (
                     <span>
                       Select the team member access type.{' '}
-                      <LearnMoreLink link="https://forum.pabbly.com/threads/how-do-add-team-members-in-pabbly-email-verification-account.26333/" />
+                      
                     </span>
                   )
                 }
@@ -311,13 +308,6 @@ export function TeamMemberDialog({ open, onClose, currentMember, ...other }) {
                   downloading reports but restricts folder and list management, while
                   &apos;Read&apos; access permits downloading reports only.
                 </span>
-              </li>
-              <li style={commonLiStyle}>
-                <span>
-                  Team members do not have access to the &apos;Settings&apos; section, any billing
-                  information, or the &apos;Trash&apos; folder.{' '}
-                </span>
-                <LearnMoreLink link="https://forum.pabbly.com/threads/team-members.26323/" />
               </li>
             </ul>
           </Box>
