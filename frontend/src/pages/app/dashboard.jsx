@@ -32,7 +32,7 @@ import { DashboardTable } from 'src/sections/dashboard/component/table/dashboard
 import CreditStatsCards from 'src/sections/dashboard/component/stats-cards/credit-stats-cards';
 import VerifySingleEmail from 'src/sections/dashboard/component/verify-single-email/verify-single-email';
 
-const metadata = { title: `Dashboard | Pabbly Email Verification` };
+const metadata = { title: `Dashboard | TrueBox Email Verification` };
 const { items, style } = listItems;
 
 export default function Page() {

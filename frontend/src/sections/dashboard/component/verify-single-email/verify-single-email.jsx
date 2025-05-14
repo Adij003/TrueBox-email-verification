@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 import {
   Box,
   Card,
-  Link,
   Button,
   Divider,
   TextField,
@@ -56,13 +55,6 @@ const VerifySingleEmail = ({ onVerify, email, setEmail, onClose }) => {
           <Box sx={{ mt: 0.5 }}>
             <Typography variant="body2" color="text.secondary">
               Check if an email address is valid and deliverable.{' '}
-              <Link
-                href="https://forum.pabbly.com/threads/verify-single-email.26319/"
-                target="_blank"
-                underline="always"
-              >
-                Learn more
-              </Link>
             </Typography>
           </Box>
         }
@@ -81,13 +73,7 @@ const VerifySingleEmail = ({ onVerify, email, setEmail, onClose }) => {
             error || (
               <span>
                 Enter an email address you want to verify.{' '}
-                <Link
-                  href="https://forum.pabbly.com/threads/verify-single-email.26319/"
-                  underline="always"
-                  target="_blank"
-                >
-                  Learn more
-                </Link>
+  
               </span>
             )
           }

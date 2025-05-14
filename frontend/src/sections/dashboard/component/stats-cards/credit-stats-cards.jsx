@@ -68,7 +68,7 @@ export default function CreditStatsCards() {
         icon_name="2card.png"
         icon_color="#28a645"
         bg_gradient="#28a645"
-        tooltipTittle="Number of email lists uploaded in your account."
+        tooltipTittle="Number of Credits alloted you."
       />
     </Box>
   );
